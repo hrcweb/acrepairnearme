@@ -1,3 +1,4 @@
+
 import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -177,7 +178,7 @@ const HeatIndexVisualization = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-red-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50">
       <div className="w-full max-w-6xl mx-auto p-6 space-y-8">
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">Florida Heat Index Monitor</h2>
