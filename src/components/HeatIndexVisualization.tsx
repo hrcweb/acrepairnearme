@@ -1,9 +1,10 @@
+
 import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Thermometer, Droplets, Wind, Sun, MapPin, Star, CheckCircle } from 'lucide-react';
+import { Thermometer, Droplets, Wind, Sun, MapPin, Star, CheckCircle, Navigation } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface WeatherData {
@@ -158,6 +159,24 @@ const HeatIndexVisualization = () => {
     }
   };
 
+  // Group locations by region for better organization
+  const locationsByRegion = useMemo(() => {
+    const grouped = floridaLocations.reduce((acc, location) => {
+      if (!acc[location.region]) {
+        acc[location.region] = [];
+      }
+      acc[location.region].push(location);
+      return acc;
+    }, {} as Record<string, typeof floridaLocations>);
+    
+    // Sort locations within each region by city name
+    Object.keys(grouped).forEach(region => {
+      grouped[region].sort((a, b) => a.city.localeCompare(b.city));
+    });
+    
+    return grouped;
+  }, []);
+
   return (
     <div className="w-full max-w-6xl mx-auto p-6 space-y-8">
       <div className="text-center mb-8">
@@ -167,33 +186,76 @@ const HeatIndexVisualization = () => {
         </p>
       </div>
 
-      {/* Location Selection Only */}
-      <Card id="search-section">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <MapPin className="w-5 h-5" />
+      {/* Enhanced Location Selection */}
+      <Card id="search-section" className="bg-gradient-to-br from-blue-50 to-cyan-50 border-blue-200">
+        <CardHeader className="text-center">
+          <CardTitle className="flex items-center justify-center gap-3 text-2xl text-blue-900">
+            <div className="p-2 bg-blue-100 rounded-full">
+              <Navigation className="w-6 h-6 text-blue-600" />
+            </div>
             Select Your Florida Location
           </CardTitle>
-          <CardDescription>
-            Choose a location to get current heat index data
+          <CardDescription className="text-blue-700 text-lg">
+            Choose any city across Florida to get current heat index conditions and safety recommendations
           </CardDescription>
         </CardHeader>
-        <CardContent>
-          <Select value={selectedLocation} onValueChange={handleLocationSelect}>
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Choose a location from the list" />
-            </SelectTrigger>
-            <SelectContent>
-              {floridaLocations.map((location) => (
-                <SelectItem 
-                  key={`${location.zipCode}-${location.city}`} 
-                  value={`${location.city}, ${location.zipCode}`}
-                >
-                  {location.city} ({location.zipCode}) - {location.county} County
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        <CardContent className="space-y-6">
+          <div className="max-w-2xl mx-auto">
+            <Select value={selectedLocation} onValueChange={handleLocationSelect}>
+              <SelectTrigger className="w-full h-14 text-lg border-2 border-blue-200 focus:border-blue-400 bg-white">
+                <SelectValue placeholder="🏙️ Choose a Florida city..." />
+              </SelectTrigger>
+              <SelectContent className="max-h-96">
+                {Object.entries(locationsByRegion).map(([region, locations]) => (
+                  <div key={region}>
+                    <div className="px-2 py-2 text-sm font-semibold text-gray-500 bg-gray-50 sticky top-0">
+                      {region}
+                    </div>
+                    {locations.map((location) => (
+                      <SelectItem 
+                        key={`${location.zipCode}-${location.city}`} 
+                        value={`${location.city}, ${location.zipCode}`}
+                        className="py-3"
+                      >
+                        <div className="flex items-center justify-between w-full">
+                          <div>
+                            <span className="font-medium">{location.city}</span>
+                            <span className="text-gray-500 ml-2">({location.zipCode})</span>
+                          </div>
+                          <Badge variant="outline" className="text-xs">
+                            {location.county}
+                          </Badge>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </div>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+          
+          {selectedLocation && (
+            <div className="text-center">
+              <Badge className="bg-blue-600 text-white px-4 py-2 text-base">
+                📍 Monitoring: {selectedLocation}
+              </Badge>
+            </div>
+          )}
+          
+          <div className="grid md:grid-cols-3 gap-4 text-center">
+            <div className="p-4 bg-white rounded-lg border border-blue-200">
+              <div className="text-blue-600 font-semibold mb-1">75+ Cities</div>
+              <div className="text-sm text-gray-600">Statewide Coverage</div>
+            </div>
+            <div className="p-4 bg-white rounded-lg border border-blue-200">
+              <div className="text-blue-600 font-semibold mb-1">Real-Time</div>
+              <div className="text-sm text-gray-600">Heat Index Data</div>
+            </div>
+            <div className="p-4 bg-white rounded-lg border border-blue-200">
+              <div className="text-blue-600 font-semibold mb-1">Safety First</div>
+              <div className="text-sm text-gray-600">Health Recommendations</div>
+            </div>
+          </div>
         </CardContent>
       </Card>
 
