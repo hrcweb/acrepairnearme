@@ -9,7 +9,16 @@ interface HeroSectionProps {
 const HeroSection = ({ onSearch }: HeroSectionProps) => {
   return (
     <section className="relative bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 text-white py-20">
-      <div className="absolute inset-0 bg-black opacity-10"></div>
+      {/* Background Image */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{
+          backgroundImage: "url('https://images.unsplash.com/photo-1621905251189-08b45d6a269e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80')"
+        }}
+      ></div>
+      {/* Dark overlay for better text readability */}
+      <div className="absolute inset-0 bg-black opacity-60"></div>
+      
       <div className="relative container mx-auto px-4 text-center">
         <h1 className="text-4xl md:text-6xl font-bold mb-6">
           Find Top-Rated AC Repair
