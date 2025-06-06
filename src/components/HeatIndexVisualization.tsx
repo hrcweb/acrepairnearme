@@ -36,7 +36,7 @@ const floridaZipCodes: Record<string, string> = {
   "33188": "Miami", "33189": "Miami", "33190": "Miami", "33193": "Miami", "33194": "Miami",
   "33195": "Miami", "33196": "Miami", "33197": "Miami", "33199": "Miami",
   
-  // Fort Lauderdale area
+  // Fort Lauderdale area (Broward County)
   "33301": "Fort Lauderdale", "33302": "Fort Lauderdale", "33303": "Fort Lauderdale", 
   "33304": "Fort Lauderdale", "33305": "Fort Lauderdale", "33306": "Fort Lauderdale",
   "33307": "Fort Lauderdale", "33308": "Fort Lauderdale", "33309": "Fort Lauderdale",
@@ -54,7 +54,7 @@ const floridaZipCodes: Record<string, string> = {
   "33349": "Fort Lauderdale", "33351": "Fort Lauderdale", "33355": "Fort Lauderdale",
   "33359": "Fort Lauderdale", "33388": "Fort Lauderdale", "33394": "Fort Lauderdale",
 
-  // Orlando area
+  // Orlando area (Orange County)
   "32801": "Orlando", "32802": "Orlando", "32803": "Orlando", "32804": "Orlando",
   "32805": "Orlando", "32806": "Orlando", "32807": "Orlando", "32808": "Orlando",
   "32809": "Orlando", "32810": "Orlando", "32811": "Orlando", "32812": "Orlando",
@@ -71,7 +71,7 @@ const floridaZipCodes: Record<string, string> = {
   "32885": "Orlando", "32886": "Orlando", "32887": "Orlando", "32891": "Orlando",
   "32893": "Orlando", "32896": "Orlando", "32897": "Orlando", "32898": "Orlando",
 
-  // Tampa area
+  // Tampa area (Hillsborough County)
   "33601": "Tampa", "33602": "Tampa", "33603": "Tampa", "33604": "Tampa",
   "33605": "Tampa", "33606": "Tampa", "33607": "Tampa", "33608": "Tampa",
   "33609": "Tampa", "33610": "Tampa", "33611": "Tampa", "33612": "Tampa",
@@ -86,7 +86,7 @@ const floridaZipCodes: Record<string, string> = {
   "33685": "Tampa", "33686": "Tampa", "33687": "Tampa", "33688": "Tampa",
   "33689": "Tampa", "33694": "Tampa", "33697": "Tampa", "33698": "Tampa",
 
-  // Jacksonville area
+  // Jacksonville area (Duval County)
   "32099": "Jacksonville", "32201": "Jacksonville", "32202": "Jacksonville", "32203": "Jacksonville",
   "32204": "Jacksonville", "32205": "Jacksonville", "32206": "Jacksonville", "32207": "Jacksonville",
   "32208": "Jacksonville", "32209": "Jacksonville", "32210": "Jacksonville", "32211": "Jacksonville",
@@ -101,22 +101,22 @@ const floridaZipCodes: Record<string, string> = {
   "32256": "Jacksonville", "32257": "Jacksonville", "32258": "Jacksonville", "32259": "Jacksonville",
   "32260": "Jacksonville", "32266": "Jacksonville", "32267": "Jacksonville", "32277": "Jacksonville",
 
-  // St. Petersburg area
+  // St. Petersburg/Clearwater area (Pinellas County)
   "33701": "St. Petersburg", "33702": "St. Petersburg", "33703": "St. Petersburg", "33704": "St. Petersburg",
   "33705": "St. Petersburg", "33706": "St. Petersburg", "33707": "St. Petersburg", "33708": "St. Petersburg",
   "33709": "St. Petersburg", "33710": "St. Petersburg", "33711": "St. Petersburg", "33712": "St. Petersburg",
   "33713": "St. Petersburg", "33714": "St. Petersburg", "33715": "St. Petersburg", "33716": "St. Petersburg",
   "33730": "St. Petersburg", "33731": "St. Petersburg", "33732": "St. Petersburg", "33733": "St. Petersburg",
   "33734": "St. Petersburg", "33736": "St. Petersburg", "33740": "St. Petersburg", "33741": "St. Petersburg",
-  "33742": "St. Petersburg", "33743": "St. Petersburg", "33747": "St. Petersburg", "33755": "St. Petersburg",
-  "33756": "St. Petersburg", "33757": "St. Petersburg", "33758": "St. Petersburg", "33759": "St. Petersburg",
-  "33760": "St. Petersburg", "33761": "St. Petersburg", "33762": "St. Petersburg", "33763": "St. Petersburg",
-  "33764": "St. Petersburg", "33765": "St. Petersburg", "33767": "St. Petersburg", "33770": "St. Petersburg",
-  "33771": "St. Petersburg", "33772": "St. Petersburg", "33773": "St. Petersburg", "33774": "St. Petersburg",
-  "33776": "St. Petersburg", "33777": "St. Petersburg", "33778": "St. Petersburg", "33781": "St. Petersburg",
-  "33782": "St. Petersburg", "33785": "St. Petersburg", "33786": "St. Petersburg",
+  "33742": "St. Petersburg", "33743": "St. Petersburg", "33747": "St. Petersburg",
+  "33755": "Clearwater", "33756": "Clearwater", "33759": "Clearwater", "33760": "Clearwater",
+  "33761": "Clearwater", "33762": "Clearwater", "33763": "Clearwater", "33764": "Clearwater",
+  "33765": "Clearwater", "33767": "Clearwater", "33770": "Clearwater", "33771": "Clearwater",
+  "33772": "Clearwater", "33773": "Clearwater", "33774": "Clearwater", "33776": "Clearwater",
+  "33777": "Clearwater", "33778": "Clearwater", "33781": "Clearwater", "33782": "Clearwater",
+  "33785": "Clearwater", "33786": "Clearwater",
 
-  // West Palm Beach area
+  // West Palm Beach area (Palm Beach County)
   "33401": "West Palm Beach", "33402": "West Palm Beach", "33403": "West Palm Beach", "33404": "West Palm Beach",
   "33405": "West Palm Beach", "33406": "West Palm Beach", "33407": "West Palm Beach", "33408": "West Palm Beach",
   "33409": "West Palm Beach", "33410": "West Palm Beach", "33411": "West Palm Beach", "33412": "West Palm Beach",
@@ -125,27 +125,178 @@ const floridaZipCodes: Record<string, string> = {
   "33481": "West Palm Beach", "33482": "West Palm Beach", "33483": "West Palm Beach", "33484": "West Palm Beach",
   "33486": "West Palm Beach", "33487": "West Palm Beach",
 
-  // Tallahassee area
+  // Tallahassee area (Leon County)
   "32301": "Tallahassee", "32302": "Tallahassee", "32303": "Tallahassee", "32304": "Tallahassee",
   "32305": "Tallahassee", "32306": "Tallahassee", "32307": "Tallahassee", "32308": "Tallahassee",
   "32309": "Tallahassee", "32310": "Tallahassee", "32311": "Tallahassee", "32312": "Tallahassee",
   "32313": "Tallahassee", "32314": "Tallahassee", "32315": "Tallahassee", "32316": "Tallahassee",
   "32317": "Tallahassee", "32318": "Tallahassee", "32395": "Tallahassee", "32399": "Tallahassee",
 
-  // Gainesville area
+  // Gainesville area (Alachua County)
   "32601": "Gainesville", "32602": "Gainesville", "32603": "Gainesville", "32604": "Gainesville",
   "32605": "Gainesville", "32606": "Gainesville", "32607": "Gainesville", "32608": "Gainesville",
   "32609": "Gainesville", "32610": "Gainesville", "32611": "Gainesville", "32612": "Gainesville",
   "32613": "Gainesville", "32614": "Gainesville", "32615": "Gainesville", "32616": "Gainesville",
   "32627": "Gainesville", "32635": "Gainesville", "32641": "Gainesville", "32653": "Gainesville",
 
-  // Clearwater area
-  "33755": "Clearwater", "33756": "Clearwater", "33759": "Clearwater", "33760": "Clearwater",
-  "33761": "Clearwater", "33762": "Clearwater", "33763": "Clearwater", "33764": "Clearwater",
-  "33765": "Clearwater", "33767": "Clearwater", "33770": "Clearwater", "33771": "Clearwater",
-  "33772": "Clearwater", "33773": "Clearwater", "33774": "Clearwater", "33776": "Clearwater",
-  "33777": "Clearwater", "33778": "Clearwater", "33781": "Clearwater", "33782": "Clearwater",
-  "33785": "Clearwater", "33786": "Clearwater",
+  // Additional major Florida cities and zip codes
+  // Pensacola area (Escambia County)
+  "32501": "Pensacola", "32502": "Pensacola", "32503": "Pensacola", "32504": "Pensacola",
+  "32505": "Pensacola", "32506": "Pensacola", "32507": "Pensacola", "32508": "Pensacola",
+  "32509": "Pensacola", "32511": "Pensacola", "32512": "Pensacola", "32513": "Pensacola",
+  "32514": "Pensacola", "32516": "Pensacola", "32520": "Pensacola", "32521": "Pensacola",
+  "32522": "Pensacola", "32523": "Pensacola", "32524": "Pensacola", "32526": "Pensacola",
+  "32534": "Pensacola", "32559": "Pensacola", "32561": "Pensacola", "32563": "Pensacola",
+  "32566": "Pensacola", "32570": "Pensacola", "32571": "Pensacola", "32572": "Pensacola",
+
+  // Naples area (Collier County)
+  "34101": "Naples", "34102": "Naples", "34103": "Naples", "34104": "Naples",
+  "34105": "Naples", "34106": "Naples", "34107": "Naples", "34108": "Naples",
+  "34109": "Naples", "34110": "Naples", "34112": "Naples", "34113": "Naples",
+  "34114": "Naples", "34116": "Naples", "34117": "Naples", "34119": "Naples",
+  "34120": "Naples", "34142": "Naples", "34145": "Naples",
+
+  // Fort Myers area (Lee County)
+  "33901": "Fort Myers", "33902": "Fort Myers", "33903": "Fort Myers", "33904": "Fort Myers",
+  "33905": "Fort Myers", "33906": "Fort Myers", "33907": "Fort Myers", "33908": "Fort Myers",
+  "33909": "Fort Myers", "33912": "Fort Myers", "33913": "Fort Myers", "33914": "Fort Myers",
+  "33916": "Fort Myers", "33917": "Fort Myers", "33918": "Fort Myers", "33919": "Fort Myers",
+  "33965": "Fort Myers", "33966": "Fort Myers", "33967": "Fort Myers", "33971": "Fort Myers",
+  "33972": "Fort Myers", "33973": "Fort Myers", "33974": "Fort Myers", "33976": "Fort Myers",
+  "33990": "Fort Myers", "33991": "Fort Myers", "33993": "Fort Myers", "33994": "Fort Myers",
+
+  // Sarasota area (Sarasota County)
+  "34201": "Sarasota", "34202": "Sarasota", "34203": "Sarasota", "34205": "Sarasota",
+  "34207": "Sarasota", "34208": "Sarasota", "34209": "Sarasota", "34210": "Sarasota",
+  "34211": "Sarasota", "34212": "Sarasota", "34215": "Sarasota", "34217": "Sarasota",
+  "34219": "Sarasota", "34221": "Sarasota", "34223": "Sarasota", "34224": "Sarasota",
+  "34228": "Sarasota", "34229": "Sarasota", "34230": "Sarasota", "34231": "Sarasota",
+  "34232": "Sarasota", "34233": "Sarasota", "34234": "Sarasota", "34235": "Sarasota",
+  "34236": "Sarasota", "34237": "Sarasota", "34238": "Sarasota", "34239": "Sarasota",
+  "34240": "Sarasota", "34241": "Sarasota", "34242": "Sarasota", "34243": "Sarasota",
+
+  // Lakeland area (Polk County)
+  "33801": "Lakeland", "33802": "Lakeland", "33803": "Lakeland", "33804": "Lakeland",
+  "33805": "Lakeland", "33806": "Lakeland", "33807": "Lakeland", "33809": "Lakeland",
+  "33810": "Lakeland", "33811": "Lakeland", "33812": "Lakeland", "33813": "Lakeland",
+  "33815": "Lakeland", "33823": "Lakeland", "33825": "Lakeland", "33827": "Lakeland",
+  "33830": "Lakeland", "33834": "Lakeland", "33835": "Lakeland", "33837": "Lakeland",
+  "33839": "Lakeland", "33840": "Lakeland", "33841": "Lakeland", "33843": "Lakeland",
+  "33844": "Lakeland", "33849": "Lakeland", "33850": "Lakeland", "33853": "Lakeland",
+  "33859": "Lakeland", "33860": "Lakeland", "33863": "Lakeland", "33868": "Lakeland",
+  "33880": "Lakeland", "33881": "Lakeland", "33884": "Lakeland", "33896": "Lakeland",
+
+  // Ocala area (Marion County)
+  "34470": "Ocala", "34471": "Ocala", "34472": "Ocala", "34473": "Ocala",
+  "34474": "Ocala", "34475": "Ocala", "34476": "Ocala", "34477": "Ocala",
+  "34478": "Ocala", "34479": "Ocala", "34480": "Ocala", "34481": "Ocala",
+  "34482": "Ocala", "34483": "Ocala", "34484": "Ocala", "34491": "Ocala",
+  "34492": "Ocala", "34714": "Ocala", "34731": "Ocala", "34739": "Ocala",
+
+  // Daytona Beach area (Volusia County)
+  "32114": "Daytona Beach", "32115": "Daytona Beach", "32116": "Daytona Beach", "32117": "Daytona Beach",
+  "32118": "Daytona Beach", "32119": "Daytona Beach", "32120": "Daytona Beach", "32121": "Daytona Beach",
+  "32122": "Daytona Beach", "32123": "Daytona Beach", "32124": "Daytona Beach", "32125": "Daytona Beach",
+  "32126": "Daytona Beach", "32127": "Daytona Beach", "32128": "Daytona Beach", "32129": "Daytona Beach",
+  "32130": "Daytona Beach", "32131": "Daytona Beach", "32132": "Daytona Beach", "32133": "Daytona Beach",
+  "32134": "Daytona Beach", "32135": "Daytona Beach", "32136": "Daytona Beach", "32141": "Daytona Beach",
+  "32142": "Daytona Beach", "32143": "Daytona Beach", "32145": "Daytona Beach", "32147": "Daytona Beach",
+  "32148": "Daytona Beach", "32149": "Daytona Beach", "32168": "Daytona Beach", "32169": "Daytona Beach",
+  "32174": "Daytona Beach", "32176": "Daytona Beach", "32180": "Daytona Beach", "32198": "Daytona Beach",
+
+  // Kissimmee area (Osceola County)
+  "34741": "Kissimmee", "34742": "Kissimmee", "34743": "Kissimmee", "34744": "Kissimmee",
+  "34745": "Kissimmee", "34746": "Kissimmee", "34747": "Kissimmee", "34758": "Kissimmee",
+  "34759": "Kissimmee", "34769": "Kissimmee", "34771": "Kissimmee", "34772": "Kissimmee",
+  "34773": "Kissimmee", "34777": "Kissimmee", "34787": "Kissimmee", "34788": "Kissimmee",
+
+  // Deltona area
+  "32725": "Deltona", "32728": "Deltona", "32738": "Deltona", "32763": "Deltona",
+
+  // Palm Coast area (Flagler County)
+  "32135": "Palm Coast", "32137": "Palm Coast", "32164": "Palm Coast",
+
+  // Cape Coral area (Lee County)
+  "33904": "Cape Coral", "33909": "Cape Coral", "33914": "Cape Coral", "33915": "Cape Coral",
+  "33990": "Cape Coral", "33991": "Cape Coral", "33993": "Cape Coral", "33994": "Cape Coral",
+
+  // Port St. Lucie area (St. Lucie County)
+  "34952": "Port St. Lucie", "34953": "Port St. Lucie", "34983": "Port St. Lucie", "34984": "Port St. Lucie",
+  "34986": "Port St. Lucie", "34987": "Port St. Lucie", "34988": "Port St. Lucie",
+
+  // Pompano Beach area
+  "33060": "Pompano Beach", "33061": "Pompano Beach", "33062": "Pompano Beach", "33063": "Pompano Beach",
+  "33064": "Pompano Beach", "33065": "Pompano Beach", "33066": "Pompano Beach", "33067": "Pompano Beach",
+  "33068": "Pompano Beach", "33069": "Pompano Beach", "33071": "Pompano Beach", "33072": "Pompano Beach",
+  "33073": "Pompano Beach", "33074": "Pompano Beach", "33076": "Pompano Beach", "33077": "Pompano Beach",
+
+  // Coral Springs area
+  "33065": "Coral Springs", "33071": "Coral Springs", "33075": "Coral Springs", "33076": "Coral Springs",
+
+  // Miramar area
+  "33023": "Miramar", "33025": "Miramar", "33027": "Miramar", "33029": "Miramar",
+
+  // Sunrise area
+  "33313": "Sunrise", "33322": "Sunrise", "33323": "Sunrise", "33351": "Sunrise",
+
+  // Plantation area
+  "33317": "Plantation", "33322": "Plantation", "33324": "Plantation", "33325": "Plantation",
+
+  // Hollywood area
+  "33019": "Hollywood", "33020": "Hollywood", "33021": "Hollywood", "33023": "Hollywood",
+  "33024": "Hollywood", "33025": "Hollywood", "33026": "Hollywood", "33027": "Hollywood",
+  "33028": "Hollywood", "33029": "Hollywood", "33081": "Hollywood", "33083": "Hollywood",
+  "33084": "Hollywood", "33312": "Hollywood", "33314": "Hollywood",
+
+  // Hialeah area
+  "33010": "Hialeah", "33012": "Hialeah", "33013": "Hialeah", "33014": "Hialeah",
+  "33015": "Hialeah", "33016": "Hialeah", "33017": "Hialeah", "33018": "Hialeah",
+
+  // Homestead area
+  "33030": "Homestead", "33031": "Homestead", "33032": "Homestead", "33033": "Homestead",
+  "33034": "Homestead", "33035": "Homestead", "33039": "Homestead",
+
+  // Key West area (Monroe County)
+  "33040": "Key West", "33041": "Key West", "33042": "Key West", "33043": "Key West",
+  "33044": "Key West", "33045": "Key West", "33050": "Key West", "33051": "Key West",
+  "33052": "Key West", "33070": "Key West",
+
+  // Boca Raton area
+  "33427": "Boca Raton", "33428": "Boca Raton", "33429": "Boca Raton", "33431": "Boca Raton",
+  "33432": "Boca Raton", "33433": "Boca Raton", "33434": "Boca Raton", "33486": "Boca Raton",
+  "33487": "Boca Raton", "33496": "Boca Raton", "33497": "Boca Raton", "33498": "Boca Raton",
+
+  // Delray Beach area
+  "33444": "Delray Beach", "33445": "Delray Beach", "33446": "Delray Beach", "33447": "Delray Beach",
+  "33448": "Delray Beach", "33483": "Delray Beach", "33484": "Delray Beach",
+
+  // Boynton Beach area
+  "33424": "Boynton Beach", "33425": "Boynton Beach", "33426": "Boynton Beach", "33435": "Boynton Beach",
+  "33436": "Boynton Beach", "33437": "Boynton Beach", "33472": "Boynton Beach", "33473": "Boynton Beach",
+  "33474": "Boynton Beach", "33493": "Boynton Beach", "33494": "Boynton Beach",
+
+  // Deerfield Beach area
+  "33441": "Deerfield Beach", "33442": "Deerfield Beach", "33443": "Deerfield Beach",
+
+  // Jupiter area
+  "33458": "Jupiter", "33468": "Jupiter", "33469": "Jupiter", "33477": "Jupiter", "33478": "Jupiter",
+
+  // Stuart area
+  "34994": "Stuart", "34995": "Stuart", "34996": "Stuart", "34997": "Stuart",
+
+  // Vero Beach area
+  "32960": "Vero Beach", "32961": "Vero Beach", "32962": "Vero Beach", "32963": "Vero Beach",
+  "32964": "Vero Beach", "32965": "Vero Beach", "32966": "Vero Beach", "32967": "Vero Beach",
+  "32968": "Vero Beach", "32969": "Vero Beach",
+
+  // Melbourne area (Brevard County)
+  "32901": "Melbourne", "32902": "Melbourne", "32903": "Melbourne", "32904": "Melbourne",
+  "32905": "Melbourne", "32906": "Melbourne", "32907": "Melbourne", "32908": "Melbourne",
+  "32909": "Melbourne", "32910": "Melbourne", "32911": "Melbourne", "32912": "Melbourne",
+  "32919": "Melbourne", "32934": "Melbourne", "32935": "Melbourne", "32936": "Melbourne",
+  "32937": "Melbourne", "32940": "Melbourne", "32941": "Melbourne", "32949": "Melbourne",
+  "32950": "Melbourne", "32951": "Melbourne", "32952": "Melbourne", "32953": "Melbourne",
+  "32954": "Melbourne", "32955": "Melbourne"
 };
 
 // ... keep existing code (mockHeatData object and chartConfig)
@@ -289,6 +440,90 @@ const mockHeatData: Record<string, HeatData[]> = {
     { date: "Oct", temperature: 83, heatIndex: 86, acUsage: 68, city: "Clearwater" },
     { date: "Nov", temperature: 77, heatIndex: 79, acUsage: 56, city: "Clearwater" },
     { date: "Dec", temperature: 71, heatIndex: 73, acUsage: 46, city: "Clearwater" },
+  ],
+  "Pensacola": [
+    { date: "Jan", temperature: 61, heatIndex: 63, acUsage: 30, city: "Pensacola" },
+    { date: "Feb", temperature: 64, heatIndex: 66, acUsage: 35, city: "Pensacola" },
+    { date: "Mar", temperature: 70, heatIndex: 72, acUsage: 45, city: "Pensacola" },
+    { date: "Apr", temperature: 76, heatIndex: 79, acUsage: 55, city: "Pensacola" },
+    { date: "May", temperature: 82, heatIndex: 87, acUsage: 70, city: "Pensacola" },
+    { date: "Jun", temperature: 87, heatIndex: 94, acUsage: 82, city: "Pensacola" },
+    { date: "Jul", temperature: 89, heatIndex: 99, acUsage: 90, city: "Pensacola" },
+    { date: "Aug", temperature: 88, heatIndex: 98, acUsage: 88, city: "Pensacola" },
+    { date: "Sep", temperature: 85, heatIndex: 90, acUsage: 75, city: "Pensacola" },
+    { date: "Oct", temperature: 78, heatIndex: 81, acUsage: 60, city: "Pensacola" },
+    { date: "Nov", temperature: 70, heatIndex: 72, acUsage: 40, city: "Pensacola" },
+    { date: "Dec", temperature: 63, heatIndex: 65, acUsage: 30, city: "Pensacola" },
+  ],
+  "Naples": [
+    { date: "Jan", temperature: 73, heatIndex: 75, acUsage: 58, city: "Naples" },
+    { date: "Feb", temperature: 75, heatIndex: 77, acUsage: 63, city: "Naples" },
+    { date: "Mar", temperature: 79, heatIndex: 82, acUsage: 69, city: "Naples" },
+    { date: "Apr", temperature: 82, heatIndex: 86, acUsage: 74, city: "Naples" },
+    { date: "May", temperature: 85, heatIndex: 91, acUsage: 79, city: "Naples" },
+    { date: "Jun", temperature: 88, heatIndex: 95, acUsage: 89, city: "Naples" },
+    { date: "Jul", temperature: 90, heatIndex: 102, acUsage: 94, city: "Naples" },
+    { date: "Aug", temperature: 90, heatIndex: 103, acUsage: 94, city: "Naples" },
+    { date: "Sep", temperature: 88, heatIndex: 95, acUsage: 84, city: "Naples" },
+    { date: "Oct", temperature: 84, heatIndex: 88, acUsage: 74, city: "Naples" },
+    { date: "Nov", temperature: 79, heatIndex: 81, acUsage: 64, city: "Naples" },
+    { date: "Dec", temperature: 75, heatIndex: 77, acUsage: 58, city: "Naples" },
+  ],
+  "Fort Myers": [
+    { date: "Jan", temperature: 72, heatIndex: 74, acUsage: 56, city: "Fort Myers" },
+    { date: "Feb", temperature: 74, heatIndex: 76, acUsage: 61, city: "Fort Myers" },
+    { date: "Mar", temperature: 78, heatIndex: 81, acUsage: 67, city: "Fort Myers" },
+    { date: "Apr", temperature: 81, heatIndex: 85, acUsage: 72, city: "Fort Myers" },
+    { date: "May", temperature: 84, heatIndex: 90, acUsage: 77, city: "Fort Myers" },
+    { date: "Jun", temperature: 87, heatIndex: 94, acUsage: 87, city: "Fort Myers" },
+    { date: "Jul", temperature: 89, heatIndex: 101, acUsage: 92, city: "Fort Myers" },
+    { date: "Aug", temperature: 89, heatIndex: 102, acUsage: 92, city: "Fort Myers" },
+    { date: "Sep", temperature: 87, heatIndex: 94, acUsage: 82, city: "Fort Myers" },
+    { date: "Oct", temperature: 83, heatIndex: 87, acUsage: 72, city: "Fort Myers" },
+    { date: "Nov", temperature: 78, heatIndex: 80, acUsage: 62, city: "Fort Myers" },
+    { date: "Dec", temperature: 74, heatIndex: 76, acUsage: 56, city: "Fort Myers" },
+  ],
+  "Sarasota": [
+    { date: "Jan", temperature: 70, heatIndex: 72, acUsage: 48, city: "Sarasota" },
+    { date: "Feb", temperature: 72, heatIndex: 74, acUsage: 53, city: "Sarasota" },
+    { date: "Mar", temperature: 77, heatIndex: 79, acUsage: 61, city: "Sarasota" },
+    { date: "Apr", temperature: 80, heatIndex: 84, acUsage: 68, city: "Sarasota" },
+    { date: "May", temperature: 85, heatIndex: 90, acUsage: 78, city: "Sarasota" },
+    { date: "Jun", temperature: 88, heatIndex: 95, acUsage: 88, city: "Sarasota" },
+    { date: "Jul", temperature: 90, heatIndex: 100, acUsage: 94, city: "Sarasota" },
+    { date: "Aug", temperature: 89, heatIndex: 101, acUsage: 94, city: "Sarasota" },
+    { date: "Sep", temperature: 87, heatIndex: 93, acUsage: 81, city: "Sarasota" },
+    { date: "Oct", temperature: 82, heatIndex: 85, acUsage: 68, city: "Sarasota" },
+    { date: "Nov", temperature: 76, heatIndex: 78, acUsage: 56, city: "Sarasota" },
+    { date: "Dec", temperature: 72, heatIndex: 74, acUsage: 48, city: "Sarasota" },
+  ],
+  "Lakeland": [
+    { date: "Jan", temperature: 68, heatIndex: 70, acUsage: 45, city: "Lakeland" },
+    { date: "Feb", temperature: 71, heatIndex: 73, acUsage: 50, city: "Lakeland" },
+    { date: "Mar", temperature: 76, heatIndex: 78, acUsage: 58, city: "Lakeland" },
+    { date: "Apr", temperature: 80, heatIndex: 83, acUsage: 66, city: "Lakeland" },
+    { date: "May", temperature: 85, heatIndex: 90, acUsage: 78, city: "Lakeland" },
+    { date: "Jun", temperature: 89, heatIndex: 97, acUsage: 88, city: "Lakeland" },
+    { date: "Jul", temperature: 91, heatIndex: 103, acUsage: 95, city: "Lakeland" },
+    { date: "Aug", temperature: 90, heatIndex: 102, acUsage: 94, city: "Lakeland" },
+    { date: "Sep", temperature: 87, heatIndex: 93, acUsage: 80, city: "Lakeland" },
+    { date: "Oct", temperature: 82, heatIndex: 85, acUsage: 66, city: "Lakeland" },
+    { date: "Nov", temperature: 76, heatIndex: 78, acUsage: 53, city: "Lakeland" },
+    { date: "Dec", temperature: 70, heatIndex: 72, acUsage: 45, city: "Lakeland" },
+  ],
+  "Ocala": [
+    { date: "Jan", temperature: 65, heatIndex: 67, acUsage: 40, city: "Ocala" },
+    { date: "Feb", temperature: 68, heatIndex: 70, acUsage: 45, city: "Ocala" },
+    { date: "Mar", temperature: 74, heatIndex: 76, acUsage: 55, city: "Ocala" },
+    { date: "Apr", temperature: 79, heatIndex: 82, acUsage: 65, city: "Ocala" },
+    { date: "May", temperature: 84, heatIndex: 89, acUsage: 76, city: "Ocala" },
+    { date: "Jun", temperature: 88, heatIndex: 95, acUsage: 86, city: "Ocala" },
+    { date: "Jul", temperature: 90, heatIndex: 101, acUsage: 93, city: "Ocala" },
+    { date: "Aug", temperature: 89, heatIndex: 100, acUsage: 92, city: "Ocala" },
+    { date: "Sep", temperature: 86, heatIndex: 91, acUsage: 79, city: "Ocala" },
+    { date: "Oct", temperature: 80, heatIndex: 83, acUsage: 65, city: "Ocala" },
+    { date: "Nov", temperature: 73, heatIndex: 75, acUsage: 50, city: "Ocala" },
+    { date: "Dec", temperature: 67, heatIndex: 69, acUsage: 40, city: "Ocala" },
   ]
 };
 
