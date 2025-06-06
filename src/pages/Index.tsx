@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Search, MapPin, Phone, Star, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import BusinessCard from "@/components/BusinessCard";
 import PricingSection from "@/components/PricingSection";
 import HeroSection from "@/components/HeroSection";
+import LocalRebateFinder from "@/components/LocalRebateFinder";
 
 // Mock data for businesses
 const businesses = [
@@ -89,15 +89,17 @@ const Index = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">AC</span>
-              </div>
-              <span className="text-xl font-bold text-gray-900">AC Repair Near Me</span>
+              <img 
+                src="/lovable-uploads/199e8012-a0ff-42e4-bcb0-b5aa38e394c5.png" 
+                alt="AC Repair Near Me" 
+                className="h-10 w-auto"
+              />
             </div>
             <nav className="hidden md:flex space-x-6">
               <a href="#" className="text-gray-600 hover:text-blue-600 transition-colors">Find Contractors</a>
               <a href="#pricing" className="text-gray-600 hover:text-blue-600 transition-colors">List Your Business</a>
               <a href="#advertising" className="text-gray-600 hover:text-blue-600 transition-colors">Advertise</a>
+              <a href="/faq" className="text-gray-600 hover:text-blue-600 transition-colors">FAQ</a>
               <Button variant="outline">Sign In</Button>
             </nav>
           </div>
@@ -224,6 +226,9 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Local Rebate Finder */}
+      <LocalRebateFinder />
+
       {/* Pricing Section */}
       <PricingSection />
 
@@ -233,10 +238,11 @@ const Index = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center space-x-2 mb-4">
-                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-sm">AC</span>
-                </div>
-                <span className="text-xl font-bold">AC Repair Near Me</span>
+                <img 
+                  src="/lovable-uploads/199e8012-a0ff-42e4-bcb0-b5aa38e394c5.png" 
+                  alt="AC Repair Near Me" 
+                  className="h-8 w-auto"
+                />
               </div>
               <p className="text-gray-400">
                 Florida's premier directory for AC repair and HVAC services.
@@ -248,6 +254,7 @@ const Index = () => {
                 <li><a href="#" className="hover:text-white transition-colors">Find Contractors</a></li>
                 <li><a href="#" className="hover:text-white transition-colors">Emergency Service</a></li>
                 <li><a href="#" className="hover:text-white transition-colors">Reviews</a></li>
+                <li><a href="/faq" className="hover:text-white transition-colors">FAQ</a></li>
               </ul>
             </div>
             <div>
