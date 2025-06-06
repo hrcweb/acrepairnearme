@@ -1,8 +1,8 @@
-
 import { Phone, MapPin, Star, CheckCircle, ExternalLink } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Link } from "react-router-dom";
 
 interface Business {
   id: number;
@@ -35,7 +35,11 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
             />
             <div className="flex-1">
               <div className="flex items-center space-x-2">
-                <h3 className="text-xl font-semibold text-gray-900">{business.name}</h3>
+                <Link to={`/business/${business.id}`}>
+                  <h3 className="text-xl font-semibold text-gray-900 hover:text-blue-600 transition-colors">
+                    {business.name}
+                  </h3>
+                </Link>
                 {business.verified && (
                   <CheckCircle className="w-5 h-5 text-green-500" />
                 )}
@@ -54,14 +58,16 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
               </div>
             </div>
           </div>
-          <Button 
-            variant="outline" 
-            size="sm"
-            className="hover:bg-blue-50 hover:border-blue-300"
-          >
-            <ExternalLink className="w-4 h-4 mr-1" />
-            View Profile
-          </Button>
+          <Link to={`/business/${business.id}`}>
+            <Button 
+              variant="outline" 
+              size="sm"
+              className="hover:bg-blue-50 hover:border-blue-300"
+            >
+              <ExternalLink className="w-4 h-4 mr-1" />
+              View Profile
+            </Button>
+          </Link>
         </div>
       </CardHeader>
       <CardContent>
