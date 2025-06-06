@@ -10,8 +10,10 @@ import BusinessCard from "@/components/BusinessCard";
 import PricingSection from "@/components/PricingSection";
 import HeroSection from "@/components/HeroSection";
 import LocalRebateFinder from "@/components/LocalRebateFinder";
+import HeatIndexVisualization from "@/components/HeatIndexVisualization";
 import SubscriptionButton from "@/components/SubscriptionButton";
 import ManageSubscriptionButton from "@/components/ManageSubscriptionButton";
+import AdvertisementButton from "@/components/AdvertisementButton";
 import { useAuth } from "@/contexts/AuthContext";
 
 // Mock data for businesses
@@ -219,15 +221,29 @@ const Index = () => {
               </Card>
 
               {/* Banner Ad Space */}
-              <Card className="bg-gray-100 border-gray-300">
-                <CardContent className="p-8 text-center">
-                  <div className="text-gray-500 mb-2">Advertisement</div>
-                  <div className="h-32 bg-gray-200 rounded-lg flex items-center justify-center">
-                    <p className="text-gray-600">Banner Ad Space</p>
+              <Card className="bg-gradient-to-br from-orange-50 to-red-50 border-orange-200" id="advertising">
+                <CardContent className="p-6 text-center">
+                  <div className="text-orange-700 mb-2 font-semibold">Premium Advertisement</div>
+                  <div className="h-32 bg-gradient-to-r from-orange-100 to-red-100 rounded-lg flex items-center justify-center mb-4">
+                    <div className="text-center">
+                      <h3 className="font-bold text-orange-800 mb-1">Your Business Here</h3>
+                      <p className="text-sm text-orange-700">Reach 10,000+ customers monthly</p>
+                    </div>
                   </div>
-                  <Button variant="outline" className="mt-4" size="sm">
-                    Advertise Here
-                  </Button>
+                  <AdvertisementButton 
+                    adType="banner" 
+                    price={199} 
+                    className="w-full bg-orange-600 hover:bg-orange-700 mb-2"
+                  >
+                    Get Banner Ad - $199/month
+                  </AdvertisementButton>
+                  <AdvertisementButton 
+                    adType="sponsored" 
+                    price={99} 
+                    className="w-full bg-orange-500 hover:bg-orange-600"
+                  >
+                    Get Sponsored Listing - $99/month
+                  </AdvertisementButton>
                 </CardContent>
               </Card>
 
@@ -251,6 +267,9 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* Heat Index Visualization */}
+      <HeatIndexVisualization />
 
       {/* Local Rebate Finder */}
       <LocalRebateFinder />
