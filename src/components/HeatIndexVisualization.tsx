@@ -1,10 +1,9 @@
 import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Thermometer, Droplets, Wind, Sun, Search, MapPin, Star, CheckCircle } from 'lucide-react';
+import { Thermometer, Droplets, Wind, Sun, MapPin, Star, CheckCircle } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface WeatherData {
@@ -136,17 +135,7 @@ const generateWeatherData = (location: string): WeatherData => {
 
 const HeatIndexVisualization = () => {
   const [selectedLocation, setSelectedLocation] = useState<string>('');
-  const [searchTerm, setSearchTerm] = useState<string>('');
   const [weatherData, setWeatherData] = useState<WeatherData | null>(null);
-
-  const filteredLocations = useMemo(() => {
-    if (!searchTerm) return floridaLocations;
-    return floridaLocations.filter(location => 
-      location.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      location.zipCode.includes(searchTerm) ||
-      location.county.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-  }, [searchTerm]);
 
   const handleLocationSelect = (value: string) => {
     setSelectedLocation(value);
@@ -178,39 +167,24 @@ const HeatIndexVisualization = () => {
         </p>
       </div>
 
-      {/* Search and Selection */}
-      <Card>
+      {/* Location Selection Only */}
+      <Card id="search-section">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <MapPin className="w-5 h-5" />
             Select Your Florida Location
           </CardTitle>
           <CardDescription>
-            Search by city name, zip code, or county to get current heat index data
+            Choose a location to get current heat index data
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex gap-4">
-            <div className="flex-1">
-              <Input
-                placeholder="Search by city, zip code, or county..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full"
-              />
-            </div>
-            <Button variant="outline" className="px-6">
-              <Search className="w-4 h-4 mr-2" />
-              Search
-            </Button>
-          </div>
-          
+        <CardContent>
           <Select value={selectedLocation} onValueChange={handleLocationSelect}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Choose a location from the list" />
             </SelectTrigger>
             <SelectContent>
-              {filteredLocations.map((location) => (
+              {floridaLocations.map((location) => (
                 <SelectItem 
                   key={`${location.zipCode}-${location.city}`} 
                   value={`${location.city}, ${location.zipCode}`}
