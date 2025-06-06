@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -17,6 +16,139 @@ interface HeatData {
   city: string;
 }
 
+// Comprehensive Florida zip code to city mapping
+const floridaZipCodes: Record<string, string> = {
+  // Miami-Dade County
+  "33101": "Miami", "33102": "Miami", "33109": "Miami", "33111": "Miami", "33112": "Miami",
+  "33114": "Miami", "33116": "Miami", "33119": "Miami", "33122": "Miami", "33125": "Miami",
+  "33126": "Miami", "33127": "Miami", "33128": "Miami", "33129": "Miami", "33130": "Miami",
+  "33131": "Miami", "33132": "Miami", "33133": "Miami", "33134": "Miami", "33135": "Miami",
+  "33136": "Miami", "33137": "Miami", "33138": "Miami", "33139": "Miami", "33140": "Miami",
+  "33141": "Miami", "33142": "Miami", "33143": "Miami", "33144": "Miami", "33145": "Miami",
+  "33146": "Miami", "33147": "Miami", "33149": "Miami", "33150": "Miami", "33151": "Miami",
+  "33152": "Miami", "33153": "Miami", "33154": "Miami", "33155": "Miami", "33156": "Miami",
+  "33157": "Miami", "33158": "Miami", "33159": "Miami", "33160": "Miami", "33161": "Miami",
+  "33162": "Miami", "33163": "Miami", "33164": "Miami", "33165": "Miami", "33166": "Miami",
+  "33167": "Miami", "33168": "Miami", "33169": "Miami", "33170": "Miami", "33172": "Miami",
+  "33173": "Miami", "33174": "Miami", "33175": "Miami", "33176": "Miami", "33177": "Miami",
+  "33178": "Miami", "33179": "Miami", "33180": "Miami", "33181": "Miami", "33182": "Miami",
+  "33183": "Miami", "33184": "Miami", "33185": "Miami", "33186": "Miami", "33187": "Miami",
+  "33188": "Miami", "33189": "Miami", "33190": "Miami", "33193": "Miami", "33194": "Miami",
+  "33195": "Miami", "33196": "Miami", "33197": "Miami", "33199": "Miami",
+  
+  // Fort Lauderdale area
+  "33301": "Fort Lauderdale", "33302": "Fort Lauderdale", "33303": "Fort Lauderdale", 
+  "33304": "Fort Lauderdale", "33305": "Fort Lauderdale", "33306": "Fort Lauderdale",
+  "33307": "Fort Lauderdale", "33308": "Fort Lauderdale", "33309": "Fort Lauderdale",
+  "33310": "Fort Lauderdale", "33311": "Fort Lauderdale", "33312": "Fort Lauderdale",
+  "33313": "Fort Lauderdale", "33314": "Fort Lauderdale", "33315": "Fort Lauderdale",
+  "33316": "Fort Lauderdale", "33317": "Fort Lauderdale", "33318": "Fort Lauderdale",
+  "33319": "Fort Lauderdale", "33320": "Fort Lauderdale", "33321": "Fort Lauderdale",
+  "33322": "Fort Lauderdale", "33323": "Fort Lauderdale", "33324": "Fort Lauderdale",
+  "33325": "Fort Lauderdale", "33326": "Fort Lauderdale", "33327": "Fort Lauderdale",
+  "33328": "Fort Lauderdale", "33329": "Fort Lauderdale", "33330": "Fort Lauderdale",
+  "33331": "Fort Lauderdale", "33332": "Fort Lauderdale", "33334": "Fort Lauderdale",
+  "33335": "Fort Lauderdale", "33336": "Fort Lauderdale", "33337": "Fort Lauderdale",
+  "33338": "Fort Lauderdale", "33339": "Fort Lauderdale", "33340": "Fort Lauderdale",
+  "33345": "Fort Lauderdale", "33346": "Fort Lauderdale", "33348": "Fort Lauderdale",
+  "33349": "Fort Lauderdale", "33351": "Fort Lauderdale", "33355": "Fort Lauderdale",
+  "33359": "Fort Lauderdale", "33388": "Fort Lauderdale", "33394": "Fort Lauderdale",
+
+  // Orlando area
+  "32801": "Orlando", "32802": "Orlando", "32803": "Orlando", "32804": "Orlando",
+  "32805": "Orlando", "32806": "Orlando", "32807": "Orlando", "32808": "Orlando",
+  "32809": "Orlando", "32810": "Orlando", "32811": "Orlando", "32812": "Orlando",
+  "32814": "Orlando", "32815": "Orlando", "32816": "Orlando", "32817": "Orlando",
+  "32818": "Orlando", "32819": "Orlando", "32820": "Orlando", "32821": "Orlando",
+  "32822": "Orlando", "32824": "Orlando", "32825": "Orlando", "32826": "Orlando",
+  "32827": "Orlando", "32828": "Orlando", "32829": "Orlando", "32830": "Orlando",
+  "32831": "Orlando", "32832": "Orlando", "32833": "Orlando", "32834": "Orlando",
+  "32835": "Orlando", "32836": "Orlando", "32837": "Orlando", "32839": "Orlando",
+  "32853": "Orlando", "32854": "Orlando", "32855": "Orlando", "32856": "Orlando",
+  "32857": "Orlando", "32858": "Orlando", "32859": "Orlando", "32860": "Orlando",
+  "32861": "Orlando", "32862": "Orlando", "32867": "Orlando", "32868": "Orlando",
+  "32869": "Orlando", "32872": "Orlando", "32877": "Orlando", "32878": "Orlando",
+  "32885": "Orlando", "32886": "Orlando", "32887": "Orlando", "32891": "Orlando",
+  "32893": "Orlando", "32896": "Orlando", "32897": "Orlando", "32898": "Orlando",
+
+  // Tampa area
+  "33601": "Tampa", "33602": "Tampa", "33603": "Tampa", "33604": "Tampa",
+  "33605": "Tampa", "33606": "Tampa", "33607": "Tampa", "33608": "Tampa",
+  "33609": "Tampa", "33610": "Tampa", "33611": "Tampa", "33612": "Tampa",
+  "33613": "Tampa", "33614": "Tampa", "33615": "Tampa", "33616": "Tampa",
+  "33617": "Tampa", "33618": "Tampa", "33619": "Tampa", "33620": "Tampa",
+  "33621": "Tampa", "33622": "Tampa", "33623": "Tampa", "33624": "Tampa",
+  "33625": "Tampa", "33626": "Tampa", "33629": "Tampa", "33630": "Tampa",
+  "33631": "Tampa", "33633": "Tampa", "33634": "Tampa", "33635": "Tampa",
+  "33637": "Tampa", "33647": "Tampa", "33672": "Tampa", "33673": "Tampa",
+  "33674": "Tampa", "33675": "Tampa", "33677": "Tampa", "33679": "Tampa",
+  "33680": "Tampa", "33681": "Tampa", "33682": "Tampa", "33684": "Tampa",
+  "33685": "Tampa", "33686": "Tampa", "33687": "Tampa", "33688": "Tampa",
+  "33689": "Tampa", "33694": "Tampa", "33697": "Tampa", "33698": "Tampa",
+
+  // Jacksonville area
+  "32099": "Jacksonville", "32201": "Jacksonville", "32202": "Jacksonville", "32203": "Jacksonville",
+  "32204": "Jacksonville", "32205": "Jacksonville", "32206": "Jacksonville", "32207": "Jacksonville",
+  "32208": "Jacksonville", "32209": "Jacksonville", "32210": "Jacksonville", "32211": "Jacksonville",
+  "32212": "Jacksonville", "32214": "Jacksonville", "32216": "Jacksonville", "32217": "Jacksonville",
+  "32218": "Jacksonville", "32219": "Jacksonville", "32220": "Jacksonville", "32221": "Jacksonville",
+  "32222": "Jacksonville", "32223": "Jacksonville", "32224": "Jacksonville", "32225": "Jacksonville",
+  "32226": "Jacksonville", "32227": "Jacksonville", "32228": "Jacksonville", "32229": "Jacksonville",
+  "32231": "Jacksonville", "32232": "Jacksonville", "32233": "Jacksonville", "32234": "Jacksonville",
+  "32235": "Jacksonville", "32236": "Jacksonville", "32238": "Jacksonville", "32239": "Jacksonville",
+  "32241": "Jacksonville", "32244": "Jacksonville", "32245": "Jacksonville", "32246": "Jacksonville",
+  "32247": "Jacksonville", "32250": "Jacksonville", "32254": "Jacksonville", "32255": "Jacksonville",
+  "32256": "Jacksonville", "32257": "Jacksonville", "32258": "Jacksonville", "32259": "Jacksonville",
+  "32260": "Jacksonville", "32266": "Jacksonville", "32267": "Jacksonville", "32277": "Jacksonville",
+
+  // St. Petersburg area
+  "33701": "St. Petersburg", "33702": "St. Petersburg", "33703": "St. Petersburg", "33704": "St. Petersburg",
+  "33705": "St. Petersburg", "33706": "St. Petersburg", "33707": "St. Petersburg", "33708": "St. Petersburg",
+  "33709": "St. Petersburg", "33710": "St. Petersburg", "33711": "St. Petersburg", "33712": "St. Petersburg",
+  "33713": "St. Petersburg", "33714": "St. Petersburg", "33715": "St. Petersburg", "33716": "St. Petersburg",
+  "33730": "St. Petersburg", "33731": "St. Petersburg", "33732": "St. Petersburg", "33733": "St. Petersburg",
+  "33734": "St. Petersburg", "33736": "St. Petersburg", "33740": "St. Petersburg", "33741": "St. Petersburg",
+  "33742": "St. Petersburg", "33743": "St. Petersburg", "33747": "St. Petersburg", "33755": "St. Petersburg",
+  "33756": "St. Petersburg", "33757": "St. Petersburg", "33758": "St. Petersburg", "33759": "St. Petersburg",
+  "33760": "St. Petersburg", "33761": "St. Petersburg", "33762": "St. Petersburg", "33763": "St. Petersburg",
+  "33764": "St. Petersburg", "33765": "St. Petersburg", "33767": "St. Petersburg", "33770": "St. Petersburg",
+  "33771": "St. Petersburg", "33772": "St. Petersburg", "33773": "St. Petersburg", "33774": "St. Petersburg",
+  "33776": "St. Petersburg", "33777": "St. Petersburg", "33778": "St. Petersburg", "33781": "St. Petersburg",
+  "33782": "St. Petersburg", "33785": "St. Petersburg", "33786": "St. Petersburg",
+
+  // West Palm Beach area
+  "33401": "West Palm Beach", "33402": "West Palm Beach", "33403": "West Palm Beach", "33404": "West Palm Beach",
+  "33405": "West Palm Beach", "33406": "West Palm Beach", "33407": "West Palm Beach", "33408": "West Palm Beach",
+  "33409": "West Palm Beach", "33410": "West Palm Beach", "33411": "West Palm Beach", "33412": "West Palm Beach",
+  "33413": "West Palm Beach", "33414": "West Palm Beach", "33415": "West Palm Beach", "33416": "West Palm Beach",
+  "33417": "West Palm Beach", "33418": "West Palm Beach", "33426": "West Palm Beach", "33480": "West Palm Beach",
+  "33481": "West Palm Beach", "33482": "West Palm Beach", "33483": "West Palm Beach", "33484": "West Palm Beach",
+  "33486": "West Palm Beach", "33487": "West Palm Beach",
+
+  // Tallahassee area
+  "32301": "Tallahassee", "32302": "Tallahassee", "32303": "Tallahassee", "32304": "Tallahassee",
+  "32305": "Tallahassee", "32306": "Tallahassee", "32307": "Tallahassee", "32308": "Tallahassee",
+  "32309": "Tallahassee", "32310": "Tallahassee", "32311": "Tallahassee", "32312": "Tallahassee",
+  "32313": "Tallahassee", "32314": "Tallahassee", "32315": "Tallahassee", "32316": "Tallahassee",
+  "32317": "Tallahassee", "32318": "Tallahassee", "32395": "Tallahassee", "32399": "Tallahassee",
+
+  // Gainesville area
+  "32601": "Gainesville", "32602": "Gainesville", "32603": "Gainesville", "32604": "Gainesville",
+  "32605": "Gainesville", "32606": "Gainesville", "32607": "Gainesville", "32608": "Gainesville",
+  "32609": "Gainesville", "32610": "Gainesville", "32611": "Gainesville", "32612": "Gainesville",
+  "32613": "Gainesville", "32614": "Gainesville", "32615": "Gainesville", "32616": "Gainesville",
+  "32627": "Gainesville", "32635": "Gainesville", "32641": "Gainesville", "32653": "Gainesville",
+
+  // Clearwater area
+  "33755": "Clearwater", "33756": "Clearwater", "33759": "Clearwater", "33760": "Clearwater",
+  "33761": "Clearwater", "33762": "Clearwater", "33763": "Clearwater", "33764": "Clearwater",
+  "33765": "Clearwater", "33767": "Clearwater", "33770": "Clearwater", "33771": "Clearwater",
+  "33772": "Clearwater", "33773": "Clearwater", "33774": "Clearwater", "33776": "Clearwater",
+  "33777": "Clearwater", "33778": "Clearwater", "33781": "Clearwater", "33782": "Clearwater",
+  "33785": "Clearwater", "33786": "Clearwater",
+};
+
+// ... keep existing code (mockHeatData object and chartConfig)
 const mockHeatData: Record<string, HeatData[]> = {
   "Miami": [
     { date: "Jan", temperature: 76, heatIndex: 78, acUsage: 65, city: "Miami" },
@@ -187,16 +319,29 @@ const HeatIndexVisualization = () => {
   const handleCitySearch = () => {
     if (!searchCity.trim()) return;
     
+    const searchTerm = searchCity.toLowerCase().trim();
+    
+    // Check if it's a zip code
+    const cityFromZip = floridaZipCodes[searchTerm];
+    if (cityFromZip) {
+      setSelectedCity(cityFromZip);
+      setSearchCity(""); // Clear search after successful search
+      return;
+    }
+    
+    // Check if it's a city name
     const cityKey = Object.keys(mockHeatData).find(
-      city => city.toLowerCase().includes(searchCity.toLowerCase().trim())
+      city => city.toLowerCase().includes(searchTerm)
     );
     
     if (cityKey) {
       setSelectedCity(cityKey);
       setSearchCity(""); // Clear search after successful search
     } else {
-      // Show alert if city not found
-      alert(`City "${searchCity}" not found. Available cities: ${Object.keys(mockHeatData).join(", ")}`);
+      // Show alert with available options
+      const availableCities = Object.keys(mockHeatData).join(", ");
+      const sampleZips = Object.keys(floridaZipCodes).slice(0, 10).join(", ");
+      alert(`"${searchCity}" not found. Try:\nCities: ${availableCities}\nOr any Florida zip code (e.g., ${sampleZips}...)`);
     }
   };
 
@@ -241,7 +386,7 @@ const HeatIndexVisualization = () => {
                 <div className="flex items-center space-x-2 flex-1">
                   <MapPin className="w-5 h-5 text-blue-600" />
                   <Input
-                    placeholder="Search for a Florida city..."
+                    placeholder="Search by Florida city or zip code (e.g., Miami, 33139)..."
                     value={searchCity}
                     onChange={(e) => setSearchCity(e.target.value)}
                     onKeyPress={handleKeyPress}
