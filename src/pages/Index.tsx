@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Search, MapPin, Phone, Star, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -9,6 +10,9 @@ import BusinessCard from "@/components/BusinessCard";
 import PricingSection from "@/components/PricingSection";
 import HeroSection from "@/components/HeroSection";
 import LocalRebateFinder from "@/components/LocalRebateFinder";
+import SubscriptionButton from "@/components/SubscriptionButton";
+import ManageSubscriptionButton from "@/components/ManageSubscriptionButton";
+import { useAuth } from "@/contexts/AuthContext";
 
 // Mock data for businesses
 const businesses = [
@@ -60,6 +64,7 @@ const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedService, setSelectedService] = useState("");
   const [filteredBusinesses, setFilteredBusinesses] = useState(businesses);
+  const { user, signOut, subscribed, subscriptionTier, subscriptionEnd } = useAuth();
 
   const handleSearch = () => {
     let filtered = businesses;
@@ -95,12 +100,27 @@ const Index = () => {
                 className="h-10 w-auto"
               />
             </div>
-            <nav className="hidden md:flex space-x-6">
+            <nav className="hidden md:flex space-x-6 items-center">
               <a href="#" className="text-gray-600 hover:text-blue-600 transition-colors">Find Contractors</a>
               <a href="#pricing" className="text-gray-600 hover:text-blue-600 transition-colors">List Your Business</a>
               <a href="#advertising" className="text-gray-600 hover:text-blue-600 transition-colors">Advertise</a>
               <a href="/faq" className="text-gray-600 hover:text-blue-600 transition-colors">FAQ</a>
-              <Button variant="outline">Sign In</Button>
+              
+              {user ? (
+                <div className="flex items-center space-x-4">
+                  {subscribed && (
+                    <Badge variant="secondary" className="bg-green-100 text-green-800">
+                      {subscriptionTier} Plan
+                    </Badge>
+                  )}
+                  <ManageSubscriptionButton />
+                  <Button variant="outline" onClick={signOut}>Sign Out</Button>
+                </div>
+              ) : (
+                <Button variant="outline" asChild>
+                  <a href="/auth">Sign In</a>
+                </Button>
+              )}
             </nav>
           </div>
         </div>
@@ -183,9 +203,15 @@ const Index = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Button className="w-full bg-blue-600 hover:bg-blue-700">
-                    List Your Business
-                  </Button>
+                  {user ? (
+                    <SubscriptionButton tier="Basic" price={29} className="w-full bg-blue-600 hover:bg-blue-700">
+                      List Your Business
+                    </SubscriptionButton>
+                  ) : (
+                    <Button className="w-full bg-blue-600 hover:bg-blue-700" asChild>
+                      <a href="/auth">List Your Business</a>
+                    </Button>
+                  )}
                   <p className="text-sm text-blue-600 mt-2 text-center">
                     Starting at $29/month
                   </p>
