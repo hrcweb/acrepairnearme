@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -178,235 +177,237 @@ const HeatIndexVisualization = () => {
   }, []);
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-6 space-y-8">
-      <div className="text-center mb-8">
-        <h2 className="text-3xl font-bold text-gray-900 mb-4">Florida Heat Index Monitor</h2>
-        <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-          Stay safe in Florida's heat! Check real-time heat index levels across the state and find qualified AC contractors when you need them most.
-        </p>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-red-50">
+      <div className="w-full max-w-6xl mx-auto p-6 space-y-8">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Florida Heat Index Monitor</h2>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Stay safe in Florida's heat! Check real-time heat index levels across the state and find qualified AC contractors when you need them most.
+          </p>
+        </div>
 
-      {/* Enhanced Location Selection */}
-      <Card id="search-section" className="bg-gradient-to-br from-blue-50 to-cyan-50 border-blue-200">
-        <CardHeader className="text-center">
-          <CardTitle className="flex items-center justify-center gap-3 text-2xl text-blue-900">
-            <div className="p-2 bg-blue-100 rounded-full">
-              <Navigation className="w-6 h-6 text-blue-600" />
-            </div>
-            Select Your Florida Location
-          </CardTitle>
-          <CardDescription className="text-blue-700 text-lg">
-            Choose any city across Florida to get current heat index conditions and safety recommendations
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="max-w-2xl mx-auto">
-            <Select value={selectedLocation} onValueChange={handleLocationSelect}>
-              <SelectTrigger className="w-full h-14 text-lg border-2 border-blue-200 focus:border-blue-400 bg-white">
-                <SelectValue placeholder="🏙️ Choose a Florida city..." />
-              </SelectTrigger>
-              <SelectContent className="max-h-96">
-                {Object.entries(locationsByRegion).map(([region, locations]) => (
-                  <div key={region}>
-                    <div className="px-2 py-2 text-sm font-semibold text-gray-500 bg-gray-50 sticky top-0">
-                      {region}
-                    </div>
-                    {locations.map((location) => (
-                      <SelectItem 
-                        key={`${location.zipCode}-${location.city}`} 
-                        value={`${location.city}, ${location.zipCode}`}
-                        className="py-3"
-                      >
-                        <div className="flex items-center justify-between w-full">
-                          <div>
-                            <span className="font-medium">{location.city}</span>
-                            <span className="text-gray-500 ml-2">({location.zipCode})</span>
-                          </div>
-                          <Badge variant="outline" className="text-xs">
-                            {location.county}
-                          </Badge>
-                        </div>
-                      </SelectItem>
-                    ))}
-                  </div>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          
-          {selectedLocation && (
-            <div className="text-center">
-              <Badge className="bg-blue-600 text-white px-4 py-2 text-base">
-                📍 Monitoring: {selectedLocation}
-              </Badge>
-            </div>
-          )}
-          
-          <div className="grid md:grid-cols-3 gap-4 text-center">
-            <div className="p-4 bg-white rounded-lg border border-blue-200">
-              <div className="text-blue-600 font-semibold mb-1">75+ Cities</div>
-              <div className="text-sm text-gray-600">Statewide Coverage</div>
-            </div>
-            <div className="p-4 bg-white rounded-lg border border-blue-200">
-              <div className="text-blue-600 font-semibold mb-1">Real-Time</div>
-              <div className="text-sm text-gray-600">Heat Index Data</div>
-            </div>
-            <div className="p-4 bg-white rounded-lg border border-blue-200">
-              <div className="text-blue-600 font-semibold mb-1">Safety First</div>
-              <div className="text-sm text-gray-600">Health Recommendations</div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Weather Data Display */}
-      {weatherData && selectedLocation && (
-        <div className="grid md:grid-cols-2 gap-6">
-          {/* Current Conditions */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Thermometer className="w-5 h-5" />
-                Current Conditions - {selectedLocation}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="text-center p-4 bg-blue-50 rounded-lg">
-                  <div className="text-2xl font-bold text-blue-600">{weatherData.temperature}°F</div>
-                  <div className="text-sm text-gray-600">Temperature</div>
-                </div>
-                <div className="text-center p-4 bg-cyan-50 rounded-lg">
-                  <div className="text-2xl font-bold text-cyan-600">{weatherData.humidity}%</div>
-                  <div className="text-sm text-gray-600">Humidity</div>
-                </div>
-                <div className="text-center p-4 bg-gray-50 rounded-lg">
-                  <div className="text-2xl font-bold text-gray-600">{weatherData.windSpeed} mph</div>
-                  <div className="text-sm text-gray-600">Wind Speed</div>
-                </div>
-                <div className="text-center p-4 bg-yellow-50 rounded-lg">
-                  <div className="text-2xl font-bold text-yellow-600">{weatherData.uvIndex}</div>
-                  <div className="text-sm text-gray-600">UV Index</div>
-                </div>
+        {/* Enhanced Location Selection */}
+        <Card id="search-section" className="bg-white/80 backdrop-blur-sm border-orange-200 shadow-lg">
+          <CardHeader className="text-center">
+            <CardTitle className="flex items-center justify-center gap-3 text-2xl text-orange-900">
+              <div className="p-3 bg-gradient-to-br from-orange-100 to-yellow-100 rounded-full shadow-md">
+                <Navigation className="w-6 h-6 text-orange-600" />
               </div>
-              
-              <div className="text-center p-4 bg-white border rounded-lg">
-                <Badge variant="outline" className="text-lg px-4 py-2">
-                  {weatherData.condition}
+              Select Your Florida Location
+            </CardTitle>
+            <CardDescription className="text-orange-700 text-lg">
+              Choose any city across Florida to get current heat index conditions and safety recommendations
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="max-w-2xl mx-auto">
+              <Select value={selectedLocation} onValueChange={handleLocationSelect}>
+                <SelectTrigger className="w-full h-14 text-lg border-2 border-orange-200 focus:border-orange-400 bg-white/90 shadow-sm">
+                  <SelectValue placeholder="🏙️ Choose a Florida city..." />
+                </SelectTrigger>
+                <SelectContent className="max-h-96 bg-white/95 backdrop-blur-sm">
+                  {Object.entries(locationsByRegion).map(([region, locations]) => (
+                    <div key={region}>
+                      <div className="px-2 py-2 text-sm font-semibold text-orange-600 bg-orange-50/80 sticky top-0">
+                        {region}
+                      </div>
+                      {locations.map((location) => (
+                        <SelectItem 
+                          key={`${location.zipCode}-${location.city}`} 
+                          value={`${location.city}, ${location.zipCode}`}
+                          className="py-3 hover:bg-orange-50"
+                        >
+                          <div className="flex items-center justify-between w-full">
+                            <div>
+                              <span className="font-medium">{location.city}</span>
+                              <span className="text-gray-500 ml-2">({location.zipCode})</span>
+                            </div>
+                            <Badge variant="outline" className="text-xs border-orange-200">
+                              {location.county}
+                            </Badge>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </div>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            
+            {selectedLocation && (
+              <div className="text-center">
+                <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-4 py-2 text-base shadow-md">
+                  📍 Monitoring: {selectedLocation}
                 </Badge>
               </div>
-            </CardContent>
-          </Card>
+            )}
+            
+            <div className="grid md:grid-cols-3 gap-4 text-center">
+              <div className="p-4 bg-white/60 backdrop-blur-sm rounded-lg border border-orange-200 shadow-sm">
+                <div className="text-orange-600 font-semibold mb-1">75+ Cities</div>
+                <div className="text-sm text-gray-600">Statewide Coverage</div>
+              </div>
+              <div className="p-4 bg-white/60 backdrop-blur-sm rounded-lg border border-orange-200 shadow-sm">
+                <div className="text-orange-600 font-semibold mb-1">Real-Time</div>
+                <div className="text-sm text-gray-600">Heat Index Data</div>
+              </div>
+              <div className="p-4 bg-white/60 backdrop-blur-sm rounded-lg border border-orange-200 shadow-sm">
+                <div className="text-orange-600 font-semibold mb-1">Safety First</div>
+                <div className="text-sm text-gray-600">Health Recommendations</div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
-          {/* Heat Index Alert */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Sun className="w-5 h-5" />
-                Heat Index Alert
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {(() => {
-                const heatLevel = getHeatIndexLevel(weatherData.heatIndex);
-                return (
-                  <>
-                    <div className="text-center">
-                      <div className="text-4xl font-bold mb-2">{weatherData.heatIndex}°F</div>
-                      <Badge className={`${heatLevel.color} text-white text-lg px-4 py-2`}>
-                        {heatLevel.level}
-                      </Badge>
-                    </div>
-                    
-                    <Progress value={(weatherData.heatIndex / 130) * 100} className="w-full" />
-                    
-                    <div className={`p-4 rounded-lg border ${heatLevel.textColor} bg-opacity-10`}>
-                      <h4 className="font-semibold mb-2">Safety Recommendations:</h4>
-                      <ul className="space-y-1 text-sm">
-                        {weatherData.heatIndex < 80 && (
-                          <>
-                            <li>• Normal outdoor activities are safe</li>
-                            <li>• Stay hydrated during physical activity</li>
-                          </>
-                        )}
-                        {weatherData.heatIndex >= 80 && weatherData.heatIndex < 90 && (
-                          <>
-                            <li>• Exercise caution during prolonged exposure</li>
-                            <li>• Take frequent water breaks</li>
-                            <li>• Watch for signs of heat exhaustion</li>
-                          </>
-                        )}
-                        {weatherData.heatIndex >= 90 && weatherData.heatIndex < 105 && (
-                          <>
-                            <li>• Heat exhaustion and cramps possible</li>
-                            <li>• Limit outdoor activities</li>
-                            <li>• Seek air conditioning when possible</li>
-                          </>
-                        )}
-                        {weatherData.heatIndex >= 105 && (
-                          <>
-                            <li>• Heat stroke highly likely</li>
-                            <li>• Avoid outdoor activities</li>
-                            <li>• Stay in air-conditioned spaces</li>
-                            <li>• Seek immediate medical attention if symptoms occur</li>
-                          </>
-                        )}
-                      </ul>
-                    </div>
-                  </>
-                );
-              })()}
-            </CardContent>
-          </Card>
-        </div>
-      )}
+        {/* Weather Data Display */}
+        {weatherData && selectedLocation && (
+          <div className="grid md:grid-cols-2 gap-6">
+            {/* Current Conditions */}
+            <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Thermometer className="w-5 h-5" />
+                  Current Conditions - {selectedLocation}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="text-center p-4 bg-blue-50/80 rounded-lg border border-blue-200">
+                    <div className="text-2xl font-bold text-blue-600">{weatherData.temperature}°F</div>
+                    <div className="text-sm text-gray-600">Temperature</div>
+                  </div>
+                  <div className="text-center p-4 bg-cyan-50/80 rounded-lg border border-cyan-200">
+                    <div className="text-2xl font-bold text-cyan-600">{weatherData.humidity}%</div>
+                    <div className="text-sm text-gray-600">Humidity</div>
+                  </div>
+                  <div className="text-center p-4 bg-gray-50/80 rounded-lg border border-gray-200">
+                    <div className="text-2xl font-bold text-gray-600">{weatherData.windSpeed} mph</div>
+                    <div className="text-sm text-gray-600">Wind Speed</div>
+                  </div>
+                  <div className="text-center p-4 bg-yellow-50/80 rounded-lg border border-yellow-200">
+                    <div className="text-2xl font-bold text-yellow-600">{weatherData.uvIndex}</div>
+                    <div className="text-sm text-gray-600">UV Index</div>
+                  </div>
+                </div>
+                
+                <div className="text-center p-4 bg-white/80 border rounded-lg">
+                  <Badge variant="outline" className="text-lg px-4 py-2">
+                    {weatherData.condition}
+                  </Badge>
+                </div>
+              </CardContent>
+            </Card>
 
-      {/* Find Qualified Contractors Section */}
-      <Card className="bg-gradient-to-r from-blue-50 to-cyan-50 border-blue-200">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl text-blue-900">
-            Beat the Heat with Professional AC Service
-          </CardTitle>
-          <CardDescription className="text-blue-700 text-lg">
-            Don't let extreme heat put your family at risk. Find qualified, licensed AC contractors in your area.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="text-center space-y-2">
-              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto">
-                <CheckCircle className="w-6 h-6 text-blue-600" />
-              </div>
-              <h3 className="font-semibold text-blue-900">Licensed & Verified</h3>
-              <p className="text-sm text-blue-700">All contractors are licensed, insured, and background-checked</p>
-            </div>
-            <div className="text-center space-y-2">
-              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto">
-                <Star className="w-6 h-6 text-blue-600" />
-              </div>
-              <h3 className="font-semibold text-blue-900">Top-Rated Service</h3>
-              <p className="text-sm text-blue-700">Read reviews from real customers in your neighborhood</p>
-            </div>
-            <div className="text-center space-y-2">
-              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto">
-                <Wind className="w-6 h-6 text-blue-600" />
-              </div>
-              <h3 className="font-semibold text-blue-900">24/7 Emergency</h3>
-              <p className="text-sm text-blue-700">Emergency AC repair available when you need it most</p>
-            </div>
+            {/* Heat Index Alert */}
+            <Card className="bg-white/80 backdrop-blur-sm shadow-lg">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Sun className="w-5 h-5" />
+                  Heat Index Alert
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {(() => {
+                  const heatLevel = getHeatIndexLevel(weatherData.heatIndex);
+                  return (
+                    <>
+                      <div className="text-center">
+                        <div className="text-4xl font-bold mb-2">{weatherData.heatIndex}°F</div>
+                        <Badge className={`${heatLevel.color} text-white text-lg px-4 py-2`}>
+                          {heatLevel.level}
+                        </Badge>
+                      </div>
+                      
+                      <Progress value={(weatherData.heatIndex / 130) * 100} className="w-full" />
+                      
+                      <div className={`p-4 rounded-lg border ${heatLevel.textColor} bg-opacity-10`}>
+                        <h4 className="font-semibold mb-2">Safety Recommendations:</h4>
+                        <ul className="space-y-1 text-sm">
+                          {weatherData.heatIndex < 80 && (
+                            <>
+                              <li>• Normal outdoor activities are safe</li>
+                              <li>• Stay hydrated during physical activity</li>
+                            </>
+                          )}
+                          {weatherData.heatIndex >= 80 && weatherData.heatIndex < 90 && (
+                            <>
+                              <li>• Exercise caution during prolonged exposure</li>
+                              <li>• Take frequent water breaks</li>
+                              <li>• Watch for signs of heat exhaustion</li>
+                            </>
+                          )}
+                          {weatherData.heatIndex >= 90 && weatherData.heatIndex < 105 && (
+                            <>
+                              <li>• Heat exhaustion and cramps possible</li>
+                              <li>• Limit outdoor activities</li>
+                              <li>• Seek air conditioning when possible</li>
+                            </>
+                          )}
+                          {weatherData.heatIndex >= 105 && (
+                            <>
+                              <li>• Heat stroke highly likely</li>
+                              <li>• Avoid outdoor activities</li>
+                              <li>• Stay in air-conditioned spaces</li>
+                              <li>• Seek immediate medical attention if symptoms occur</li>
+                            </>
+                          )}
+                        </ul>
+                      </div>
+                    </>
+                  );
+                })()}
+              </CardContent>
+            </Card>
           </div>
-          
-          <div className="text-center">
-            <Button 
-              size="lg" 
-              className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3"
-              onClick={scrollToSearch}
-            >
-              Find AC Contractors Near You
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+        )}
+
+        {/* Find Qualified Contractors Section */}
+        <Card className="bg-white/80 backdrop-blur-sm border-orange-200 shadow-lg">
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl text-orange-900">
+              Beat the Heat with Professional AC Service
+            </CardTitle>
+            <CardDescription className="text-orange-700 text-lg">
+              Don't let extreme heat put your family at risk. Find qualified, licensed AC contractors in your area.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="grid md:grid-cols-3 gap-6">
+              <div className="text-center space-y-2">
+                <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto">
+                  <CheckCircle className="w-6 h-6 text-orange-600" />
+                </div>
+                <h3 className="font-semibold text-orange-900">Licensed & Verified</h3>
+                <p className="text-sm text-orange-700">All contractors are licensed, insured, and background-checked</p>
+              </div>
+              <div className="text-center space-y-2">
+                <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto">
+                  <Star className="w-6 h-6 text-orange-600" />
+                </div>
+                <h3 className="font-semibold text-orange-900">Top-Rated Service</h3>
+                <p className="text-sm text-orange-700">Read reviews from real customers in your neighborhood</p>
+              </div>
+              <div className="text-center space-y-2">
+                <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto">
+                  <Wind className="w-6 h-6 text-orange-600" />
+                </div>
+                <h3 className="font-semibold text-orange-900">24/7 Emergency</h3>
+                <p className="text-sm text-orange-700">Emergency AC repair available when you need it most</p>
+              </div>
+            </div>
+            
+            <div className="text-center">
+              <Button 
+                size="lg" 
+                className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-8 py-3 shadow-lg"
+                onClick={scrollToSearch}
+              >
+                Find AC Contractors Near You
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 };
