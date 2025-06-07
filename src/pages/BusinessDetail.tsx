@@ -4,6 +4,12 @@ import { ArrowLeft, Phone, MapPin, Star, CheckCircle, ExternalLink, Clock, Globe
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import ReviewForm from "@/components/ReviewForm";
+import ReviewsList from "@/components/ReviewsList";
+import QuoteRequestForm from "@/components/QuoteRequestForm";
+import BusinessLocation from "@/components/BusinessLocation";
+import { useState } from "react";
 
 // Mock data - in a real app this would come from an API
 const businessData = {
@@ -80,6 +86,11 @@ const businessData = {
 const BusinessDetail = () => {
   const { id } = useParams<{ id: string }>();
   const business = businessData[Number(id) as keyof typeof businessData];
+  const [reviewsRefreshTrigger, setReviewsRefreshTrigger] = useState(0);
+
+  const handleReviewSubmitted = () => {
+    setReviewsRefreshTrigger(prev => prev + 1);
+  };
 
   if (!business) {
     return (
@@ -178,32 +189,31 @@ const BusinessDetail = () => {
               </CardContent>
             </Card>
 
-            {/* Reviews */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Customer Reviews</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {business.reviews.map((review) => (
-                    <div key={review.id} className="border-b pb-4 last:border-b-0">
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="flex items-center space-x-2">
-                          <span className="font-medium">{review.name}</span>
-                          <div className="flex items-center">
-                            {[...Array(review.rating)].map((_, i) => (
-                              <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
-                            ))}
-                          </div>
-                        </div>
-                        <span className="text-sm text-gray-500">{review.date}</span>
-                      </div>
-                      <p className="text-gray-700">{review.comment}</p>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+            {/* Tabs for Reviews and Quote */}
+            <Tabs defaultValue="reviews" className="w-full">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="reviews">Customer Reviews</TabsTrigger>
+                <TabsTrigger value="quote">Get Quote</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="reviews" className="space-y-6">
+                <ReviewForm 
+                  businessId={business.id} 
+                  onReviewSubmitted={handleReviewSubmitted}
+                />
+                <ReviewsList 
+                  businessId={business.id}
+                  refreshTrigger={reviewsRefreshTrigger}
+                />
+              </TabsContent>
+              
+              <TabsContent value="quote">
+                <QuoteRequestForm 
+                  businessName={business.name}
+                  businessPhone={business.phone}
+                />
+              </TabsContent>
+            </Tabs>
           </div>
 
           {/* Sidebar */}
@@ -240,9 +250,11 @@ const BusinessDetail = () => {
                 </div>
                 
                 <div className="pt-4 space-y-2">
-                  <Button className="w-full bg-blue-600 hover:bg-blue-700">
-                    <Phone className="w-4 h-4 mr-2" />
-                    Call Now
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700" asChild>
+                    <a href={`tel:${business.phone}`}>
+                      <Phone className="w-4 h-4 mr-2" />
+                      Call Now
+                    </a>
                   </Button>
                   <Button variant="outline" className="w-full">
                     Get Free Quote
@@ -250,6 +262,12 @@ const BusinessDetail = () => {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Location Card */}
+            <BusinessLocation 
+              address={business.address}
+              hours={business.hours}
+            />
 
             {/* Gallery */}
             {business.gallery.length > 0 && (

@@ -15,7 +15,11 @@ import SubscriptionButton from "@/components/SubscriptionButton";
 import ManageSubscriptionButton from "@/components/ManageSubscriptionButton";
 import AdvertisementButton from "@/components/AdvertisementButton";
 import SearchFiltersComponent, { SearchFilters } from "@/components/SearchFilters";
+import ServiceAreaMap from "@/components/ServiceAreaMap";
+import MobileNavigation from "@/components/MobileNavigation";
 import { useAuth } from "@/contexts/AuthContext";
+import { useDebounce } from "@/hooks/useDebounce";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
 
 // Mock data for businesses with additional filter properties
 const businesses = [
@@ -84,20 +88,22 @@ const businesses = [
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedService, setSelectedService] = useState("");
-  const [filters, setFilters] = useState<SearchFilters>({});
+  const [filters, setFilters] = useLocalStorage<SearchFilters>("searchFilters", {});
   const [filteredBusinesses, setFilteredBusinesses] = useState(businesses);
   const { user, signOut, subscribed, subscriptionTier, subscriptionEnd } = useAuth();
+  
+  const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
   const handleSearch = () => {
     let filtered = businesses;
     
     // Text search
-    if (searchQuery) {
+    if (debouncedSearchQuery) {
       filtered = filtered.filter(business => 
-        business.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        business.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        business.zipCodes.some(zip => zip.includes(searchQuery)) ||
-        business.services.some(service => service.toLowerCase().includes(searchQuery.toLowerCase()))
+        business.name.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+        business.address.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+        business.zipCodes.some(zip => zip.includes(debouncedSearchQuery)) ||
+        business.services.some(service => service.toLowerCase().includes(debouncedSearchQuery.toLowerCase()))
       );
     }
     
@@ -162,8 +168,9 @@ const Index = () => {
             </div>
             <nav className="hidden md:flex space-x-6 items-center">
               <a href="#" className="text-gray-600 hover:text-blue-600 transition-colors">Find Contractors</a>
-              <a href="#pricing" className="text-gray-600 hover:text-blue-600 transition-colors">List Your Business</a>
+              <a href="/list-business" className="text-gray-600 hover:text-blue-600 transition-colors">List Your Business</a>
               <a href="#advertising" className="text-gray-600 hover:text-blue-600 transition-colors">Advertise</a>
+              <a href="/emergency" className="text-red-600 hover:text-red-700 transition-colors font-medium">Emergency</a>
               <a href="/faq" className="text-gray-600 hover:text-blue-600 transition-colors">FAQ</a>
               
               {user ? (
@@ -182,6 +189,7 @@ const Index = () => {
                 </Button>
               )}
             </nav>
+            <MobileNavigation />
           </div>
         </div>
       </header>
@@ -261,6 +269,27 @@ const Index = () => {
 
             {/* Sidebar */}
             <div className="space-y-6">
+              {/* Emergency CTA */}
+              <Card className="bg-red-50 border-red-200">
+                <CardHeader>
+                  <CardTitle className="text-red-900 flex items-center space-x-2">
+                    <Phone className="w-5 h-5" />
+                    <span>Need Emergency Service?</span>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <Button className="w-full bg-red-600 hover:bg-red-700 mb-2" asChild>
+                    <a href="/emergency">Find Emergency Service</a>
+                  </Button>
+                  <p className="text-sm text-red-600 text-center">
+                    24/7 contractors available
+                  </p>
+                </CardContent>
+              </Card>
+
+              {/* Service Area Map */}
+              <ServiceAreaMap />
+
               {/* Add Your Business CTA */}
               <Card className="bg-blue-50 border-blue-200">
                 <CardHeader>
@@ -276,7 +305,7 @@ const Index = () => {
                     </SubscriptionButton>
                   ) : (
                     <Button className="w-full bg-blue-600 hover:bg-blue-700" asChild>
-                      <a href="/auth">List Your Business</a>
+                      <a href="/list-business">List Your Business</a>
                     </Button>
                   )}
                   <p className="text-sm text-blue-600 mt-2 text-center">
@@ -362,7 +391,7 @@ const Index = () => {
               <h3 className="font-semibold mb-4">For Customers</h3>
               <ul className="space-y-2 text-gray-400">
                 <li><a href="#" className="hover:text-white transition-colors">Find Contractors</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Emergency Service</a></li>
+                <li><a href="/emergency" className="hover:text-white transition-colors">Emergency Service</a></li>
                 <li><a href="#" className="hover:text-white transition-colors">Reviews</a></li>
                 <li><a href="/faq" className="hover:text-white transition-colors">FAQ</a></li>
               </ul>
@@ -370,7 +399,7 @@ const Index = () => {
             <div>
               <h3 className="font-semibold mb-4">For Businesses</h3>
               <ul className="space-y-2 text-gray-400">
-                <li><a href="#" className="hover:text-white transition-colors">List Your Business</a></li>
+                <li><a href="/list-business" className="hover:text-white transition-colors">List Your Business</a></li>
                 <li><a href="#" className="hover:text-white transition-colors">Advertising</a></li>
                 <li><a href="#" className="hover:text-white transition-colors">Premium Features</a></li>
               </ul>
