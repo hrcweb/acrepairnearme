@@ -9,6 +9,78 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      businesses: {
+        Row: {
+          address: string
+          business_hours: Json | null
+          city: string
+          created_at: string | null
+          description: string | null
+          email: string | null
+          featured: boolean | null
+          id: number
+          insurance_verified: boolean | null
+          latitude: number | null
+          license_number: string | null
+          longitude: number | null
+          name: string
+          phone: string | null
+          rating: number | null
+          review_count: number | null
+          services: string[] | null
+          state: string
+          updated_at: string | null
+          website: string | null
+          zip_code: string
+        }
+        Insert: {
+          address: string
+          business_hours?: Json | null
+          city: string
+          created_at?: string | null
+          description?: string | null
+          email?: string | null
+          featured?: boolean | null
+          id?: number
+          insurance_verified?: boolean | null
+          latitude?: number | null
+          license_number?: string | null
+          longitude?: number | null
+          name: string
+          phone?: string | null
+          rating?: number | null
+          review_count?: number | null
+          services?: string[] | null
+          state: string
+          updated_at?: string | null
+          website?: string | null
+          zip_code: string
+        }
+        Update: {
+          address?: string
+          business_hours?: Json | null
+          city?: string
+          created_at?: string | null
+          description?: string | null
+          email?: string | null
+          featured?: boolean | null
+          id?: number
+          insurance_verified?: boolean | null
+          latitude?: number | null
+          license_number?: string | null
+          longitude?: number | null
+          name?: string
+          phone?: string | null
+          rating?: number | null
+          review_count?: number | null
+          services?: string[] | null
+          state?: string
+          updated_at?: string | null
+          website?: string | null
+          zip_code?: string
+        }
+        Relationships: []
+      }
       orders: {
         Row: {
           amount: number | null

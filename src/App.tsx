@@ -14,6 +14,7 @@ import PaymentSuccess from "./pages/PaymentSuccess";
 import NotFound from "./pages/NotFound";
 import ListBusiness from "./pages/ListBusiness";
 import Emergency from "./pages/Emergency";
+import Admin from "./pages/Admin";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -39,6 +40,7 @@ const App: React.FC = () => {
               <Route path="/faq" element={<FAQ />} />
               <Route path="/list-business" element={<ListBusiness />} />
               <Route path="/emergency" element={<Emergency />} />
+              <Route path="/admin" element={<Admin />} />
               <Route path="/payment-success" element={<PaymentSuccess />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
