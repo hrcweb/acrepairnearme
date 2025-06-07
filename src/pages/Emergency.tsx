@@ -73,7 +73,7 @@ const Emergency = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-2xl mx-auto mb-8">
             <div className="bg-white rounded-lg p-4 shadow-md">
               <Clock className="w-8 h-8 text-red-600 mx-auto mb-2" />
-              <div className="text-2xl font-bold">< 1 Hour</div>
+              <div className="text-2xl font-bold">Less Than 1 Hour</div>
               <div className="text-gray-600">Average Response</div>
             </div>
             <div className="bg-white rounded-lg p-4 shadow-md">
