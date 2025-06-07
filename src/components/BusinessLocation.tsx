@@ -19,6 +19,11 @@ const BusinessLocation = ({ address, hours }: BusinessLocationProps) => {
     window.open(`https://www.google.com/maps/search/?api=1&query=${encodedAddress}`, '_blank');
   };
 
+  const getEmbedMapUrl = () => {
+    const encodedAddress = encodeURIComponent(address);
+    return `https://www.google.com/maps/embed/v1/place?key=AIzaSyDummy&q=${encodedAddress}`;
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -57,14 +62,19 @@ const BusinessLocation = ({ address, hours }: BusinessLocationProps) => {
           </Button>
         </div>
 
-        {/* Simple embedded map placeholder */}
+        {/* Interactive Google Maps embed */}
         <div className="mt-4">
-          <div className="w-full h-48 bg-gray-200 rounded-lg flex items-center justify-center">
-            <div className="text-center text-gray-500">
-              <MapPin className="w-8 h-8 mx-auto mb-2" />
-              <p className="text-sm">Interactive Map</p>
-              <p className="text-xs">Click buttons above to open in Maps</p>
-            </div>
+          <div className="w-full h-48 rounded-lg overflow-hidden">
+            <iframe
+              src={`https://www.google.com/maps?q=${encodeURIComponent(address)}&output=embed`}
+              width="100%"
+              height="100%"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title={`Map showing location of ${address}`}
+            />
           </div>
         </div>
       </CardContent>

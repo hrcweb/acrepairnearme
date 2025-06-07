@@ -54,6 +54,7 @@ const ListBusiness = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Header */}
       <header className="bg-white border-b shadow-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
@@ -125,8 +126,10 @@ const ListBusiness = () => {
       </section>
 
       <main className="container mx-auto px-4 py-8">
-        {/* Pricing Section */}
-        <PricingSection />
+        {/* Pricing Section with ID anchor */}
+        <div id="pricing">
+          <PricingSection />
+        </div>
 
         {/* Benefits Section */}
         <section className="mt-16">
