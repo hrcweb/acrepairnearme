@@ -15,9 +15,9 @@ interface Review {
   comment: string;
   created_at: string;
   verified: boolean;
-  businesses?: {
+  businesses: {
     name: string;
-  };
+  } | null;
 }
 
 const AdminReviewManagement = () => {
@@ -36,7 +36,7 @@ const AdminReviewManagement = () => {
         .from('reviews')
         .select(`
           *,
-          businesses (name)
+          businesses!fk_reviews_business (name)
         `)
         .order('created_at', { ascending: false });
 
@@ -134,7 +134,7 @@ const AdminReviewManagement = () => {
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-lg">{review.businesses?.name}</CardTitle>
+                  <CardTitle className="text-lg">{review.businesses?.name || 'Unknown Business'}</CardTitle>
                   <p className="text-sm text-gray-600">by {review.customer_name}</p>
                 </div>
                 <div className="flex items-center gap-2">

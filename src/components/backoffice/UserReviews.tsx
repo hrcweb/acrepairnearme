@@ -14,9 +14,9 @@ interface Review {
   comment: string;
   created_at: string;
   verified: boolean;
-  businesses?: {
+  businesses: {
     name: string;
-  };
+  } | null;
 }
 
 const UserReviews = () => {
@@ -37,7 +37,7 @@ const UserReviews = () => {
         .from('reviews')
         .select(`
           *,
-          businesses (name)
+          businesses!fk_reviews_business (name)
         `)
         .eq('user_id', user?.id)
         .order('created_at', { ascending: false });
@@ -85,7 +85,7 @@ const UserReviews = () => {
         <Card key={review.id}>
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle className="text-lg">{review.businesses?.name}</CardTitle>
+              <CardTitle className="text-lg">{review.businesses?.name || 'Unknown Business'}</CardTitle>
               <div className="flex items-center gap-2">
                 {review.verified && (
                   <Badge variant="secondary" className="bg-green-100 text-green-800">

@@ -13,7 +13,7 @@ interface UserProfile {
   email: string;
   full_name: string | null;
   created_at: string;
-  user_roles?: Array<{ role: string }>;
+  user_roles: Array<{ role: string }> | null;
 }
 
 const AdminUserManagement = () => {
@@ -32,7 +32,7 @@ const AdminUserManagement = () => {
         .from('profiles')
         .select(`
           *,
-          user_roles (role)
+          user_roles!fk_user_roles_profile (role)
         `)
         .order('created_at', { ascending: false });
 
