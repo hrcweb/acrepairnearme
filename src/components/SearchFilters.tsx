@@ -30,6 +30,8 @@ interface SearchFiltersProps {
 const SearchFiltersComponent = ({ onLocationChange, onServiceChange, onSortChange }: SearchFiltersProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [filters, setFilters] = useState<SearchFilters>({});
+  const [selectedService, setSelectedService] = useState("");
+  const [selectedSort, setSelectedSort] = useState("rating");
 
   const updateFilter = (key: keyof SearchFilters, value: any) => {
     setFilters({ ...filters, [key]: value });
@@ -43,9 +45,25 @@ const SearchFiltersComponent = ({ onLocationChange, onServiceChange, onSortChang
 
   const clearAllFilters = () => {
     setFilters({});
+    setSelectedService("");
+    setSelectedSort("rating");
+    onServiceChange("");
+    onSortChange("rating");
   };
 
-  const activeFiltersCount = Object.keys(filters).length;
+  const handleServiceChange = (value: string) => {
+    setSelectedService(value);
+    onServiceChange(value);
+  };
+
+  const handleSortChange = (value: string) => {
+    setSelectedSort(value);
+    onSortChange(value);
+  };
+
+  const activeFiltersCount = Object.keys(filters).length + 
+    (selectedService ? 1 : 0) + 
+    (selectedSort !== "rating" ? 1 : 0);
 
   return (
     <div className="space-y-4">
@@ -81,7 +99,7 @@ const SearchFiltersComponent = ({ onLocationChange, onServiceChange, onSortChang
                 {/* Service Filter */}
                 <div className="space-y-2">
                   <Label>Service Type</Label>
-                  <Select onValueChange={onServiceChange}>
+                  <Select value={selectedService} onValueChange={handleServiceChange}>
                     <SelectTrigger>
                       <SelectValue placeholder="Select service" />
                     </SelectTrigger>
@@ -98,7 +116,7 @@ const SearchFiltersComponent = ({ onLocationChange, onServiceChange, onSortChang
                 {/* Sort Filter */}
                 <div className="space-y-2">
                   <Label>Sort By</Label>
-                  <Select onValueChange={onSortChange}>
+                  <Select value={selectedSort} onValueChange={handleSortChange}>
                     <SelectTrigger>
                       <SelectValue placeholder="Sort by" />
                     </SelectTrigger>
@@ -203,6 +221,24 @@ const SearchFiltersComponent = ({ onLocationChange, onServiceChange, onSortChang
       {/* Active Filters Display */}
       {activeFiltersCount > 0 && (
         <div className="flex flex-wrap gap-2">
+          {selectedService && (
+            <Badge variant="secondary" className="flex items-center space-x-1">
+              <span>{selectedService === 'repair' ? 'AC Repair' : selectedService === 'installation' ? 'Installation' : selectedService === 'maintenance' ? 'Maintenance' : 'Emergency Service'}</span>
+              <X 
+                className="w-3 h-3 cursor-pointer" 
+                onClick={() => handleServiceChange("")}
+              />
+            </Badge>
+          )}
+          {selectedSort !== "rating" && (
+            <Badge variant="secondary" className="flex items-center space-x-1">
+              <span>Sort: {selectedSort === 'reviews' ? 'Review Count' : 'Name'}</span>
+              <X 
+                className="w-3 h-3 cursor-pointer" 
+                onClick={() => handleSortChange("rating")}
+              />
+            </Badge>
+          )}
           {filters.distance && (
             <Badge variant="secondary" className="flex items-center space-x-1">
               <span>Within {filters.distance} miles</span>
