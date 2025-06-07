@@ -1,11 +1,9 @@
-
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import BusinessList from "@/components/BusinessList";
 import SearchFilters from "@/components/SearchFilters";
 import HeroSection from "@/components/HeroSection";
-import ServiceAreaMap from "@/components/ServiceAreaMap";
 import LocalRebateFinder from "@/components/LocalRebateFinder";
 import HeatIndexVisualization from "@/components/HeatIndexVisualization";
 import Footer from "@/components/Footer";
@@ -145,11 +143,6 @@ const Index = () => {
     console.log('Search triggered');
   };
 
-  const handleAreaSelect = (area: any) => {
-    setSearchLocation(area.city);
-    filterBusinesses(area.city, serviceFilter, sortBy);
-  };
-
   if (error) {
     console.error('Query error:', error);
   }
@@ -175,7 +168,6 @@ const Index = () => {
           </div>
           
           <div className="space-y-8">
-            <ServiceAreaMap onAreaSelect={handleAreaSelect} />
             <LocalRebateFinder />
             <HeatIndexVisualization />
           </div>
