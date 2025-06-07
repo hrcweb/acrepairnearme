@@ -1,140 +1,220 @@
 
-import { ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
+import { Plus, Minus, Phone, Mail, MessageCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import Footer from "@/components/Footer";
+
+interface FAQItem {
+  id: number;
+  question: string;
+  answer: string;
+  category: string;
+}
 
 const FAQ = () => {
   const [openItems, setOpenItems] = useState<number[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState("all");
 
-  const toggleItem = (index: number) => {
-    setOpenItems(prev => 
-      prev.includes(index) 
-        ? prev.filter(i => i !== index)
-        : [...prev, index]
-    );
-  };
-
-  const faqs = [
+  const faqData: FAQItem[] = [
     {
-      question: "How do I find AC repair services near me?",
-      answer: "Simply enter your zip code or city in our search bar, select the type of service you need, and browse through verified AC repair professionals in your area. All listings include ratings, reviews, and contact information."
+      id: 1,
+      question: "How do I find a reliable AC contractor near me?",
+      answer: "Use our verified contractor directory by entering your ZIP code. All contractors are pre-screened, licensed, and insured. Look for verified badges, customer reviews, and response times to make your decision.",
+      category: "finding-contractors"
     },
     {
-      question: "Are all AC repair companies on your platform verified?",
-      answer: "Yes! We verify all businesses through licensing checks, insurance verification, and background screening. Look for the verified badge next to business names for additional assurance."
-    },
-    {
-      question: "How much does it cost to list my AC business?",
-      answer: "We offer three tiers: Basic ($29/month), Premium ($79/month), and Enterprise ($149/month). Each tier offers different levels of visibility and features to help grow your business."
-    },
-    {
-      question: "What's included in emergency AC repair services?",
-      answer: "Emergency services typically include 24/7 availability, same-day repairs, diagnostic services, and temporary cooling solutions. Contact individual contractors for specific emergency service details."
-    },
-    {
-      question: "How do I leave a review for an AC contractor?",
-      answer: "After receiving service, you can leave a review by visiting the contractor's profile page and clicking the 'Write Review' button. Reviews help other customers make informed decisions."
-    },
-    {
+      id: 2,
       question: "What should I do if my AC stops working?",
-      answer: "First, check your thermostat settings and circuit breaker. If the issue persists, contact one of our verified AC repair professionals for diagnosis and repair. Many offer emergency services for urgent situations."
+      answer: "First, check your thermostat settings and circuit breaker. Replace the air filter if it's dirty. If these steps don't help, contact one of our emergency contractors available 24/7.",
+      category: "emergency"
     },
     {
-      question: "Do you offer rebate information for AC installations?",
-      answer: "Yes! Our Local Rebate Finder helps you discover federal, state, and utility rebates available in your area for energy-efficient AC installations and upgrades."
+      id: 3,
+      question: "How much does AC repair typically cost?",
+      answer: "AC repair costs vary depending on the issue. Simple fixes like filter replacement cost $20-50, while major repairs like compressor replacement can cost $1,500-3,000. Get multiple quotes from our verified contractors for accurate pricing.",
+      category: "pricing"
     },
     {
-      question: "How can I get quotes from multiple contractors?",
-      answer: "Use our 'Get Quote' feature on individual business listings to request estimates. We recommend getting quotes from 3-4 contractors to compare pricing and services."
+      id: 4,
+      question: "How often should I service my AC unit?",
+      answer: "We recommend professional AC maintenance twice a year - before summer and winter. Regular maintenance can prevent 85% of AC problems and extend your system's lifespan by 5-10 years.",
+      category: "maintenance"
+    },
+    {
+      id: 5,
+      question: "What are signs that I need a new AC system?",
+      answer: "Consider replacement if your AC is over 15 years old, requires frequent repairs, has rising energy bills, or doesn't cool evenly. Our contractors can perform efficiency assessments to help you decide.",
+      category: "replacement"
+    },
+    {
+      id: 6,
+      question: "Do you provide emergency AC repair services?",
+      answer: "Yes! We have 24/7 emergency contractors available across Florida. Average response time is under 1 hour. Emergency services may cost more but prevent further damage to your system.",
+      category: "emergency"
+    },
+    {
+      id: 7,
+      question: "How do I list my AC business on your platform?",
+      answer: "Visit our 'List Your Business' page to choose a subscription plan. Plans start at $29/month and include business listing, customer reviews, and lead generation tools. Setup takes less than 10 minutes.",
+      category: "business"
+    },
+    {
+      id: 8,
+      question: "Are the contractors on your platform licensed and insured?",
+      answer: "Absolutely. We verify all contractor licenses, insurance, and business credentials before approval. Look for the verified badge on contractor profiles for additional assurance.",
+      category: "verification"
+    },
+    {
+      id: 9,
+      question: "Can I get quotes from multiple contractors?",
+      answer: "Yes! We recommend getting 2-3 quotes for major repairs or installations. Use our quote request form to contact multiple verified contractors in your area simultaneously.",
+      category: "quotes"
+    },
+    {
+      id: 10,
+      question: "What financing options are available for AC replacement?",
+      answer: "Many of our contractors offer financing options including 0% APR for qualified customers. Financing terms typically range from 12-84 months depending on the contractor and your credit.",
+      category: "financing"
     }
   ];
+
+  const categories = [
+    { value: "all", label: "All Questions" },
+    { value: "finding-contractors", label: "Finding Contractors" },
+    { value: "emergency", label: "Emergency Services" },
+    { value: "pricing", label: "Pricing & Costs" },
+    { value: "maintenance", label: "Maintenance" },
+    { value: "business", label: "Business Listings" }
+  ];
+
+  const filteredFAQs = selectedCategory === "all" 
+    ? faqData 
+    : faqData.filter(item => item.category === selectedCategory);
+
+  const toggleItem = (id: number) => {
+    setOpenItems(prev => 
+      prev.includes(id) 
+        ? prev.filter(item => item !== id)
+        : [...prev, id]
+    );
+  };
 
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-white border-b shadow-sm">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <img 
-                src="/lovable-uploads/199e8012-a0ff-42e4-bcb0-b5aa38e394c5.png" 
-                alt="AC Repair Near Me" 
-                className="h-10 w-auto"
-              />
-            </div>
-            <nav className="hidden md:flex space-x-6">
-              <a href="/" className="text-gray-600 hover:text-blue-600 transition-colors">Find Contractors</a>
-              <a href="/#pricing" className="text-gray-600 hover:text-blue-600 transition-colors">List Your Business</a>
-              <a href="/faq" className="text-gray-600 hover:text-blue-600 transition-colors">FAQ</a>
-            </nav>
-          </div>
+      <div className="bg-gradient-to-br from-blue-50 to-indigo-100 py-16">
+        <div className="container mx-auto px-4 text-center">
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            Frequently Asked Questions
+          </h1>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Find answers to common questions about AC repair, maintenance, and our contractor directory.
+          </p>
         </div>
-      </header>
+      </div>
 
       <div className="container mx-auto px-4 py-12">
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              Frequently Asked Questions
-            </h1>
-            <p className="text-xl text-gray-600">
-              Find answers to common questions about AC repair services and our platform
-            </p>
-          </div>
-
-          <div className="space-y-4">
-            {faqs.map((faq, index) => (
-              <Card key={index} className="overflow-hidden">
-                <CardHeader 
-                  className="cursor-pointer hover:bg-gray-50 transition-colors"
-                  onClick={() => toggleItem(index)}
-                >
-                  <CardTitle className="flex items-center justify-between text-lg">
-                    {faq.question}
-                    {openItems.includes(index) ? (
-                      <ChevronUp className="w-5 h-5 text-gray-500" />
-                    ) : (
-                      <ChevronDown className="w-5 h-5 text-gray-500" />
-                    )}
-                  </CardTitle>
-                </CardHeader>
-                {openItems.includes(index) && (
-                  <CardContent className="pt-0">
-                    <p className="text-gray-600 leading-relaxed">{faq.answer}</p>
-                  </CardContent>
-                )}
-              </Card>
+        {/* Category Filter */}
+        <div className="mb-8">
+          <div className="flex flex-wrap justify-center gap-2">
+            {categories.map((category) => (
+              <Button
+                key={category.value}
+                variant={selectedCategory === category.value ? "default" : "outline"}
+                onClick={() => setSelectedCategory(category.value)}
+                className="mb-2"
+              >
+                {category.label}
+              </Button>
             ))}
           </div>
+        </div>
 
-          <div className="mt-12 text-center">
-            <Card className="bg-blue-50 border-blue-200">
-              <CardContent className="p-8">
-                <h3 className="text-2xl font-bold text-blue-900 mb-4">
-                  Still have questions?
-                </h3>
-                <p className="text-blue-700 mb-6">
-                  Can't find the answer you're looking for? Our support team is here to help.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <a 
-                    href="mailto:support@acrepairnearme.pro"
-                    className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
-                  >
-                    Email Support
-                  </a>
-                  <a 
-                    href="tel:(855)227-3724"
-                    className="bg-white text-blue-600 border border-blue-600 px-6 py-3 rounded-lg hover:bg-blue-50 transition-colors"
-                  >
-                    Call (855) AC-REPAIR
-                  </a>
-                </div>
-              </CardContent>
+        {/* FAQ Items */}
+        <div className="max-w-4xl mx-auto space-y-4">
+          {filteredFAQs.map((item) => (
+            <Card key={item.id}>
+              <Collapsible
+                open={openItems.includes(item.id)}
+                onOpenChange={() => toggleItem(item.id)}
+              >
+                <CollapsibleTrigger asChild>
+                  <CardHeader className="cursor-pointer hover:bg-gray-50 transition-colors">
+                    <div className="flex items-center justify-between">
+                      <CardTitle className="text-left text-lg font-medium">
+                        {item.question}
+                      </CardTitle>
+                      {openItems.includes(item.id) ? (
+                        <Minus className="w-5 h-5 text-gray-500" />
+                      ) : (
+                        <Plus className="w-5 h-5 text-gray-500" />
+                      )}
+                    </div>
+                  </CardHeader>
+                </CollapsibleTrigger>
+                <CollapsibleContent>
+                  <CardContent className="pt-0">
+                    <p className="text-gray-600 leading-relaxed">{item.answer}</p>
+                  </CardContent>
+                </CollapsibleContent>
+              </Collapsible>
             </Card>
+          ))}
+        </div>
+
+        {/* Contact Section */}
+        <div className="mt-16 bg-blue-50 rounded-lg p-8 max-w-4xl mx-auto">
+          <h3 className="text-2xl font-bold text-center mb-6">Still Have Questions?</h3>
+          <p className="text-center text-gray-600 mb-8">
+            Can't find what you're looking for? Our support team is here to help.
+          </p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="text-center">
+              <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                <Mail className="w-6 h-6 text-white" />
+              </div>
+              <h4 className="font-semibold mb-2">Email Support</h4>
+              <p className="text-gray-600 text-sm mb-3">
+                Get detailed answers to your questions
+              </p>
+              <Button variant="outline" size="sm">
+                support@acrepairnearme.pro
+              </Button>
+            </div>
+            
+            <div className="text-center">
+              <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                <MessageCircle className="w-6 h-6 text-white" />
+              </div>
+              <h4 className="font-semibold mb-2">Live Chat</h4>
+              <p className="text-gray-600 text-sm mb-3">
+                Chat with our team during business hours
+              </p>
+              <Button variant="outline" size="sm">
+                Start Chat
+              </Button>
+            </div>
+            
+            <div className="text-center">
+              <div className="w-12 h-12 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-3">
+                <Phone className="w-6 h-6 text-white" />
+              </div>
+              <h4 className="font-semibold mb-2">Call Us</h4>
+              <p className="text-gray-600 text-sm mb-3">
+                Speak directly with our support team
+              </p>
+              <Button variant="outline" size="sm">
+                (855) AC-REPAIR
+              </Button>
+            </div>
           </div>
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 };

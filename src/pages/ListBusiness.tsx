@@ -1,15 +1,13 @@
 
 import { Link } from "react-router-dom";
-import { ArrowLeft, CheckCircle, Star, TrendingUp } from "lucide-react";
+import { ArrowLeft, CheckCircle, Star, TrendingUp, Users, Award, Clock } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import PricingSection from "@/components/PricingSection";
-import { useAuth } from "@/contexts/AuthContext";
+import Footer from "@/components/Footer";
 
 const ListBusiness = () => {
-  const { user } = useAuth();
-
   return (
     <div className="min-h-screen bg-background">
       <header className="bg-white border-b shadow-sm">
@@ -29,16 +27,60 @@ const ListBusiness = () => {
         </div>
       </header>
 
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            List Your AC Business
-          </h1>
-          <p className="text-lg text-gray-600">
-            Choose a plan to get started and reach thousands of potential customers
-          </p>
-        </div>
+      {/* Hero Section */}
+      <div className="bg-gradient-to-br from-blue-50 to-indigo-100 py-16">
+        <div className="container mx-auto px-4">
+          <div className="text-center max-w-4xl mx-auto">
+            <Badge className="mb-6 bg-blue-100 text-blue-800 px-4 py-2">
+              Florida's #1 AC Business Directory
+            </Badge>
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Grow Your AC Business with 
+              <span className="text-blue-600"> Qualified Leads</span>
+            </h1>
+            <p className="text-xl text-gray-600 mb-8 leading-relaxed">
+              Join over 2,500 successful AC contractors who've increased their revenue by an average of 40% 
+              through our proven directory platform. Get connected with homeowners actively seeking AC services.
+            </p>
+            
+            {/* Key Stats */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <div className="bg-white rounded-lg p-6 shadow-md">
+                <div className="flex items-center justify-center mb-2">
+                  <Users className="w-8 h-8 text-blue-600" />
+                </div>
+                <div className="text-2xl font-bold text-gray-900">50,000+</div>
+                <div className="text-gray-600">Monthly Searches</div>
+              </div>
+              <div className="bg-white rounded-lg p-6 shadow-md">
+                <div className="flex items-center justify-center mb-2">
+                  <Award className="w-8 h-8 text-green-600" />
+                </div>
+                <div className="text-2xl font-bold text-gray-900">2,500+</div>
+                <div className="text-gray-600">Verified Contractors</div>
+              </div>
+              <div className="bg-white rounded-lg p-6 shadow-md">
+                <div className="flex items-center justify-center mb-2">
+                  <Clock className="w-8 h-8 text-purple-600" />
+                </div>
+                <div className="text-2xl font-bold text-gray-900">24 Hours</div>
+                <div className="text-gray-600">Average Time to First Lead</div>
+              </div>
+            </div>
 
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-lg px-8 py-3">
+                View Pricing Plans Below
+              </Button>
+              <Button variant="outline" size="lg" className="text-lg px-8 py-3">
+                See Success Stories
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 py-8">
         {/* Pricing Section */}
         <PricingSection />
 
@@ -136,7 +178,7 @@ const ListBusiness = () => {
               </div>
               <h4 className="text-xl font-semibold mb-3">Go Live & Get Customers</h4>
               <p className="text-gray-600 mb-4">
-                Your business listing goes live immediately and starts appearing in search results. Begin receiving customer inquiries, quote requests, and phone calls from homeowners in your service area within 24-48 hours.
+                Your business listing goes live immediately and starts appearing in search results. Begin receiving customer inquiries, quote requests within 24-48 hours.
               </p>
               <div className="text-sm text-gray-500">
                 <strong>Results:</strong> 24-48 hours<br />
@@ -198,6 +240,8 @@ const ListBusiness = () => {
           </div>
         </div>
       </div>
+      
+      <Footer />
     </div>
   );
 };
