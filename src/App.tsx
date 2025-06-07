@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
+import BreadcrumbNavigation from "@/components/BreadcrumbNavigation";
 import Index from "./pages/Index";
 import BusinessDetail from "./pages/BusinessDetail";
 import BusinessDetailDynamic from "./pages/BusinessDetailDynamic";
@@ -39,6 +40,7 @@ const App: React.FC = () => {
         <Sonner />
         <AuthProvider>
           <BrowserRouter>
+            <BreadcrumbNavigation />
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<Auth />} />
