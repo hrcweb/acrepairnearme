@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -15,6 +14,7 @@ import NotFound from "./pages/NotFound";
 import ListBusiness from "./pages/ListBusiness";
 import Emergency from "./pages/Emergency";
 import Admin from "./pages/Admin";
+import BackOffice from "./pages/BackOffice";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -41,6 +41,7 @@ const App: React.FC = () => {
               <Route path="/list-business" element={<ListBusiness />} />
               <Route path="/emergency" element={<Emergency />} />
               <Route path="/admin" element={<Admin />} />
+              <Route path="/back-office" element={<BackOffice />} />
               <Route path="/payment-success" element={<PaymentSuccess />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
