@@ -17,6 +17,10 @@ import ListBusiness from "./pages/ListBusiness";
 import Emergency from "./pages/Emergency";
 import Admin from "./pages/Admin";
 import BackOffice from "./pages/BackOffice";
+import ContactSupport from "./pages/ContactSupport";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
+import ContractorGuidelines from "./pages/ContractorGuidelines";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -46,6 +50,10 @@ const App: React.FC = () => {
               <Route path="/admin" element={<Admin />} />
               <Route path="/back-office" element={<BackOffice />} />
               <Route path="/payment-success" element={<PaymentSuccess />} />
+              <Route path="/contact-support" element={<ContactSupport />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/terms-of-service" element={<TermsOfService />} />
+              <Route path="/contractor-guidelines" element={<ContractorGuidelines />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

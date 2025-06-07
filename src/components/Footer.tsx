@@ -1,4 +1,6 @@
 
+import { Link } from "react-router-dom";
+
 const Footer = () => {
   return (
     <footer className="bg-gray-900 text-white py-8 mt-16">
@@ -20,20 +22,20 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-2 text-gray-300">
-              <li><a href="/" className="hover:text-white transition-colors">Home</a></li>
-              <li><a href="/list-business" className="hover:text-white transition-colors">List Your Business</a></li>
-              <li><a href="/emergency" className="hover:text-white transition-colors">Emergency Service</a></li>
-              <li><a href="/faq" className="hover:text-white transition-colors">FAQ</a></li>
+              <li><Link to="/" className="hover:text-white transition-colors">Home</Link></li>
+              <li><Link to="/list-business" className="hover:text-white transition-colors">List Your Business</Link></li>
+              <li><Link to="/emergency" className="hover:text-white transition-colors">Emergency Service</Link></li>
+              <li><Link to="/faq" className="hover:text-white transition-colors">FAQ</Link></li>
             </ul>
           </div>
           
           <div>
             <h4 className="font-semibold mb-4">Support</h4>
             <ul className="space-y-2 text-gray-300">
-              <li><a href="mailto:support@acrepairnearme.pro" className="hover:text-white transition-colors">Contact Support</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Privacy Policy</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Terms of Service</a></li>
-              <li><a href="#" className="hover:text-white transition-colors">Contractor Guidelines</a></li>
+              <li><Link to="/contact-support" className="hover:text-white transition-colors">Contact Support</Link></li>
+              <li><Link to="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
+              <li><Link to="/terms-of-service" className="hover:text-white transition-colors">Terms of Service</Link></li>
+              <li><Link to="/contractor-guidelines" className="hover:text-white transition-colors">Contractor Guidelines</Link></li>
             </ul>
           </div>
         </div>

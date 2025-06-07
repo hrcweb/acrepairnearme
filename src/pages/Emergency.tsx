@@ -10,6 +10,7 @@ import Footer from "@/components/Footer";
 
 const Emergency = () => {
   const [zipCode, setZipCode] = useState("");
+  const [showResults, setShowResults] = useState(false);
 
   const emergencyContractors = [
     {
@@ -46,6 +47,12 @@ const Emergency = () => {
       verified: true
     }
   ];
+
+  const handleFindHelp = () => {
+    if (zipCode.trim()) {
+      setShowResults(true);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -97,7 +104,10 @@ const Emergency = () => {
                 onChange={(e) => setZipCode(e.target.value)}
                 className="flex-1"
               />
-              <Button className="bg-red-600 hover:bg-red-700">
+              <Button 
+                className="bg-red-600 hover:bg-red-700"
+                onClick={handleFindHelp}
+              >
                 Find Help Now
               </Button>
             </div>
@@ -106,66 +116,73 @@ const Emergency = () => {
       </div>
 
       <div className="container mx-auto px-4 py-12">
-        {/* Emergency Contractors */}
-        <div className="mb-12">
-          <h2 className="text-3xl font-bold text-center mb-8">Available Emergency Contractors</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {emergencyContractors.map((contractor) => (
-              <Card key={contractor.id} className="border-l-4 border-l-red-500">
-                <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <CardTitle className="text-lg">{contractor.name}</CardTitle>
-                      <div className="flex items-center space-x-2 mt-1">
-                        <MapPin className="w-4 h-4 text-gray-500" />
-                        <span className="text-gray-600 text-sm">{contractor.location}</span>
+        {/* Emergency Contractors - Show based on search */}
+        {showResults && (
+          <div className="mb-12">
+            <h2 className="text-3xl font-bold text-center mb-8">Available Emergency Contractors Near {zipCode}</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {emergencyContractors.map((contractor) => (
+                <Card key={contractor.id} className="border-l-4 border-l-red-500">
+                  <CardHeader>
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <CardTitle className="text-lg">{contractor.name}</CardTitle>
+                        <div className="flex items-center space-x-2 mt-1">
+                          <MapPin className="w-4 h-4 text-gray-500" />
+                          <span className="text-gray-600 text-sm">{contractor.location}</span>
+                        </div>
                       </div>
+                      {contractor.verified && (
+                        <CheckCircle className="w-5 h-5 text-green-500" />
+                      )}
                     </div>
-                    {contractor.verified && (
-                      <CheckCircle className="w-5 h-5 text-green-500" />
-                    )}
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-1">
-                        <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                        <span className="font-medium">{contractor.rating}</span>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-1">
+                          <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                          <span className="font-medium">{contractor.rating}</span>
+                        </div>
+                        <Badge className="bg-green-100 text-green-800">
+                          {contractor.availability}
+                        </Badge>
                       </div>
-                      <Badge className="bg-green-100 text-green-800">
-                        {contractor.availability}
-                      </Badge>
-                    </div>
-                    
-                    <div className="flex items-center space-x-2">
-                      <Clock className="w-4 h-4 text-gray-500" />
-                      <span className="text-sm">Response time: {contractor.responseTime}</span>
-                    </div>
+                      
+                      <div className="flex items-center space-x-2">
+                        <Clock className="w-4 h-4 text-gray-500" />
+                        <span className="text-sm">Response time: {contractor.responseTime}</span>
+                      </div>
 
-                    <div>
-                      <p className="text-sm font-medium mb-1">Emergency Services:</p>
-                      <div className="flex flex-wrap gap-1">
-                        {contractor.services.map((service, index) => (
-                          <Badge key={index} variant="outline" className="text-xs">
-                            {service}
-                          </Badge>
-                        ))}
+                      <div>
+                        <p className="text-sm font-medium mb-1">Emergency Services:</p>
+                        <div className="flex flex-wrap gap-1">
+                          {contractor.services.map((service, index) => (
+                            <Badge key={index} variant="outline" className="text-xs">
+                              {service}
+                            </Badge>
+                          ))}
+                        </div>
                       </div>
-                    </div>
 
-                    <Button className="w-full bg-red-600 hover:bg-red-700">
-                      <Phone className="w-4 h-4 mr-2" />
-                      Call {contractor.phone}
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                      <Button 
+                        className="w-full bg-red-600 hover:bg-red-700"
+                        asChild
+                      >
+                        <a href={`tel:${contractor.phone}`}>
+                          <Phone className="w-4 h-4 mr-2" />
+                          Call {contractor.phone}
+                        </a>
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
-        {/* Emergency Service Locator */}
+        {/* Always show Emergency Service Locator */}
         <EmergencyServiceLocator />
 
         {/* Emergency Tips */}
