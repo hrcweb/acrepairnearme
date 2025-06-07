@@ -16,7 +16,7 @@ const Emergency = () => {
     {
       id: 1,
       name: "24/7 AC Emergency Repair",
-      phone: "(305) 555-0123",
+      phone: "561-206-2624",
       rating: 4.9,
       responseTime: "30 minutes",
       location: "Miami, FL",
@@ -27,7 +27,7 @@ const Emergency = () => {
     {
       id: 2,
       name: "Quick Cool AC Services",
-      phone: "(407) 555-0456",
+      phone: "561-206-2624",
       rating: 4.8,
       responseTime: "45 minutes",
       location: "Orlando, FL",
@@ -38,7 +38,7 @@ const Emergency = () => {
     {
       id: 3,
       name: "Rapid Response HVAC",
-      phone: "(813) 555-0789",
+      phone: "561-206-2624",
       rating: 4.7,
       responseTime: "1 hour",
       location: "Tampa, FL",

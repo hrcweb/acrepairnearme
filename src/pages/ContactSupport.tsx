@@ -131,7 +131,7 @@ const ContactSupport = () => {
                   <Phone className="w-5 h-5 text-blue-600 mt-1" />
                   <div>
                     <h3 className="font-semibold">Phone Support</h3>
-                    <p className="text-gray-600">(855) AC-REPAIR</p>
+                    <p className="text-gray-600">561-206-2624</p>
                     <p className="text-sm text-gray-500">Mon-Fri 9AM-6PM EST</p>
                   </div>
                 </div>

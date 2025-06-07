@@ -22,7 +22,7 @@ const emergencyBusinesses: EmergencyBusiness[] = [
   {
     id: 1,
     name: "Cool Breeze AC Repair",
-    phone: "(305) 555-0123",
+    phone: "561-206-2624",
     address: "123 Ocean Drive, Miami, FL",
     distance: 2.5,
     rating: 4.8,
@@ -33,7 +33,7 @@ const emergencyBusinesses: EmergencyBusiness[] = [
   {
     id: 3,
     name: "Sunshine AC & Heating",
-    phone: "(813) 555-0789",
+    phone: "561-206-2624",
     address: "789 Tampa Bay Blvd, Tampa, FL",
     distance: 15.3,
     rating: 4.9,
