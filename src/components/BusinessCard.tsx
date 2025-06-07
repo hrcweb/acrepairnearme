@@ -1,3 +1,4 @@
+
 import { Phone, MapPin, Star, CheckCircle, ExternalLink } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -28,15 +29,17 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
       <CardHeader>
         <div className="flex justify-between items-start">
           <div className="flex items-start space-x-4">
-            <img 
-              src={business.image} 
-              alt={business.name}
-              className="w-16 h-16 rounded-lg object-cover bg-gray-200"
-            />
+            <Link to={`/business/${business.id}`}>
+              <img 
+                src={business.image} 
+                alt={business.name}
+                className="w-16 h-16 rounded-lg object-cover bg-gray-200 hover:opacity-80 transition-opacity cursor-pointer"
+              />
+            </Link>
             <div className="flex-1">
               <div className="flex items-center space-x-2">
                 <Link to={`/business/${business.id}`}>
-                  <h3 className="text-xl font-semibold text-gray-900 hover:text-blue-600 transition-colors">
+                  <h3 className="text-xl font-semibold text-gray-900 hover:text-blue-600 transition-colors cursor-pointer">
                     {business.name}
                   </h3>
                 </Link>
@@ -85,7 +88,9 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
           <div className="space-y-1">
             <div className="flex items-center text-sm text-gray-600">
               <Phone className="w-4 h-4 mr-1" />
-              {business.phone}
+              <a href={`tel:${business.phone}`} className="hover:text-blue-600 transition-colors">
+                {business.phone}
+              </a>
             </div>
             <div className="flex items-center text-sm text-gray-600">
               <MapPin className="w-4 h-4 mr-1" />
@@ -93,11 +98,11 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
             </div>
           </div>
           <div className="flex space-x-2">
-            <Button size="sm" variant="outline">
-              Call Now
+            <Button size="sm" variant="outline" asChild>
+              <a href={`tel:${business.phone}`}>Call Now</a>
             </Button>
-            <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
-              Get Quote
+            <Button size="sm" className="bg-blue-600 hover:bg-blue-700" asChild>
+              <Link to={`/business/${business.id}`}>Get Quote</Link>
             </Button>
           </div>
         </div>
