@@ -310,9 +310,9 @@ const Index = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <SubscriptionButton tier="Basic" price={29} className="w-full bg-blue-600 hover:bg-blue-700">
-                    List Your Business
-                  </SubscriptionButton>
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700" asChild>
+                    <a href="/list-business">List Your Business</a>
+                  </Button>
                   <p className="text-sm text-blue-600 mt-2 text-center">
                     Starting at $29/month
                   </p>
