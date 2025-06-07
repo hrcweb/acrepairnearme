@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -37,6 +38,48 @@ const Index = () => {
   const [searchLocation, setSearchLocation] = useState("");
   const [serviceFilter, setServiceFilter] = useState("");
   const [sortBy, setSortBy] = useState("rating");
+
+  // Add SEO metadata effect
+  useEffect(() => {
+    document.title = "AC Repair Near Me | Commercial AC Repair Florida | 24/7 Emergency HVAC Service";
+    
+    // Update meta description
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 
+        'Find top-rated AC repair near me in Florida. Professional commercial AC repair, heating and air conditioning repair services. Licensed HVAC contractors available 24/7. Get quotes today!'
+      );
+    }
+
+    // Add structured data for better SEO
+    const structuredData = {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "AC Repair Near Me - Find Local HVAC Contractors",
+      "description": "Directory of professional AC repair and commercial HVAC services across Florida",
+      "url": window.location.href,
+      "mainEntity": {
+        "@type": "ItemList",
+        "name": "AC Repair Contractors",
+        "description": "List of verified AC repair and HVAC contractors in Florida"
+      }
+    };
+
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(structuredData);
+    document.head.appendChild(script);
+
+    return () => {
+      // Cleanup script on unmount
+      const scripts = document.querySelectorAll('script[type="application/ld+json"]');
+      scripts.forEach(script => {
+        if (script.textContent?.includes('"AC Repair Near Me - Find Local HVAC Contractors"')) {
+          script.remove();
+        }
+      });
+    };
+  }, []);
 
   // Fetch businesses from database
   const { data: businessData, isLoading, error } = useQuery({
@@ -159,26 +202,73 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <HeroSection onSearch={handleHeroSearch} />
-      
-      <div className="container mx-auto px-4 py-8">
+      {/* SEO-optimized main content area */}
+      <main role="main">
+        <HeroSection onSearch={handleHeroSearch} />
         
-        
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
-          <div className="lg:col-span-2">
-            <BusinessList 
-              businesses={filteredBusinesses}
-              isLoading={isLoading}
-              searchLocation={searchLocation}
-            />
-          </div>
+        <div className="container mx-auto px-4 py-8">
+          {/* SEO content section */}
+          <section className="mb-8 text-center">
+            <h2 className="text-3xl font-bold mb-4 text-gray-900">
+              Find Trusted AC Repair Near Me & Commercial HVAC Services
+            </h2>
+            <p className="text-lg text-gray-600 max-w-4xl mx-auto">
+              Our directory connects you with licensed and verified AC repair contractors specializing in 
+              residential and commercial heating and air conditioning repair near me. Whether you need 
+              emergency AC repair, routine maintenance, or commercial HVAC services, find qualified 
+              professionals in your area with verified reviews and instant quotes.
+            </p>
+          </section>
           
-          <div className="space-y-8">
-            <LocalRebateFinder />
-            <HeatIndexVisualization />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
+            <div className="lg:col-span-2">
+              <BusinessList 
+                businesses={filteredBusinesses}
+                isLoading={isLoading}
+                searchLocation={searchLocation}
+              />
+            </div>
+            
+            <aside className="space-y-8" role="complementary">
+              <LocalRebateFinder />
+              <HeatIndexVisualization />
+            </aside>
           </div>
+
+          {/* Additional SEO content */}
+          <section className="mt-16 bg-gray-50 rounded-lg p-8">
+            <h3 className="text-2xl font-bold mb-6 text-center">
+              Why Choose Our AC Repair Directory?
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-gray-700">
+              <div>
+                <h4 className="font-semibold mb-2">Licensed & Verified Contractors</h4>
+                <p className="text-sm">All AC repair contractors are verified for proper licensing, insurance, and credentials.</p>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2">Commercial AC Repair Specialists</h4>
+                <p className="text-sm">Find contractors specializing in commercial heating and air conditioning repair for businesses.</p>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2">24/7 Emergency Service</h4>
+                <p className="text-sm">Access emergency AC repair services available around the clock for urgent situations.</p>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2">Local Florida Coverage</h4>
+                <p className="text-sm">Comprehensive coverage across Florida cities for both residential and commercial HVAC needs.</p>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2">Instant Quotes & Reviews</h4>
+                <p className="text-sm">Get instant quotes and read verified customer reviews before choosing your AC repair contractor.</p>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2">No Hidden Fees</h4>
+                <p className="text-sm">Transparent pricing with no hidden fees. Compare quotes from multiple AC repair contractors.</p>
+              </div>
+            </div>
+          </section>
         </div>
-      </div>
+      </main>
       
       <Footer />
     </div>

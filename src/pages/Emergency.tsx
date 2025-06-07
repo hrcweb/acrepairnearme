@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Clock, Phone, MapPin, AlertTriangle, CheckCircle, Star } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,58 @@ import Footer from "@/components/Footer";
 const Emergency = () => {
   const [zipCode, setZipCode] = useState("");
   const [showResults, setShowResults] = useState(false);
+
+  // SEO optimization
+  useEffect(() => {
+    document.title = "24/7 Emergency AC Repair Near Me | Commercial Emergency HVAC Services Florida";
+    
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 
+        '24/7 emergency AC repair near me. Fast response commercial and residential emergency HVAC services across Florida. Licensed contractors available now for urgent AC repairs.'
+      );
+    }
+
+    // Add emergency service structured data
+    const structuredData = {
+      "@context": "https://schema.org",
+      "@type": "EmergencyService",
+      "name": "24/7 Emergency AC Repair Services",
+      "description": "24/7 emergency AC repair and commercial HVAC services across Florida",
+      "serviceArea": {
+        "@type": "State", 
+        "name": "Florida"
+      },
+      "availableService": [
+        {
+          "@type": "Service",
+          "name": "Emergency AC Repair",
+          "description": "24/7 emergency air conditioning repair services"
+        },
+        {
+          "@type": "Service", 
+          "name": "Commercial Emergency HVAC",
+          "description": "Emergency commercial heating and air conditioning repair"
+        }
+      ],
+      "telephone": "561-206-2624",
+      "hoursAvailable": "Mo,Tu,We,Th,Fr,Sa,Su 00:00-23:59"
+    };
+
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(structuredData);
+    document.head.appendChild(script);
+
+    return () => {
+      const scripts = document.querySelectorAll('script[type="application/ld+json"]');
+      scripts.forEach(script => {
+        if (script.textContent?.includes('"24/7 Emergency AC Repair Services"')) {
+          script.remove();
+        }
+      });
+    };
+  }, []);
 
   const emergencyContractors = [
     {
@@ -61,20 +113,20 @@ const Emergency = () => {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-center space-x-2">
             <AlertTriangle className="w-6 h-6" />
-            <span className="text-lg font-semibold">24/7 Emergency AC Service Available</span>
+            <span className="text-lg font-semibold">24/7 Emergency AC Repair Service Available</span>
           </div>
         </div>
       </div>
 
       {/* Hero Section */}
-      <div className="bg-gradient-to-br from-red-50 to-orange-50 py-16">
+      <header className="bg-gradient-to-br from-red-50 to-orange-50 py-16">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Emergency AC Repair
+            Emergency AC Repair Near Me
           </h1>
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            AC system down? Get immediate help from verified emergency contractors available 24/7 across Florida.
-          </p>
+          <h2 className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+            24/7 Emergency AC Repair & Commercial HVAC Services - Get immediate help from verified emergency contractors available around the clock across Florida.
+          </h2>
           
           {/* Emergency Stats */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-2xl mx-auto mb-8">
@@ -99,27 +151,29 @@ const Emergency = () => {
           <div className="max-w-md mx-auto">
             <div className="flex gap-2">
               <Input
-                placeholder="Enter your ZIP code"
+                placeholder="Enter your ZIP code for emergency AC repair"
                 value={zipCode}
                 onChange={(e) => setZipCode(e.target.value)}
                 className="flex-1"
+                aria-label="Enter ZIP code for emergency AC repair"
               />
               <Button 
                 className="bg-red-600 hover:bg-red-700"
                 onClick={handleFindHelp}
+                aria-label="Find emergency AC repair help"
               >
                 Find Help Now
               </Button>
             </div>
           </div>
         </div>
-      </div>
+      </header>
 
-      <div className="container mx-auto px-4 py-12">
+      <main className="container mx-auto px-4 py-12">
         {/* Emergency Contractors - Show based on search */}
         {showResults && (
-          <div className="mb-12">
-            <h2 className="text-3xl font-bold text-center mb-8">Available Emergency Contractors Near {zipCode}</h2>
+          <section className="mb-12">
+            <h3 className="text-3xl font-bold text-center mb-8">Available Emergency AC Repair Contractors Near {zipCode}</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {emergencyContractors.map((contractor) => (
                 <Card key={contractor.id} className="border-l-4 border-l-red-500">
@@ -179,39 +233,55 @@ const Emergency = () => {
                 </Card>
               ))}
             </div>
-          </div>
+          </section>
         )}
 
         {/* Always show Emergency Service Locator */}
         <EmergencyServiceLocator />
 
         {/* Emergency Tips */}
-        <div className="mt-12 bg-gray-50 rounded-lg p-8">
-          <h3 className="text-2xl font-bold text-center mb-8">What to Do While You Wait</h3>
+        <section className="mt-12 bg-gray-50 rounded-lg p-8">
+          <h3 className="text-2xl font-bold text-center mb-8">What to Do While You Wait for Emergency AC Repair</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <h4 className="font-semibold text-lg mb-3 text-red-600">Immediate Steps:</h4>
+              <h4 className="font-semibold text-lg mb-3 text-red-600">Call Emergency AC Repair If:</h4>
               <ul className="space-y-2 text-gray-700">
-                <li>• Turn off your AC system at the thermostat</li>
-                <li>• Check circuit breakers and reset if tripped</li>
-                <li>• Replace air filter if it's dirty</li>
-                <li>• Clear area around outdoor unit</li>
-                <li>• Check for obvious leaks or damage</li>
+                <li>• AC unit is smoking or burning smell</li>
+                <li>• Electrical sparks or unusual noises</li>
+                <li>• Complete system failure in extreme heat</li>
+                <li>• Water leaking extensively</li>
+                <li>• Commercial HVAC system down during business hours</li>
               </ul>
             </div>
             <div>
-              <h4 className="font-semibold text-lg mb-3 text-blue-600">Safety Reminders:</h4>
+              <h4 className="font-semibold text-lg mb-3 text-blue-600">AC Issues That Can Wait:</h4>
               <ul className="space-y-2 text-gray-700">
-                <li>• Never attempt electrical repairs yourself</li>
-                <li>• Keep pets and children away from units</li>
-                <li>• Don't use space heaters as temporary cooling</li>
-                <li>• Stay hydrated in hot weather</li>
-                <li>• Consider temporary cooling options</li>
+                <li>• AC not cooling efficiently</li>
+                <li>• Strange but not alarming sounds</li>
+                <li>• Unit turns on but doesn't cool properly</li>
+                <li>• Filter needs replacement</li>
+                <li>• Minor refrigerant leaks</li>
               </ul>
             </div>
           </div>
-        </div>
-      </div>
+        </section>
+
+        {/* SEO Content Section */}
+        <section className="mt-12">
+          <h3 className="text-2xl font-bold text-center mb-6">Emergency AC Repair & Commercial HVAC Services</h3>
+          <div className="max-w-4xl mx-auto text-gray-700">
+            <p className="mb-4">
+              When your air conditioning system fails, especially during Florida's hot climate, you need fast, reliable emergency AC repair near me. Our network of verified contractors specializes in both residential and commercial emergency HVAC services, ensuring you get immediate help when you need it most.
+            </p>
+            <p className="mb-4">
+              Our emergency AC repair contractors are available 24/7 and specialize in commercial heating and air conditioning repair near me, serving businesses and residential properties across Florida. Whether it's a complete system breakdown, electrical issues, or refrigerant leaks, our verified professionals provide rapid response emergency services.
+            </p>
+            <p>
+              Don't let a broken AC system disrupt your comfort or business operations. Find qualified emergency AC repair contractors in your area who are licensed, insured, and ready to respond quickly to your urgent HVAC needs.
+            </p>
+          </div>
+        </section>
+      </main>
 
       <Footer />
     </div>

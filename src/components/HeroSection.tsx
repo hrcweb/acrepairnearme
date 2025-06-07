@@ -35,12 +35,12 @@ const HeroSection = ({ onSearch }: HeroSectionProps) => {
       
       <div className="relative container mx-auto px-4 text-center">
         <h1 className="text-4xl md:text-6xl font-bold mb-6">
-          Find Top-Rated AC Repair Near Me
-          <span className="block text-blue-200">Services in Florida</span>
+          Professional AC Repair Near Me
+          <span className="block text-blue-200">Commercial & Residential HVAC Services in Florida</span>
         </h1>
         <p className="text-xl md:text-2xl mb-8 text-blue-100 max-w-3xl mx-auto">
-          Connect with licensed, verified HVAC professionals in your area. 
-          Get quotes, read reviews, and book AC repair near me today.
+          Find licensed, verified HVAC professionals for AC repair near me, commercial AC repair, 
+          and emergency heating and air conditioning repair services. Get instant quotes from top-rated contractors.
         </p>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-2xl mx-auto mb-8">
@@ -48,35 +48,37 @@ const HeroSection = ({ onSearch }: HeroSectionProps) => {
             <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <Input
               type="text"
-              placeholder="Enter city, ZIP code, or area..."
+              placeholder="Enter city, ZIP code, or area for AC repair near me..."
               value={searchLocation}
               onChange={(e) => setSearchLocation(e.target.value)}
               onKeyPress={handleKeyPress}
               className="pl-10 pr-4 py-3 w-full text-gray-900 bg-white border-0 rounded-l-lg sm:rounded-r-none"
+              aria-label="Search for AC repair services by location"
             />
           </div>
           <Button 
             size="lg" 
             className="w-full sm:w-auto bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-r-lg sm:rounded-l-none"
             onClick={handleSearch}
+            aria-label="Find AC repair contractors"
           >
             <Search className="w-5 h-5 mr-2" />
-            Find AC Repair
+            Find AC Repair Near Me
           </Button>
         </div>
 
         <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
           <div className="text-center">
             <div className="text-3xl font-bold text-blue-200">500+</div>
-            <div className="text-blue-100">Verified Contractors</div>
+            <div className="text-blue-100">Verified AC Repair Contractors</div>
           </div>
           <div className="text-center">
             <div className="text-3xl font-bold text-blue-200">24/7</div>
-            <div className="text-blue-100">Emergency Service</div>
+            <div className="text-blue-100">Emergency AC & Heating Service</div>
           </div>
           <div className="text-center">
             <div className="text-3xl font-bold text-blue-200">4.8★</div>
-            <div className="text-blue-100">Average Rating</div>
+            <div className="text-blue-100">Average Customer Rating</div>
           </div>
         </div>
       </div>

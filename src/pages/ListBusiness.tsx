@@ -1,4 +1,5 @@
 
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, CheckCircle, Star, TrendingUp, Users, Award, Clock } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,6 +9,49 @@ import PricingSection from "@/components/PricingSection";
 import Footer from "@/components/Footer";
 
 const ListBusiness = () => {
+  // SEO optimization
+  useEffect(() => {
+    document.title = "List Your AC Repair Business | Join Florida's Top HVAC Directory";
+    
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 
+        'List your AC repair business in Florida\'s premier HVAC directory. Get more customers for commercial AC repair and heating services. Join 2,500+ verified contractors today!'
+      );
+    }
+
+    // Add business listing structured data
+    const structuredData = {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "List Your AC Repair Business",
+      "description": "Join Florida's premier AC repair and HVAC contractor directory",
+      "url": window.location.href,
+      "mainEntity": {
+        "@type": "Service",
+        "name": "Business Directory Listing",
+        "provider": {
+          "@type": "Organization",
+          "name": "AC Repair Near Me Pro"
+        }
+      }
+    };
+
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(structuredData);
+    document.head.appendChild(script);
+
+    return () => {
+      const scripts = document.querySelectorAll('script[type="application/ld+json"]');
+      scripts.forEach(script => {
+        if (script.textContent?.includes('"List Your AC Repair Business"')) {
+          script.remove();
+        }
+      });
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       <header className="bg-white border-b shadow-sm">
@@ -28,20 +72,20 @@ const ListBusiness = () => {
       </header>
 
       {/* Hero Section */}
-      <div className="bg-gradient-to-br from-blue-50 to-indigo-100 py-16">
+      <section className="bg-gradient-to-br from-blue-50 to-indigo-100 py-16">
         <div className="container mx-auto px-4">
           <div className="text-center max-w-4xl mx-auto">
             <Badge className="mb-6 bg-blue-100 text-blue-800 px-4 py-2">
-              Florida's #1 AC Business Directory
+              Florida's #1 AC Repair & HVAC Business Directory
             </Badge>
             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-              Grow Your AC Business with 
+              Grow Your AC Repair Business with 
               <span className="text-blue-600"> Qualified Leads</span>
             </h1>
-            <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-              Join over 2,500 successful AC contractors who've increased their revenue by an average of 40% 
-              through our proven directory platform. Get connected with homeowners actively seeking AC services.
-            </p>
+            <h2 className="text-xl text-gray-600 mb-8 leading-relaxed">
+              Join over 2,500 successful AC repair contractors who've increased their revenue by an average of 40% 
+              through our proven directory platform. Get connected with homeowners and businesses actively seeking AC repair near me and commercial HVAC services.
+            </h2>
             
             {/* Key Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -50,14 +94,14 @@ const ListBusiness = () => {
                   <Users className="w-8 h-8 text-blue-600" />
                 </div>
                 <div className="text-2xl font-bold text-gray-900">50,000+</div>
-                <div className="text-gray-600">Monthly Searches</div>
+                <div className="text-gray-600">Monthly Searches for AC Repair</div>
               </div>
               <div className="bg-white rounded-lg p-6 shadow-md">
                 <div className="flex items-center justify-center mb-2">
                   <Award className="w-8 h-8 text-green-600" />
                 </div>
                 <div className="text-2xl font-bold text-gray-900">2,500+</div>
-                <div className="text-gray-600">Verified Contractors</div>
+                <div className="text-gray-600">Verified AC Contractors</div>
               </div>
               <div className="bg-white rounded-lg p-6 shadow-md">
                 <div className="flex items-center justify-center mb-2">
@@ -73,29 +117,29 @@ const ListBusiness = () => {
                 View Pricing Plans Below
               </Button>
               <Button variant="outline" size="lg" className="text-lg px-8 py-3">
-                See Success Stories
+                See AC Contractor Success Stories
               </Button>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      <div className="container mx-auto px-4 py-8">
+      <main className="container mx-auto px-4 py-8">
         {/* Pricing Section */}
         <PricingSection />
 
         {/* Benefits Section */}
-        <div className="mt-16">
-          <h2 className="text-2xl font-bold text-center mb-8">Why List Your Business?</h2>
+        <section className="mt-16">
+          <h3 className="text-2xl font-bold text-center mb-8">Why List Your AC Repair Business?</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Card>
               <CardHeader>
                 <TrendingUp className="w-8 h-8 text-blue-600 mb-2" />
-                <CardTitle className="text-lg">More Visibility</CardTitle>
+                <CardTitle className="text-lg">More Visibility for AC Repair</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
-                  Get found by customers actively searching for AC services in your area. Our platform receives over 50,000 monthly searches from homeowners in need of AC repair and installation services.
+                  Get found by customers actively searching for AC repair near me. Our platform receives over 50,000 monthly searches from homeowners and businesses in need of AC repair and commercial HVAC services.
                 </p>
               </CardContent>
             </Card>
@@ -103,11 +147,11 @@ const ListBusiness = () => {
             <Card>
               <CardHeader>
                 <CheckCircle className="w-8 h-8 text-green-600 mb-2" />
-                <CardTitle className="text-lg">Verified Badge</CardTitle>
+                <CardTitle className="text-lg">Verified AC Contractor Badge</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
-                  Build trust with a verified business badge after our comprehensive review process. We verify licenses, insurance, and business credentials to help customers choose reliable contractors.
+                  Build trust with a verified business badge after our comprehensive review process. We verify licenses, insurance, and business credentials for all AC repair and HVAC contractors.
                 </p>
               </CardContent>
             </Card>
@@ -115,11 +159,11 @@ const ListBusiness = () => {
             <Card>
               <CardHeader>
                 <Star className="w-8 h-8 text-yellow-600 mb-2" />
-                <CardTitle className="text-lg">Customer Reviews</CardTitle>
+                <CardTitle className="text-lg">Customer Reviews & Ratings</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
-                  Collect and showcase authentic customer reviews to build your reputation. Our review system helps potential customers see your quality work and satisfied clients, increasing your conversion rate.
+                  Collect and showcase authentic customer reviews for your AC repair services. Our review system helps potential customers see your quality work and increases conversion rates for commercial and residential projects.
                 </p>
               </CardContent>
             </Card>
@@ -129,28 +173,28 @@ const ListBusiness = () => {
                 <Badge className="w-8 h-8 bg-purple-600 mb-2 flex items-center justify-center">
                   $
                 </Badge>
-                <CardTitle className="text-lg">Lead Generation</CardTitle>
+                <CardTitle className="text-lg">AC Repair Lead Generation</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600">
-                  Receive direct quote requests from customers ready to hire. Our platform connects you with pre-qualified leads who are actively seeking AC services in your service area.
+                  Receive direct quote requests from customers ready to hire AC repair contractors. Our platform connects you with pre-qualified leads seeking commercial heating and air conditioning repair services.
                 </p>
               </CardContent>
             </Card>
           </div>
-        </div>
+        </section>
 
         {/* Enhanced How It Works Section */}
-        <div className="mt-16 bg-gray-50 rounded-lg p-8">
-          <h3 className="text-2xl font-bold text-center mb-8">How It Works - Start Getting Customers Today</h3>
+        <section className="mt-16 bg-gray-50 rounded-lg p-8">
+          <h3 className="text-2xl font-bold text-center mb-8">How It Works - Start Getting AC Repair Customers Today</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             <div className="text-center">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-blue-600 font-bold text-xl">1</span>
               </div>
-              <h4 className="text-xl font-semibold mb-3">Choose Your Plan</h4>
+              <h4 className="text-xl font-semibold mb-3">Choose Your AC Business Plan</h4>
               <p className="text-gray-600 mb-4">
-                Select the subscription plan that best fits your business size and goals. Start with Basic for new businesses or choose Premium/Enterprise for established companies looking to dominate their market.
+                Select the subscription plan that best fits your AC repair business size and goals. Start with Basic for new contractors or choose Premium/Enterprise for established AC repair companies looking to dominate their market.
               </p>
               <div className="text-sm text-gray-500">
                 <strong>Takes:</strong> 2 minutes<br />
@@ -162,13 +206,13 @@ const ListBusiness = () => {
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-blue-600 font-bold text-xl">2</span>
               </div>
-              <h4 className="text-xl font-semibold mb-3">Complete Payment & Setup</h4>
+              <h4 className="text-xl font-semibold mb-3">Complete Payment & AC Business Setup</h4>
               <p className="text-gray-600 mb-4">
-                Secure checkout process with no setup fees or hidden costs. After payment, you'll receive immediate access to our business dashboard where you can create your detailed listing with photos, services, and contact information.
+                Secure checkout process with no setup fees or hidden costs. After payment, you'll receive immediate access to create your detailed AC repair business listing with photos, services, and contact information.
               </p>
               <div className="text-sm text-gray-500">
                 <strong>Takes:</strong> 5-10 minutes<br />
-                <strong>Includes:</strong> Business profile setup
+                <strong>Includes:</strong> AC business profile setup
               </div>
             </div>
             
@@ -176,13 +220,13 @@ const ListBusiness = () => {
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <span className="text-blue-600 font-bold text-xl">3</span>
               </div>
-              <h4 className="text-xl font-semibold mb-3">Go Live & Get Customers</h4>
+              <h4 className="text-xl font-semibold mb-3">Go Live & Get AC Repair Customers</h4>
               <p className="text-gray-600 mb-4">
-                Your business listing goes live immediately and starts appearing in search results. Begin receiving customer inquiries, quote requests within 24-48 hours.
+                Your AC repair business listing goes live immediately and starts appearing in search results for "AC repair near me" and commercial HVAC searches. Begin receiving customer inquiries and quote requests within 24-48 hours.
               </p>
               <div className="text-sm text-gray-500">
                 <strong>Results:</strong> 24-48 hours<br />
-                <strong>Average:</strong> 5-15 leads per month
+                <strong>Average:</strong> 5-15 AC repair leads per month
               </div>
             </div>
           </div>
@@ -191,7 +235,7 @@ const ListBusiness = () => {
           <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             <div className="bg-white rounded-lg p-4 shadow-sm">
               <div className="text-2xl font-bold text-blue-600">50K+</div>
-              <div className="text-sm text-gray-600">Monthly Searches</div>
+              <div className="text-sm text-gray-600">Monthly AC Repair Searches</div>
             </div>
             <div className="bg-white rounded-lg p-4 shadow-sm">
               <div className="text-2xl font-bold text-green-600">85%</div>
@@ -206,15 +250,15 @@ const ListBusiness = () => {
               <div className="text-sm text-gray-600">Time to First Lead</div>
             </div>
           </div>
-        </div>
+        </section>
 
         {/* Trust Indicators */}
-        <div className="mt-12 text-center">
-          <h3 className="text-xl font-semibold mb-6">Trusted by AC Professionals Across Florida</h3>
+        <section className="mt-12 text-center">
+          <h3 className="text-xl font-semibold mb-6">Trusted by AC Repair Professionals Across Florida</h3>
           <div className="flex flex-wrap justify-center items-center gap-8 text-gray-600">
             <div className="flex items-center space-x-2">
               <CheckCircle className="w-5 h-5 text-green-600" />
-              <span>Licensed & Insured Contractors Only</span>
+              <span>Licensed & Insured AC Contractors Only</span>
             </div>
             <div className="flex items-center space-x-2">
               <CheckCircle className="w-5 h-5 text-green-600" />
@@ -232,14 +276,32 @@ const ListBusiness = () => {
           
           <div className="mt-8 p-6 bg-blue-50 rounded-lg max-w-2xl mx-auto">
             <p className="text-blue-800 font-medium mb-2">
-              "Since joining AC Repair Near Me, we've increased our monthly revenue by 40% and receive 3-5 qualified leads per week. The platform pays for itself!"
+              "Since joining AC Repair Near Me, we've increased our monthly revenue by 40% and receive 3-5 qualified leads per week for both residential and commercial AC repair projects. The platform pays for itself!"
             </p>
             <p className="text-blue-600 text-sm">
               - Mike Rodriguez, Cool Air Solutions, Tampa
             </p>
           </div>
-        </div>
-      </div>
+        </section>
+
+        {/* SEO Content Section */}
+        <section className="mt-16">
+          <h3 className="text-2xl font-bold text-center mb-6">
+            Join Florida's Premier AC Repair & Commercial HVAC Directory
+          </h3>
+          <div className="max-w-4xl mx-auto text-gray-700">
+            <p className="mb-4">
+              List your AC repair business in Florida's most comprehensive directory for heating and air conditioning contractors. Our platform specializes in connecting qualified AC repair professionals with customers actively searching for "AC repair near me" and commercial HVAC services.
+            </p>
+            <p className="mb-4">
+              Whether you specialize in residential AC repair, commercial heating and air conditioning repair near me, or emergency HVAC services, our directory helps you reach more customers and grow your business. Join thousands of verified contractors who have successfully expanded their customer base through our platform.
+            </p>
+            <p>
+              Don't miss out on the opportunity to connect with customers who need AC repair services. List your business today and start receiving qualified leads from homeowners and businesses looking for reliable, professional HVAC contractors in their area.
+            </p>
+          </div>
+        </section>
+      </main>
       
       <Footer />
     </div>
