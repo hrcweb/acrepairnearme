@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -55,8 +54,21 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
     
     try {
       const lines = text.split('\n').filter(line => line.trim());
-      const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
+      if (lines.length === 0) {
+        toast({
+          title: "Empty file",
+          description: "The CSV file appears to be empty.",
+          variant: "destructive",
+        });
+        setIsUploading(false);
+        return;
+      }
+
+      const headers = parseCSVLine(lines[0]).map(h => h.trim().toLowerCase().replace(/"/g, ''));
+      console.log("Parsed headers:", headers);
+      
       const dataRows = lines.slice(1);
+      console.log(`Processing ${dataRows.length} data rows`);
       
       const businesses = [];
       const errors = [];
@@ -64,45 +76,70 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
       for (let i = 0; i < dataRows.length; i++) {
         try {
           const values = parseCSVLine(dataRows[i]);
-          if (values.length < headers.length) continue;
+          console.log(`Row ${i + 2} values:`, values);
+          
+          if (values.length === 0 || values.every(v => !v.trim())) {
+            console.log(`Skipping empty row ${i + 2}`);
+            continue;
+          }
 
           const business: any = {};
+          
+          // Map headers to values
           headers.forEach((header, index) => {
-            let value = values[index]?.trim().replace(/"/g, '') || null;
+            let value = values[index]?.trim().replace(/^"|"$/g, '') || '';
             
-            switch (header) {
+            // Map common header variations to our database fields
+            let dbField = header;
+            if (header === 'business_name' || header === 'company_name') dbField = 'name';
+            if (header === 'zip' || header === 'zipcode' || header === 'postal_code') dbField = 'zip_code';
+            if (header === 'phone_number' || header === 'telephone') dbField = 'phone';
+            if (header === 'email_address') dbField = 'email';
+            if (header === 'website_url' || header === 'url') dbField = 'website';
+            
+            switch (dbField) {
               case 'services':
-                business[header] = value ? value.split(',').map(s => s.trim()) : [];
+                business[dbField] = value ? value.split(',').map(s => s.trim()).filter(s => s) : [];
                 break;
               case 'rating':
-                business[header] = value ? parseFloat(value) : 0.0;
+                business[dbField] = value ? parseFloat(value) : 0.0;
                 break;
               case 'review_count':
-                business[header] = value ? parseInt(value) : 0;
+                business[dbField] = value ? parseInt(value) : 0;
                 break;
               case 'insurance_verified':
-                business[header] = value === 'true' || value === '1';
+                business[dbField] = value.toLowerCase() === 'true' || value === '1';
                 break;
               case 'latitude':
               case 'longitude':
-                business[header] = value ? parseFloat(value) : null;
+                business[dbField] = value ? parseFloat(value) : null;
                 break;
               default:
-                business[header] = value;
+                business[dbField] = value || null;
             }
           });
 
+          console.log(`Row ${i + 2} business object:`, business);
+
           // Validate required fields
-          if (!business.name || !business.address || !business.city || !business.state || !business.zip_code) {
-            errors.push(`Row ${i + 2}: Missing required fields (name, address, city, state, zip_code)`);
+          const requiredFields = ['name', 'address', 'city', 'state', 'zip_code'];
+          const missingFields = requiredFields.filter(field => !business[field] || business[field].trim() === '');
+          
+          if (missingFields.length > 0) {
+            errors.push(`Row ${i + 2}: Missing required fields: ${missingFields.join(', ')}`);
+            console.log(`Row ${i + 2} missing fields:`, missingFields);
             continue;
           }
 
           businesses.push(business);
         } catch (error) {
-          errors.push(`Row ${i + 2}: ${error instanceof Error ? error.message : 'Parse error'}`);
+          const errorMsg = `Row ${i + 2}: ${error instanceof Error ? error.message : 'Parse error'}`;
+          errors.push(errorMsg);
+          console.error(errorMsg, error);
         }
       }
+
+      console.log(`Processed ${businesses.length} valid businesses`);
 
       if (businesses.length > 0) {
         const { error } = await supabase
@@ -110,6 +147,7 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
           .insert(businesses);
 
         if (error) {
+          console.error('Supabase insert error:', error);
           toast({
             title: "Import failed",
             description: error.message,
@@ -132,6 +170,7 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
 
       setImportResults({ success: businesses.length, errors });
     } catch (error) {
+      console.error('Import error:', error);
       toast({
         title: "Import failed",
         description: error instanceof Error ? error.message : "An error occurred",
@@ -146,19 +185,31 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
     const result = [];
     let current = '';
     let inQuotes = false;
+    let i = 0;
     
-    for (let i = 0; i < line.length; i++) {
+    while (i < line.length) {
       const char = line[i];
       
       if (char === '"') {
-        inQuotes = !inQuotes;
+        if (inQuotes && line[i + 1] === '"') {
+          // Handle escaped quotes
+          current += '"';
+          i += 2;
+        } else {
+          // Toggle quote state
+          inQuotes = !inQuotes;
+          i++;
+        }
       } else if (char === ',' && !inQuotes) {
         result.push(current);
         current = '';
+        i++;
       } else {
         current += char;
+        i++;
       }
     }
+    
     result.push(current);
     return result;
   };
