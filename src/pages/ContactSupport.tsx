@@ -141,8 +141,8 @@ const ContactSupport = () => {
                   <div>
                     <h3 className="font-semibold">Office Location</h3>
                     <p className="text-gray-600">
-                      123 Business Blvd<br />
-                      Miami, FL 33101
+                      11987 Southern Blvd., 2020<br />
+                      Royal Palm Beach, FL 33411
                     </p>
                   </div>
                 </div>

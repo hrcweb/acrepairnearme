@@ -112,7 +112,7 @@ const PrivacyPolicy = () => {
             <div className="mt-4 p-4 bg-gray-50 rounded-lg">
               <p className="text-gray-700">
                 <strong>Email:</strong> support@acrepairnearme.pro<br />
-                <strong>Address:</strong> 123 Business Blvd, Miami, FL 33101
+                <strong>Address:</strong> 11987 Southern Blvd., 2020, Royal Palm Beach, FL 33411
               </p>
             </div>
           </section>
