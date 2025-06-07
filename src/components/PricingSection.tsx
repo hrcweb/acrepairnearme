@@ -163,7 +163,7 @@ const PricingSection = () => {
               Questions about which plan is right for you?
             </p>
             <p className="text-sm text-gray-500">
-              Call us at (855) AC-REPAIR or email support@acrepairnearme.pro for personalized recommendations
+              Call us at 561-206-2624 or email support@acrepairnearme.pro for personalized recommendations
             </p>
           </div>
         </div>
