@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -7,6 +8,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Index from "./pages/Index";
 import BusinessDetail from "./pages/BusinessDetail";
+import BusinessDetailDynamic from "./pages/BusinessDetailDynamic";
 import FAQ from "./pages/FAQ";
 import Auth from "./pages/Auth";
 import PaymentSuccess from "./pages/PaymentSuccess";
@@ -36,7 +38,8 @@ const App: React.FC = () => {
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<Auth />} />
-              <Route path="/business/:id" element={<BusinessDetail />} />
+              <Route path="/business/:id" element={<BusinessDetailDynamic />} />
+              <Route path="/business-static/:id" element={<BusinessDetail />} />
               <Route path="/faq" element={<FAQ />} />
               <Route path="/list-business" element={<ListBusiness />} />
               <Route path="/emergency" element={<Emergency />} />

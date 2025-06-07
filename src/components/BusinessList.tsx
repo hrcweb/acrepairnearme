@@ -5,8 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
-import { Search, Edit, Trash2, Star, Phone, MapPin } from "lucide-react";
+import { Search, Edit, Trash2, Star, Phone, MapPin, ExternalLink } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { Link } from "react-router-dom";
 
 interface Business {
   id: number;
@@ -25,7 +26,11 @@ interface Business {
   created_at: string;
 }
 
-const BusinessList = () => {
+interface BusinessListProps {
+  onEditBusiness?: (business: Business) => void;
+}
+
+const BusinessList: React.FC<BusinessListProps> = ({ onEditBusiness }) => {
   const { toast } = useToast();
   const [businesses, setBusinesses] = useState<Business[]>([]);
   const [loading, setLoading] = useState(true);
@@ -163,7 +168,16 @@ const BusinessList = () => {
             <CardContent className="pt-6">
               <div className="flex justify-between items-start mb-4">
                 <div className="flex-1">
-                  <h3 className="text-lg font-semibold">{business.name}</h3>
+                  <div className="flex items-center space-x-2 mb-2">
+                    <Link to={`/business/${business.id}`} className="hover:underline">
+                      <h3 className="text-lg font-semibold text-blue-600">{business.name}</h3>
+                    </Link>
+                    <Button size="sm" variant="ghost" asChild>
+                      <Link to={`/business/${business.id}`}>
+                        <ExternalLink className="h-4 w-4" />
+                      </Link>
+                    </Button>
+                  </div>
                   <p className="text-gray-600 text-sm mb-2">{business.description}</p>
                   <div className="flex items-center space-x-4 text-sm text-gray-500">
                     <div className="flex items-center">
@@ -184,6 +198,15 @@ const BusinessList = () => {
                     <span className="font-medium">{business.rating}</span>
                     <span className="text-gray-500 ml-1">({business.review_count})</span>
                   </div>
+                  {onEditBusiness && (
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => onEditBusiness(business)}
+                    >
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                  )}
                   <Button
                     size="sm"
                     variant="outline"

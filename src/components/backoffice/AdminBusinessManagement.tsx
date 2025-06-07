@@ -31,6 +31,10 @@ const AdminBusinessManagement = () => {
     setActiveSubTab("list");
   };
 
+  const handleEditBusiness = (business) => {
+    setEditingBusiness(business);
+  };
+
   if (editingBusiness) {
     return (
       <BusinessEditForm
@@ -80,7 +84,7 @@ const AdminBusinessManagement = () => {
       </div>
 
       {/* Content */}
-      {activeSubTab === "list" && <BusinessList />}
+      {activeSubTab === "list" && <BusinessList onEditBusiness={handleEditBusiness} />}
 
       {activeSubTab === "import" && (
         <div className="space-y-4">
