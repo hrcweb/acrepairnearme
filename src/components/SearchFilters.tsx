@@ -22,22 +22,27 @@ export interface SearchFilters {
 }
 
 interface SearchFiltersProps {
-  filters: SearchFilters;
-  onFiltersChange: (filters: SearchFilters) => void;
-  onClearFilters: () => void;
+  onLocationChange: (location: string) => void;
+  onServiceChange: (service: string) => void;
+  onSortChange: (sort: string) => void;
 }
 
-const SearchFiltersComponent = ({ filters, onFiltersChange, onClearFilters }: SearchFiltersProps) => {
+const SearchFiltersComponent = ({ onLocationChange, onServiceChange, onSortChange }: SearchFiltersProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [filters, setFilters] = useState<SearchFilters>({});
 
   const updateFilter = (key: keyof SearchFilters, value: any) => {
-    onFiltersChange({ ...filters, [key]: value });
+    setFilters({ ...filters, [key]: value });
   };
 
   const removeFilter = (key: keyof SearchFilters) => {
     const newFilters = { ...filters };
     delete newFilters[key];
-    onFiltersChange(newFilters);
+    setFilters(newFilters);
+  };
+
+  const clearAllFilters = () => {
+    setFilters({});
   };
 
   const activeFiltersCount = Object.keys(filters).length;
@@ -66,11 +71,43 @@ const SearchFiltersComponent = ({ filters, onFiltersChange, onClearFilters }: Se
                     <Button 
                       variant="ghost" 
                       size="sm" 
-                      onClick={onClearFilters}
+                      onClick={clearAllFilters}
                     >
                       Clear All
                     </Button>
                   )}
+                </div>
+
+                {/* Service Filter */}
+                <div className="space-y-2">
+                  <Label>Service Type</Label>
+                  <Select onValueChange={onServiceChange}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select service" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="">All Services</SelectItem>
+                      <SelectItem value="repair">AC Repair</SelectItem>
+                      <SelectItem value="installation">Installation</SelectItem>
+                      <SelectItem value="maintenance">Maintenance</SelectItem>
+                      <SelectItem value="emergency">Emergency Service</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Sort Filter */}
+                <div className="space-y-2">
+                  <Label>Sort By</Label>
+                  <Select onValueChange={onSortChange}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Sort by" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="rating">Rating</SelectItem>
+                      <SelectItem value="reviews">Review Count</SelectItem>
+                      <SelectItem value="name">Name</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 {/* Distance Filter */}

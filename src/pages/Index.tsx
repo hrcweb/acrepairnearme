@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -10,7 +11,7 @@ import HeatIndexVisualization from "@/components/HeatIndexVisualization";
 import Footer from "@/components/Footer";
 
 export interface Business {
-  id: string;
+  id: number;
   name: string;
   description: string;
   phone: string;
@@ -20,18 +21,17 @@ export interface Business {
   city: string;
   state: string;
   zip_code: string;
-  service_areas: string[];
   services: string[];
   rating: number;
   review_count: number;
-  is_featured: boolean;
-  is_emergency: boolean;
-  image_url?: string;
-  license_number?: string;
+  featured: boolean;
   insurance_verified: boolean;
-  years_in_business?: number;
-  certifications?: string[];
-  subscription_tier?: string;
+  license_number?: string;
+  created_at: string;
+  updated_at: string;
+  latitude?: number;
+  longitude?: number;
+  business_hours?: any;
 }
 
 const Index = () => {
@@ -49,8 +49,7 @@ const Index = () => {
       const { data, error } = await supabase
         .from('businesses')
         .select('*')
-        .eq('is_active', true)
-        .order('is_featured', { ascending: false })
+        .order('featured', { ascending: false })
         .order('rating', { ascending: false });
       
       if (error) {
@@ -70,25 +69,24 @@ const Index = () => {
         id: business.id,
         name: business.name,
         description: business.description || '',
-        phone: business.phone,
-        email: business.email,
+        phone: business.phone || '',
+        email: business.email || '',
         website: business.website,
         address: business.address,
         city: business.city,
         state: business.state,
         zip_code: business.zip_code,
-        service_areas: business.service_areas || [],
         services: business.services || [],
         rating: business.rating || 0,
         review_count: business.review_count || 0,
-        is_featured: business.is_featured || false,
-        is_emergency: business.is_emergency || false,
-        image_url: business.image_url,
-        license_number: business.license_number,
+        featured: business.featured || false,
         insurance_verified: business.insurance_verified || false,
-        years_in_business: business.years_in_business,
-        certifications: business.certifications || [],
-        subscription_tier: business.subscription_tier
+        license_number: business.license_number,
+        created_at: business.created_at,
+        updated_at: business.updated_at,
+        latitude: business.latitude,
+        longitude: business.longitude,
+        business_hours: business.business_hours
       }));
       setBusinesses(transformedBusinesses);
       setFilteredBusinesses(transformedBusinesses);
@@ -116,10 +114,7 @@ const Index = () => {
     if (location) {
       filtered = filtered.filter(business => 
         business.city.toLowerCase().includes(location.toLowerCase()) ||
-        business.zip_code.includes(location) ||
-        business.service_areas.some(area => 
-          area.toLowerCase().includes(location.toLowerCase())
-        )
+        business.zip_code.includes(location)
       );
     }
 
@@ -146,13 +141,17 @@ const Index = () => {
     setFilteredBusinesses(filtered);
   };
 
+  const handleSearch = () => {
+    console.log('Search triggered');
+  };
+
   if (error) {
     console.error('Query error:', error);
   }
 
   return (
     <div className="min-h-screen bg-background">
-      <HeroSection />
+      <HeroSection onSearch={handleSearch} />
       
       <div className="container mx-auto px-4 py-8">
         <SearchFilters 

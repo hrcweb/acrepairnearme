@@ -27,29 +27,44 @@ interface Business {
 }
 
 interface BusinessListProps {
+  businesses?: Business[];
+  isLoading?: boolean;
+  searchLocation?: string;
   onEditBusiness?: (business: Business) => void;
 }
 
-const BusinessList: React.FC<BusinessListProps> = ({ onEditBusiness }) => {
+const BusinessList: React.FC<BusinessListProps> = ({ 
+  businesses: propBusinesses, 
+  isLoading: propIsLoading, 
+  searchLocation,
+  onEditBusiness 
+}) => {
   const { toast } = useToast();
   const [businesses, setBusinesses] = useState<Business[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredBusinesses, setFilteredBusinesses] = useState<Business[]>([]);
 
+  // Use prop businesses if provided, otherwise fetch from database
   useEffect(() => {
-    fetchBusinesses();
-  }, []);
+    if (propBusinesses) {
+      setBusinesses(propBusinesses);
+      setLoading(propIsLoading || false);
+    } else {
+      fetchBusinesses();
+    }
+  }, [propBusinesses, propIsLoading]);
 
   useEffect(() => {
+    const searchTerm = searchLocation || searchQuery;
     const filtered = businesses.filter(business =>
-      business.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      business.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      business.state.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      business.zip_code.includes(searchQuery)
+      business.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      business.city.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      business.state.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      business.zip_code.includes(searchTerm)
     );
     setFilteredBusinesses(filtered);
-  }, [businesses, searchQuery]);
+  }, [businesses, searchQuery, searchLocation]);
 
   const fetchBusinesses = async () => {
     try {
@@ -117,16 +132,18 @@ const BusinessList: React.FC<BusinessListProps> = ({ onEditBusiness }) => {
 
   return (
     <div className="space-y-6">
-      {/* Search */}
-      <div className="flex items-center space-x-2">
-        <Search className="h-4 w-4 text-gray-500" />
-        <Input
-          placeholder="Search businesses..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="flex-1"
-        />
-      </div>
+      {/* Search - only show if not using prop businesses */}
+      {!propBusinesses && (
+        <div className="flex items-center space-x-2">
+          <Search className="h-4 w-4 text-gray-500" />
+          <Input
+            placeholder="Search businesses..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="flex-1"
+          />
+        </div>
+      )}
 
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
