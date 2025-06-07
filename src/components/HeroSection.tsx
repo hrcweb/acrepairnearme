@@ -35,12 +35,12 @@ const HeroSection = ({ onSearch }: HeroSectionProps) => {
       
       <div className="relative container mx-auto px-4 text-center">
         <h1 className="text-4xl md:text-6xl font-bold mb-6">
-          Find Top-Rated AC Repair
+          Find Top-Rated AC Repair Near Me
           <span className="block text-blue-200">Services in Florida</span>
         </h1>
         <p className="text-xl md:text-2xl mb-8 text-blue-100 max-w-3xl mx-auto">
           Connect with licensed, verified HVAC professionals in your area. 
-          Get quotes, read reviews, and book service today.
+          Get quotes, read reviews, and book AC repair near me today.
         </p>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-2xl mx-auto mb-8">

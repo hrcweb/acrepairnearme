@@ -1,9 +1,7 @@
-
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import BusinessList from "@/components/BusinessList";
-import SearchFilters from "@/components/SearchFilters";
 import HeroSection from "@/components/HeroSection";
 import LocalRebateFinder from "@/components/LocalRebateFinder";
 import HeatIndexVisualization from "@/components/HeatIndexVisualization";
@@ -164,11 +162,7 @@ const Index = () => {
       <HeroSection onSearch={handleHeroSearch} />
       
       <div className="container mx-auto px-4 py-8">
-        <SearchFilters 
-          onLocationChange={handleLocationFilter}
-          onServiceChange={handleServiceFilter}
-          onSortChange={handleSortChange}
-        />
+        
         
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
           <div className="lg:col-span-2">
