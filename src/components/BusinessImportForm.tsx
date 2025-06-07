@@ -85,21 +85,48 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
 
           const business: any = {};
           
-          // Map headers to values with improved field mapping
+          // Map headers to values with cleaner field mapping
           headers.forEach((header, index) => {
             let value = values[index]?.trim().replace(/^"|"$/g, '') || '';
             
-            // Enhanced mapping for common header variations
+            // Clean header mapping - handle your specific headers
             let dbField = header;
             
-            // Common field mappings
-            if (header === 'business_name' || header === 'company_name') dbField = 'name';
-            if (header === 'zip' || header === 'zipcode' || header === 'postal_code') dbField = 'zip_code';
-            if (header === 'phone_number' || header === 'telephone' || header === 'phone_1') dbField = 'phone';
-            if (header === 'email_address' || header === 'email_1') dbField = 'email';
-            if (header === 'website_url' || header === 'url') dbField = 'website';
-            if (header === 'reviews' || header === 'review_count' || header === 'total_reviews') dbField = 'review_count';
+            // Map your specific headers to database fields
+            switch (header) {
+              case 'business_name':
+              case 'company_name':
+                dbField = 'name';
+                break;
+              case 'postal_code':
+              case 'zip':
+              case 'zipcode':
+                dbField = 'zip_code';
+                break;
+              case 'phone_1':
+              case 'phone_number':
+              case 'telephone':
+                dbField = 'phone';
+                break;
+              case 'email_1':
+              case 'email_address':
+                dbField = 'email';
+                break;
+              case 'website_url':
+              case 'url':
+                dbField = 'website';
+                break;
+              case 'reviews':
+              case 'total_reviews':
+                dbField = 'review_count';
+                break;
+              default:
+                dbField = header;
+            }
             
+            console.log(`Mapping ${header} -> ${dbField} with value: "${value}"`);
+            
+            // Process the value based on the database field type
             switch (dbField) {
               case 'services':
                 business[dbField] = value ? value.split(',').map(s => s.trim()).filter(s => s) : [];
@@ -108,7 +135,7 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
                 business[dbField] = value ? parseFloat(value) : 0.0;
                 break;
               case 'review_count':
-                business[dbField] = value ? parseInt(value) : 0;
+                business[dbField] = value ? parseInt(value) || 0 : 0;
                 break;
               case 'insurance_verified':
                 business[dbField] = value.toLowerCase() === 'true' || value === '1';
@@ -129,8 +156,10 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
           const missingFields = requiredFields.filter(field => !business[field] || business[field].trim() === '');
           
           if (missingFields.length > 0) {
-            errors.push(`Row ${i + 2}: Missing required fields: ${missingFields.join(', ')}`);
-            console.log(`Row ${i + 2} missing fields:`, missingFields);
+            const errorMsg = `Row ${i + 2}: Missing required fields: ${missingFields.join(', ')}`;
+            errors.push(errorMsg);
+            console.log(errorMsg);
+            console.log(`Business object for failed row:`, business);
             continue;
           }
 
@@ -142,7 +171,8 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
         }
       }
 
-      console.log(`Processed ${businesses.length} valid businesses`);
+      console.log(`Processed ${businesses.length} valid businesses out of ${dataRows.length} rows`);
+      console.log('Sample business object:', businesses[0]);
 
       if (businesses.length > 0) {
         const { error } = await supabase
@@ -164,9 +194,10 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
           });
         }
       } else {
+        console.log('No valid businesses to import. Errors:', errors);
         toast({
           title: "No valid businesses found",
-          description: "Please check your CSV format and try again.",
+          description: "Please check your CSV format and required fields.",
           variant: "destructive",
         });
       }
@@ -419,14 +450,16 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
 
       {/* CSV Format Help */}
       <div className="bg-blue-50 p-4 rounded-lg">
-        <h4 className="font-medium text-blue-900 mb-2">CSV Format Requirements:</h4>
+        <h4 className="font-medium text-blue-900 mb-2">Your CSV Headers Detected:</h4>
         <p className="text-sm text-blue-800 mb-2">
-          Your CSV should include these headers (the system will automatically map common variations):
+          Based on your headers, the system will map: <strong>postal_code → zip_code</strong>, <strong>email_1 → email</strong>, <strong>reviews → review_count</strong>
         </p>
-        <ul className="text-sm text-blue-800 list-disc list-inside space-y-1">
-          <li><strong>Required:</strong> name, address, city, state, zip_code (or postal_code)</li>
-          <li><strong>Optional:</strong> phone, email (or email_1), website, services, rating, reviews (or review_count)</li>
-        </ul>
+        <p className="text-sm text-blue-800 mb-2">
+          <strong>Required fields:</strong> name, address, city, state, postal_code (or zip_code)
+        </p>
+        <p className="text-sm text-blue-800">
+          <strong>Optional fields:</strong> phone, email_1 (or email), website, services, rating, reviews (or review_count)
+        </p>
       </div>
 
       {importResults && (
