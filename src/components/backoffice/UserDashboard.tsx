@@ -2,31 +2,32 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { FileText, MessageSquare, User, BarChart3 } from "lucide-react";
+import { UserCheck, MessageSquare, Building2, Settings, Plus } from "lucide-react";
 import UserProfile from "./UserProfile";
 import UserReviews from "./UserReviews";
 import UserBusinesses from "./UserBusinesses";
+import UserBusinessManagement from "./UserBusinessManagement";
 
 const UserDashboard = () => {
-  const [activeTab, setActiveTab] = useState("profile");
+  const [activeTab, setActiveTab] = useState("businesses");
 
   const tabs = [
-    { id: "profile", label: "My Profile", icon: User, description: "Manage your account information" },
-    { id: "businesses", label: "My Businesses", icon: FileText, description: "View and manage your business listings" },
-    { id: "reviews", label: "My Reviews", icon: MessageSquare, description: "See reviews you've submitted" },
+    { id: "businesses", label: "My Businesses", icon: Building2, description: "Manage your business listings" },
+    { id: "reviews", label: "My Reviews", icon: MessageSquare, description: "View your submitted reviews" },
+    { id: "profile", label: "Profile", icon: Settings, description: "Update your account information" },
   ];
 
   return (
     <div className="space-y-6">
-      {/* Welcome Section */}
-      <Card>
+      {/* User Welcome Section */}
+      <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <BarChart3 className="h-5 w-5" />
+          <CardTitle className="flex items-center gap-2 text-blue-800">
+            <UserCheck className="h-5 w-5" />
             User Dashboard
           </CardTitle>
-          <CardDescription>
-            Welcome to your personal dashboard. Manage your profile, businesses, and reviews.
+          <CardDescription className="text-blue-700">
+            Manage your business listings, reviews, and profile information.
           </CardDescription>
         </CardHeader>
       </Card>
@@ -48,30 +49,16 @@ const UserDashboard = () => {
 
       {/* Tab Content */}
       <div className="space-y-6">
-        {activeTab === "profile" && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Profile Information</CardTitle>
-              <CardDescription>
-                Update your personal information and account settings.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <UserProfile />
-            </CardContent>
-          </Card>
-        )}
-
         {activeTab === "businesses" && (
           <Card>
             <CardHeader>
-              <CardTitle>My Business Listings</CardTitle>
+              <CardTitle>Business Management</CardTitle>
               <CardDescription>
-                Manage your business listings and information.
+                Add, edit, and manage your business listings.
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <UserBusinesses />
+              <UserBusinessManagement />
             </CardContent>
           </Card>
         )}
@@ -86,6 +73,20 @@ const UserDashboard = () => {
             </CardHeader>
             <CardContent>
               <UserReviews />
+            </CardContent>
+          </Card>
+        )}
+
+        {activeTab === "profile" && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Profile Settings</CardTitle>
+              <CardDescription>
+                Update your personal information and account settings.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <UserProfile />
             </CardContent>
           </Card>
         )}

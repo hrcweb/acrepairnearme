@@ -1,12 +1,14 @@
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Upload, Plus, Download } from "lucide-react";
+import { Upload, Plus, Download, Edit, BarChart3, Settings } from "lucide-react";
 import BusinessImportForm from "@/components/BusinessImportForm";
 import BusinessList from "@/components/BusinessList";
+import BusinessEditForm from "./BusinessEditForm";
 
 const AdminBusinessManagement = () => {
   const [activeSubTab, setActiveSubTab] = useState("list");
+  const [editingBusiness, setEditingBusiness] = useState(null);
 
   const downloadTemplate = () => {
     const csvContent = [
@@ -24,6 +26,21 @@ const AdminBusinessManagement = () => {
     window.URL.revokeObjectURL(url);
   };
 
+  const handleBusinessSaved = () => {
+    setEditingBusiness(null);
+    setActiveSubTab("list");
+  };
+
+  if (editingBusiness) {
+    return (
+      <BusinessEditForm
+        business={editingBusiness}
+        onSave={handleBusinessSaved}
+        onCancel={() => setEditingBusiness(null)}
+      />
+    );
+  }
+
   return (
     <div className="space-y-6">
       {/* Sub-tab Navigation */}
@@ -33,6 +50,7 @@ const AdminBusinessManagement = () => {
           onClick={() => setActiveSubTab("list")}
           className="px-4"
         >
+          <Settings className="w-4 h-4 mr-2" />
           Manage Businesses
         </Button>
         <Button
@@ -51,6 +69,14 @@ const AdminBusinessManagement = () => {
           <Plus className="w-4 h-4 mr-2" />
           Add Single
         </Button>
+        <Button
+          variant={activeSubTab === "analytics" ? "default" : "ghost"}
+          onClick={() => setActiveSubTab("analytics")}
+          className="px-4"
+        >
+          <BarChart3 className="w-4 h-4 mr-2" />
+          Analytics
+        </Button>
       </div>
 
       {/* Content */}
@@ -67,6 +93,14 @@ const AdminBusinessManagement = () => {
       )}
 
       {activeSubTab === "add" && <BusinessImportForm singleMode />}
+
+      {activeSubTab === "analytics" && (
+        <div className="text-center py-8">
+          <BarChart3 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+          <h3 className="text-lg font-semibold mb-2">Business Analytics</h3>
+          <p className="text-gray-600">Detailed analytics coming soon...</p>
+        </div>
+      )}
     </div>
   );
 };
