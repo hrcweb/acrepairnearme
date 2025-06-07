@@ -48,10 +48,22 @@ const BusinessDetailDynamic = () => {
 
   const fetchBusiness = async () => {
     try {
+      const businessId = parseInt(id!, 10);
+      if (isNaN(businessId)) {
+        toast({
+          title: "Error",
+          description: "Invalid business ID",
+          variant: "destructive",
+        });
+        setBusiness(null);
+        setLoading(false);
+        return;
+      }
+
       const { data, error } = await supabase
         .from('businesses')
         .select('*')
-        .eq('id', id)
+        .eq('id', businessId)
         .single();
 
       if (error) {
