@@ -28,7 +28,7 @@ Allow: /
 User-agent: Twitterbot
 Allow: /
 
-# Block AI crawlers if desired (optional)
+# Block AI crawlers (optional - uncomment if desired)
 # User-agent: GPTBot
 # Disallow: /
 
@@ -37,3 +37,13 @@ Allow: /
 
 # User-agent: CCBot
 # Disallow: /
+
+# Block common bad bots
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
