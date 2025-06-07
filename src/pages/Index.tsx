@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -14,7 +15,7 @@ export interface Business {
   description: string | null;
   phone: string | null;
   email: string | null;
-  website?: string | null;
+  website: string | null;
   address: string;
   city: string;
   state: string;
@@ -24,12 +25,12 @@ export interface Business {
   review_count: number;
   featured: boolean;
   insurance_verified: boolean;
-  license_number?: string | null;
+  license_number: string | null;
   created_at: string;
   updated_at: string;
-  latitude?: number | null;
-  longitude?: number | null;
-  business_hours?: any;
+  latitude: number | null;
+  longitude: number | null;
+  business_hours: any;
 }
 
 const Index = () => {
@@ -91,32 +92,40 @@ const Index = () => {
     }
   }, [businessData]);
 
+  // Apply filters whenever any filter changes
+  useEffect(() => {
+    filterBusinesses(searchLocation, serviceFilter, sortBy);
+  }, [businesses, searchLocation, serviceFilter, sortBy]);
+
   const handleLocationFilter = (location: string) => {
+    console.log('Location filter changed:', location);
     setSearchLocation(location);
-    filterBusinesses(location, serviceFilter, sortBy);
   };
 
   const handleServiceFilter = (service: string) => {
+    console.log('Service filter changed:', service);
     setServiceFilter(service);
-    filterBusinesses(searchLocation, service, sortBy);
   };
 
   const handleSortChange = (sort: string) => {
+    console.log('Sort changed:', sort);
     setSortBy(sort);
-    filterBusinesses(searchLocation, serviceFilter, sort);
   };
 
   const filterBusinesses = (location: string, service: string, sort: string) => {
+    console.log('Filtering businesses:', { location, service, sort });
     let filtered = [...businesses];
 
-    if (location) {
+    if (location.trim()) {
       filtered = filtered.filter(business => 
         business.city.toLowerCase().includes(location.toLowerCase()) ||
-        business.zip_code.includes(location)
+        business.zip_code.includes(location.trim()) ||
+        business.address.toLowerCase().includes(location.toLowerCase()) ||
+        business.state.toLowerCase().includes(location.toLowerCase())
       );
     }
 
-    if (service) {
+    if (service && service !== "") {
       filtered = filtered.filter(business =>
         business.services?.some(s => 
           s.toLowerCase().includes(service.toLowerCase())
@@ -124,6 +133,7 @@ const Index = () => {
       );
     }
 
+    // Sort businesses
     switch (sort) {
       case 'rating':
         filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
@@ -136,11 +146,13 @@ const Index = () => {
         break;
     }
 
+    console.log('Filtered businesses:', filtered);
     setFilteredBusinesses(filtered);
   };
 
-  const handleSearch = () => {
-    console.log('Search triggered');
+  const handleHeroSearch = (location: string) => {
+    console.log('Hero search triggered with location:', location);
+    setSearchLocation(location);
   };
 
   if (error) {
@@ -149,7 +161,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <HeroSection onSearch={handleSearch} />
+      <HeroSection onSearch={handleHeroSearch} />
       
       <div className="container mx-auto px-4 py-8">
         <SearchFilters 

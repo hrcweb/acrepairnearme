@@ -1,12 +1,26 @@
 
-import { Search } from "lucide-react";
+import { useState } from "react";
+import { Search, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface HeroSectionProps {
-  onSearch: () => void;
+  onSearch: (location: string) => void;
 }
 
 const HeroSection = ({ onSearch }: HeroSectionProps) => {
+  const [searchLocation, setSearchLocation] = useState("");
+
+  const handleSearch = () => {
+    onSearch(searchLocation);
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    }
+  };
+
   return (
     <section className="relative bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 text-white py-20">
       {/* Background Image */}
@@ -29,14 +43,25 @@ const HeroSection = ({ onSearch }: HeroSectionProps) => {
           Get quotes, read reviews, and book service today.
         </p>
         
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-md mx-auto">
+        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center max-w-2xl mx-auto mb-8">
+          <div className="relative flex-1 w-full">
+            <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <Input
+              type="text"
+              placeholder="Enter city, ZIP code, or area..."
+              value={searchLocation}
+              onChange={(e) => setSearchLocation(e.target.value)}
+              onKeyPress={handleKeyPress}
+              className="pl-10 pr-4 py-3 w-full text-gray-900 bg-white border-0 rounded-l-lg sm:rounded-r-none"
+            />
+          </div>
           <Button 
             size="lg" 
-            className="w-full sm:w-auto bg-white text-blue-600 hover:bg-blue-50 font-semibold px-8"
-            onClick={onSearch}
+            className="w-full sm:w-auto bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3 rounded-r-lg sm:rounded-l-none"
+            onClick={handleSearch}
           >
             <Search className="w-5 h-5 mr-2" />
-            Find AC Repair Now
+            Find AC Repair
           </Button>
         </div>
 
