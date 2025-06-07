@@ -14,9 +14,10 @@ import HeatIndexVisualization from "@/components/HeatIndexVisualization";
 import SubscriptionButton from "@/components/SubscriptionButton";
 import ManageSubscriptionButton from "@/components/ManageSubscriptionButton";
 import AdvertisementButton from "@/components/AdvertisementButton";
+import SearchFiltersComponent, { SearchFilters } from "@/components/SearchFilters";
 import { useAuth } from "@/contexts/AuthContext";
 
-// Mock data for businesses
+// Mock data for businesses with additional filter properties
 const businesses = [
   {
     id: 1,
@@ -30,7 +31,13 @@ const businesses = [
     image: "/placeholder.svg",
     sponsored: true,
     verified: true,
-    zipCodes: ["33139", "33140", "33141"]
+    zipCodes: ["33139", "33140", "33141"],
+    distance: 2.5,
+    priceRange: "moderate",
+    emergencyService: true,
+    openNow: true,
+    weekendService: true,
+    extendedHours: false
   },
   {
     id: 2,
@@ -44,7 +51,13 @@ const businesses = [
     image: "/placeholder.svg",
     sponsored: false,
     verified: true,
-    zipCodes: ["32804", "32805", "32806"]
+    zipCodes: ["32804", "32805", "32806"],
+    distance: 8.1,
+    priceRange: "budget",
+    emergencyService: false,
+    openNow: false,
+    weekendService: true,
+    extendedHours: true
   },
   {
     id: 3,
@@ -58,19 +71,27 @@ const businesses = [
     image: "/placeholder.svg",
     sponsored: true,
     verified: true,
-    zipCodes: ["33607", "33608", "33609"]
+    zipCodes: ["33607", "33608", "33609"],
+    distance: 15.3,
+    priceRange: "premium",
+    emergencyService: true,
+    openNow: true,
+    weekendService: false,
+    extendedHours: true
   }
 ];
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedService, setSelectedService] = useState("");
+  const [filters, setFilters] = useState<SearchFilters>({});
   const [filteredBusinesses, setFilteredBusinesses] = useState(businesses);
   const { user, signOut, subscribed, subscriptionTier, subscriptionEnd } = useAuth();
 
   const handleSearch = () => {
     let filtered = businesses;
     
+    // Text search
     if (searchQuery) {
       filtered = filtered.filter(business => 
         business.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -80,13 +101,50 @@ const Index = () => {
       );
     }
     
+    // Service filter
     if (selectedService) {
       filtered = filtered.filter(business =>
         business.services.some(service => service.toLowerCase().includes(selectedService.toLowerCase()))
       );
     }
+
+    // Apply advanced filters
+    if (filters.distance) {
+      const maxDistance = parseInt(filters.distance);
+      filtered = filtered.filter(business => business.distance <= maxDistance);
+    }
+
+    if (filters.priceRange) {
+      filtered = filtered.filter(business => business.priceRange === filters.priceRange);
+    }
+
+    if (filters.businessHours) {
+      if (filters.businessHours === 'open-now') {
+        filtered = filtered.filter(business => business.openNow);
+      } else if (filters.businessHours === 'weekends') {
+        filtered = filtered.filter(business => business.weekendService);
+      } else if (filters.businessHours === 'extended') {
+        filtered = filtered.filter(business => business.extendedHours);
+      }
+    }
+
+    if (filters.emergencyService) {
+      filtered = filtered.filter(business => business.emergencyService);
+    }
+
+    if (filters.minRating) {
+      filtered = filtered.filter(business => business.rating >= filters.minRating);
+    }
     
     setFilteredBusinesses(filtered);
+  };
+
+  const handleFiltersChange = (newFilters: SearchFilters) => {
+    setFilters(newFilters);
+  };
+
+  const handleClearFilters = () => {
+    setFilters({});
   };
 
   return (
@@ -135,7 +193,7 @@ const Index = () => {
       <section className="py-8 bg-gray-50">
         <div className="container mx-auto px-4">
           <Card className="max-w-4xl mx-auto">
-            <CardContent className="p-6">
+            <CardContent className="p-6 space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                 <div className="md:col-span-2">
                   <Input
@@ -162,6 +220,13 @@ const Index = () => {
                   Search
                 </Button>
               </div>
+              
+              {/* Advanced Filters */}
+              <SearchFiltersComponent 
+                filters={filters}
+                onFiltersChange={handleFiltersChange}
+                onClearFilters={handleClearFilters}
+              />
             </CardContent>
           </Card>
         </div>
