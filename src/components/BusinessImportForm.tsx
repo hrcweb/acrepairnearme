@@ -37,6 +37,14 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
     insurance_verified: false
   });
 
+  // Define the exact database column names
+  const validColumns = [
+    'name', 'description', 'address', 'city', 'state', 'zip_code',
+    'phone', 'email', 'website', 'services', 'rating', 'review_count',
+    'license_number', 'insurance_verified', 'latitude', 'longitude',
+    'business_hours', 'featured'
+  ];
+
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -44,12 +52,11 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
     console.log('File type detected:', file.type);
     console.log('File name:', file.name);
 
-    // More robust CSV file validation - check both MIME type and file extension
     const fileName = file.name.toLowerCase();
     const isCSVFile = file.type === 'text/csv' || 
                      file.type === 'application/csv' || 
                      file.type === 'text/plain' ||
-                     file.type === '' || // Some browsers don't set MIME type for CSV
+                     file.type === '' || 
                      fileName.endsWith('.csv');
 
     if (!isCSVFile) {
@@ -77,7 +84,7 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
       }
 
       const headers = parseCSVLine(lines[0]).map(h => h.trim().toLowerCase().replace(/"/g, ''));
-      console.log("Parsed headers:", headers);
+      console.log("Original headers:", headers);
       
       const dataRows = lines.slice(1);
       console.log(`Processing ${dataRows.length} data rows`);
@@ -97,43 +104,17 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
 
           const business: any = {};
           
-          // Map headers to values with cleaner field mapping
+          // Map headers to values with proper field mapping
           headers.forEach((header, index) => {
             let value = values[index]?.trim().replace(/^"|"$/g, '') || '';
             
-            // Clean header mapping - handle your specific headers
-            let dbField = header;
+            // Map CSV headers to database column names
+            let dbField = mapHeaderToDbColumn(header);
             
-            // Map your specific headers to database fields
-            switch (header) {
-              case 'business_name':
-              case 'company_name':
-                dbField = 'name';
-                break;
-              case 'postal_code':
-              case 'zip':
-              case 'zipcode':
-                dbField = 'zip_code';
-                break;
-              case 'phone_1':
-              case 'phone_number':
-              case 'telephone':
-                dbField = 'phone';
-                break;
-              case 'email_1':
-              case 'email_address':
-                dbField = 'email';
-                break;
-              case 'website_url':
-              case 'url':
-                dbField = 'website';
-                break;
-              case 'reviews':
-              case 'total_reviews':
-                dbField = 'review_count';
-                break;
-              default:
-                dbField = header;
+            // Only process valid database columns
+            if (!validColumns.includes(dbField)) {
+              console.log(`Skipping unknown column: ${header} -> ${dbField}`);
+              return;
             }
             
             console.log(`Mapping ${header} -> ${dbField} with value: "${value}"`);
@@ -141,20 +122,24 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
             // Process the value based on the database field type
             switch (dbField) {
               case 'services':
-                business[dbField] = value ? value.split(',').map(s => s.trim()).filter(s => s) : [];
+                business[dbField] = value ? value.split(',').map(s => s.trim()).filter(s => s) : null;
                 break;
               case 'rating':
-                business[dbField] = value ? parseFloat(value) : 0.0;
+                business[dbField] = value ? parseFloat(value) || null : null;
                 break;
               case 'review_count':
                 business[dbField] = value ? parseInt(value) || 0 : 0;
                 break;
               case 'insurance_verified':
-                business[dbField] = value.toLowerCase() === 'true' || value === '1';
+              case 'featured':
+                business[dbField] = value ? (value.toLowerCase() === 'true' || value === '1') : false;
                 break;
               case 'latitude':
               case 'longitude':
-                business[dbField] = value ? parseFloat(value) : null;
+                business[dbField] = value ? parseFloat(value) || null : null;
+                break;
+              case 'business_hours':
+                business[dbField] = value ? JSON.parse(value) : null;
                 break;
               default:
                 business[dbField] = value || null;
@@ -187,34 +172,49 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
       console.log('Sample business object:', businesses[0]);
 
       if (businesses.length > 0) {
-        const { error } = await supabase
-          .from('businesses')
-          .insert(businesses);
+        // Insert businesses one by one to get better error messages
+        let successCount = 0;
+        for (const business of businesses) {
+          try {
+            const { error } = await supabase
+              .from('businesses')
+              .insert([business]);
 
-        if (error) {
-          console.error('Supabase insert error:', error);
+            if (error) {
+              console.error('Supabase insert error for business:', business.name, error);
+              errors.push(`Failed to insert ${business.name}: ${error.message}`);
+            } else {
+              successCount++;
+            }
+          } catch (insertError) {
+            console.error('Insert error:', insertError);
+            errors.push(`Failed to insert ${business.name}: ${insertError instanceof Error ? insertError.message : 'Unknown error'}`);
+          }
+        }
+
+        setImportResults({ success: successCount, errors });
+        
+        if (successCount > 0) {
           toast({
-            title: "Import failed",
-            description: error.message,
-            variant: "destructive",
+            title: "Import completed",
+            description: `Successfully imported ${successCount} businesses${errors.length > 0 ? ` with ${errors.length} errors` : ''}.`,
           });
         } else {
-          setImportResults({ success: businesses.length, errors });
           toast({
-            title: "Import successful",
-            description: `Successfully imported ${businesses.length} businesses.`,
+            title: "Import failed",
+            description: "No businesses were successfully imported. Check the errors below.",
+            variant: "destructive",
           });
         }
       } else {
         console.log('No valid businesses to import. Errors:', errors);
+        setImportResults({ success: 0, errors });
         toast({
           title: "No valid businesses found",
           description: "Please check your CSV format and required fields.",
           variant: "destructive",
         });
       }
-
-      setImportResults({ success: businesses.length, errors });
     } catch (error) {
       console.error('Import error:', error);
       toast({
@@ -222,9 +222,46 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
         description: error instanceof Error ? error.message : "An error occurred",
         variant: "destructive",
       });
+      setImportResults({ success: 0, errors: [error instanceof Error ? error.message : "Unknown error"] });
     } finally {
       setIsUploading(false);
     }
+  };
+
+  const mapHeaderToDbColumn = (header: string): string => {
+    const headerMap: { [key: string]: string } = {
+      'business_name': 'name',
+      'company_name': 'name',
+      'business name': 'name',
+      'company name': 'name',
+      'postal_code': 'zip_code',
+      'zipcode': 'zip_code',
+      'zip': 'zip_code',
+      'zip code': 'zip_code',
+      'phone_1': 'phone',
+      'phone_number': 'phone',
+      'telephone': 'phone',
+      'phone number': 'phone',
+      'email_1': 'email',
+      'email_address': 'email',
+      'email address': 'email',
+      'website_url': 'website',
+      'url': 'website',
+      'website url': 'website',
+      'reviews': 'review_count',
+      'total_reviews': 'review_count',
+      'review count': 'review_count',
+      'total reviews': 'review_count',
+      'num_reviews': 'review_count',
+      'license': 'license_number',
+      'license num': 'license_number',
+      'license #': 'license_number',
+      'insured': 'insurance_verified',
+      'insurance': 'insurance_verified',
+      'verified': 'insurance_verified'
+    };
+
+    return headerMap[header] || header.replace(/\s+/g, '_');
   };
 
   const parseCSVLine = (line: string): string[] => {
@@ -238,16 +275,13 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
       
       if (char === '"') {
         if (inQuotes && line[i + 1] === '"') {
-          // Handle escaped quotes
           current += '"';
           i += 2;
         } else {
-          // Toggle quote state
           inQuotes = !inQuotes;
           i++;
         }
       } else if ((char === ',' || char === '\t') && !inQuotes) {
-        // Handle both comma and tab delimiters
         result.push(current);
         current = '';
         i++;
@@ -268,9 +302,9 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
     try {
       const businessData = {
         ...formData,
-        services: formData.services ? formData.services.split(',').map(s => s.trim()) : [],
-        rating: formData.rating ? parseFloat(formData.rating) : 0.0,
-        review_count: formData.review_count ? parseInt(formData.review_count) : 0,
+        services: formData.services ? formData.services.split(',').map(s => s.trim()) : null,
+        rating: formData.rating ? parseFloat(formData.rating) || null : null,
+        review_count: formData.review_count ? parseInt(formData.review_count) || 0 : 0,
       };
 
       const { error } = await supabase
@@ -278,6 +312,7 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
         .insert([businessData]);
 
       if (error) {
+        console.error('Single business insert error:', error);
         toast({
           title: "Error adding business",
           description: error.message,
@@ -306,6 +341,7 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
         });
       }
     } catch (error) {
+      console.error('Single business submit error:', error);
       toast({
         title: "Error adding business",
         description: error instanceof Error ? error.message : "An error occurred",
@@ -462,15 +498,15 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
 
       {/* CSV Format Help */}
       <div className="bg-blue-50 p-4 rounded-lg">
-        <h4 className="font-medium text-blue-900 mb-2">Your CSV Headers Detected:</h4>
+        <h4 className="font-medium text-blue-900 mb-2">CSV Import Guide:</h4>
         <p className="text-sm text-blue-800 mb-2">
-          Based on your headers, the system will map: <strong>postal_code → zip_code</strong>, <strong>email_1 → email</strong>, <strong>reviews → review_count</strong>
+          <strong>Required fields:</strong> name, address, city, state, zip_code (or postal_code)
         </p>
         <p className="text-sm text-blue-800 mb-2">
-          <strong>Required fields:</strong> name, address, city, state, postal_code (or zip_code)
+          <strong>Optional fields:</strong> phone, email, website, services, rating, review_count, license_number, insurance_verified
         </p>
         <p className="text-sm text-blue-800">
-          <strong>Optional fields:</strong> phone, email_1 (or email), website, services, rating, reviews (or review_count)
+          <strong>Auto-mapped headers:</strong> business_name→name, postal_code→zip_code, email_1→email, reviews→review_count
         </p>
       </div>
 
