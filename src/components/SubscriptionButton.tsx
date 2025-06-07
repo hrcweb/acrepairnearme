@@ -20,21 +20,13 @@ const SubscriptionButton = ({ tier, price, children, className }: SubscriptionBu
   const isCurrentPlan = subscriptionTier === tier;
 
   const handleSubscribe = async () => {
-    if (!user) {
-      toast({
-        title: "Authentication Required",
-        description: "Please sign in to subscribe to a plan.",
-        variant: "destructive"
-      });
-      return;
-    }
-
     setLoading(true);
 
     try {
+      // Create guest checkout session without requiring authentication
       const { data, error } = await supabase.functions.invoke('create-checkout', {
         body: { tier },
-        headers: { Authorization: `Bearer ${session?.access_token}` }
+        headers: session ? { Authorization: `Bearer ${session.access_token}` } : {}
       });
 
       if (error) throw error;
@@ -55,7 +47,7 @@ const SubscriptionButton = ({ tier, price, children, className }: SubscriptionBu
     }
   };
 
-  if (isCurrentPlan) {
+  if (isCurrentPlan && user) {
     return (
       <Button variant="outline" className={className} disabled>
         Current Plan

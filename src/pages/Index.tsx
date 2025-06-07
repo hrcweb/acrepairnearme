@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, MapPin, Phone, Star, CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,79 +20,74 @@ import MobileNavigation from "@/components/MobileNavigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { useDebounce } from "@/hooks/useDebounce";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 
-// Mock data for businesses with additional filter properties
-const businesses = [
-  {
-    id: 1,
-    name: "Cool Breeze AC Repair",
-    rating: 4.8,
-    reviewCount: 127,
-    phone: "(305) 555-0123",
-    address: "123 Ocean Drive, Miami, FL 33139",
-    services: ["AC Repair", "Installation", "Maintenance"],
-    description: "Professional AC repair and installation services in Miami. 24/7 emergency service available.",
-    image: "/placeholder.svg",
-    sponsored: true,
-    verified: true,
-    zipCodes: ["33139", "33140", "33141"],
-    distance: 2.5,
-    priceRange: "moderate",
-    emergencyService: true,
-    openNow: true,
-    weekendService: true,
-    extendedHours: false
-  },
-  {
-    id: 2,
-    name: "Florida Comfort Solutions",
-    rating: 4.6,
-    reviewCount: 89,
-    phone: "(407) 555-0456",
-    address: "456 Colonial Dr, Orlando, FL 32804",
-    services: ["HVAC Repair", "Duct Cleaning", "Energy Audits"],
-    description: "Comprehensive HVAC services for Central Florida. Licensed and insured professionals.",
-    image: "/placeholder.svg",
-    sponsored: false,
-    verified: true,
-    zipCodes: ["32804", "32805", "32806"],
-    distance: 8.1,
-    priceRange: "budget",
-    emergencyService: false,
-    openNow: false,
-    weekendService: true,
-    extendedHours: true
-  },
-  {
-    id: 3,
-    name: "Sunshine AC & Heating",
-    rating: 4.9,
-    reviewCount: 203,
-    phone: "(813) 555-0789",
-    address: "789 Tampa Bay Blvd, Tampa, FL 33607",
-    services: ["AC Repair", "Heat Pump Service", "Indoor Air Quality"],
-    description: "Award-winning AC repair service in Tampa Bay area. Family-owned since 1985.",
-    image: "/placeholder.svg",
-    sponsored: true,
-    verified: true,
-    zipCodes: ["33607", "33608", "33609"],
-    distance: 15.3,
-    priceRange: "premium",
-    emergencyService: true,
-    openNow: true,
-    weekendService: false,
-    extendedHours: true
-  }
-];
+interface Business {
+  id: number;
+  name: string;
+  rating: number;
+  review_count: number;
+  phone: string | null;
+  address: string;
+  city: string;
+  state: string;
+  zip_code: string;
+  services: string[] | null;
+  description: string | null;
+  featured: boolean;
+  insurance_verified: boolean;
+}
 
 const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedService, setSelectedService] = useState("");
   const [filters, setFilters] = useLocalStorage<SearchFilters>("searchFilters", {});
-  const [filteredBusinesses, setFilteredBusinesses] = useState(businesses);
+  const [businesses, setBusinesses] = useState<Business[]>([]);
+  const [filteredBusinesses, setFilteredBusinesses] = useState<Business[]>([]);
+  const [loading, setLoading] = useState(true);
   const { user, signOut, subscribed, subscriptionTier, subscriptionEnd } = useAuth();
+  const { toast } = useToast();
   
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
+
+  useEffect(() => {
+    fetchBusinesses();
+  }, []);
+
+  useEffect(() => {
+    handleSearch();
+  }, [debouncedSearchQuery, selectedService, filters, businesses]);
+
+  const fetchBusinesses = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('businesses')
+        .select('*')
+        .order('featured', { ascending: false })
+        .order('rating', { ascending: false });
+
+      if (error) {
+        toast({
+          title: "Error loading businesses",
+          description: error.message,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      setBusinesses(data || []);
+    } catch (error) {
+      console.error('Error fetching businesses:', error);
+      toast({
+        title: "Error",
+        description: "Failed to load businesses",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleSearch = () => {
     let filtered = businesses;
@@ -102,42 +97,25 @@ const Index = () => {
       filtered = filtered.filter(business => 
         business.name.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
         business.address.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
-        business.zipCodes.some(zip => zip.includes(debouncedSearchQuery)) ||
-        business.services.some(service => service.toLowerCase().includes(debouncedSearchQuery.toLowerCase()))
+        business.city.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+        business.state.toLowerCase().includes(debouncedSearchQuery.toLowerCase()) ||
+        business.zip_code.includes(debouncedSearchQuery) ||
+        (business.services && business.services.some(service => 
+          service.toLowerCase().includes(debouncedSearchQuery.toLowerCase())
+        ))
       );
     }
     
     // Service filter
     if (selectedService) {
       filtered = filtered.filter(business =>
-        business.services.some(service => service.toLowerCase().includes(selectedService.toLowerCase()))
+        business.services && business.services.some(service => 
+          service.toLowerCase().includes(selectedService.toLowerCase())
+        )
       );
     }
 
     // Apply advanced filters
-    if (filters.distance) {
-      const maxDistance = parseInt(filters.distance);
-      filtered = filtered.filter(business => business.distance <= maxDistance);
-    }
-
-    if (filters.priceRange) {
-      filtered = filtered.filter(business => business.priceRange === filters.priceRange);
-    }
-
-    if (filters.businessHours) {
-      if (filters.businessHours === 'open-now') {
-        filtered = filtered.filter(business => business.openNow);
-      } else if (filters.businessHours === 'weekends') {
-        filtered = filtered.filter(business => business.weekendService);
-      } else if (filters.businessHours === 'extended') {
-        filtered = filtered.filter(business => business.extendedHours);
-      }
-    }
-
-    if (filters.emergencyService) {
-      filtered = filtered.filter(business => business.emergencyService);
-    }
-
     if (filters.minRating) {
       filtered = filtered.filter(business => business.rating >= filters.minRating);
     }
@@ -152,6 +130,28 @@ const Index = () => {
   const handleClearFilters = () => {
     setFilters({});
   };
+
+  // Transform business data for BusinessCard component
+  const transformBusinessForCard = (business: Business) => ({
+    id: business.id,
+    name: business.name,
+    rating: business.rating,
+    reviewCount: business.review_count,
+    phone: business.phone || "",
+    address: `${business.address}, ${business.city}, ${business.state} ${business.zip_code}`,
+    services: business.services || [],
+    description: business.description || "Professional service provider in your area.",
+    image: "/placeholder.svg",
+    sponsored: business.featured,
+    verified: business.insurance_verified,
+    zipCodes: [business.zip_code],
+    distance: 0,
+    priceRange: "moderate" as const,
+    emergencyService: true,
+    openNow: true,
+    weekendService: true,
+    extendedHours: false
+  });
 
   return (
     <div className="min-h-screen bg-background">
@@ -262,9 +262,20 @@ const Index = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Business Listings */}
             <div className="lg:col-span-2 space-y-6">
-              {filteredBusinesses.map((business) => (
-                <BusinessCard key={business.id} business={business} />
-              ))}
+              {loading ? (
+                <div className="text-center py-8">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+                  <p>Loading businesses...</p>
+                </div>
+              ) : filteredBusinesses.length > 0 ? (
+                filteredBusinesses.map((business) => (
+                  <BusinessCard key={business.id} business={transformBusinessForCard(business)} />
+                ))
+              ) : (
+                <div className="text-center py-8">
+                  <p className="text-gray-600">No businesses found matching your criteria.</p>
+                </div>
+              )}
             </div>
 
             {/* Sidebar */}
@@ -299,15 +310,9 @@ const Index = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  {user ? (
-                    <SubscriptionButton tier="Basic" price={29} className="w-full bg-blue-600 hover:bg-blue-700">
-                      List Your Business
-                    </SubscriptionButton>
-                  ) : (
-                    <Button className="w-full bg-blue-600 hover:bg-blue-700" asChild>
-                      <a href="/list-business">List Your Business</a>
-                    </Button>
-                  )}
+                  <SubscriptionButton tier="Basic" price={29} className="w-full bg-blue-600 hover:bg-blue-700">
+                    List Your Business
+                  </SubscriptionButton>
                   <p className="text-sm text-blue-600 mt-2 text-center">
                     Starting at $29/month
                   </p>

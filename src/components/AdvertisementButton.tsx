@@ -14,25 +14,17 @@ interface AdvertisementButtonProps {
 
 const AdvertisementButton = ({ adType, price, children, className }: AdvertisementButtonProps) => {
   const [loading, setLoading] = useState(false);
-  const { user, session } = useAuth();
+  const { session } = useAuth();
   const { toast } = useToast();
 
   const handleAdvertisement = async () => {
-    if (!user) {
-      toast({
-        title: "Authentication Required",
-        description: "Please sign in to purchase advertisements.",
-        variant: "destructive"
-      });
-      return;
-    }
-
     setLoading(true);
 
     try {
+      // Create guest checkout session without requiring authentication
       const { data, error } = await supabase.functions.invoke('create-ad-checkout', {
         body: { adType },
-        headers: { Authorization: `Bearer ${session?.access_token}` }
+        headers: session ? { Authorization: `Bearer ${session.access_token}` } : {}
       });
 
       if (error) throw error;

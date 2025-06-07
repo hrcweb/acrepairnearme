@@ -29,21 +29,39 @@ serve(async (req) => {
     const { tier } = await req.json();
     logStep("Received request", { tier });
 
-    const authHeader = req.headers.get("Authorization")!;
-    const token = authHeader.replace("Bearer ", "");
-    const { data } = await supabaseClient.auth.getUser(token);
-    const user = data.user;
-    if (!user?.email) throw new Error("User not authenticated or email not available");
-    logStep("User authenticated", { userId: user.id, email: user.email });
+    // Check if user is authenticated (optional for guest checkout)
+    let user = null;
+    let email = "guest@example.com"; // Default guest email
+    
+    const authHeader = req.headers.get("Authorization");
+    if (authHeader) {
+      try {
+        const token = authHeader.replace("Bearer ", "");
+        const { data } = await supabaseClient.auth.getUser(token);
+        user = data.user;
+        if (user?.email) {
+          email = user.email;
+        }
+        logStep("User authenticated", { userId: user?.id, email });
+      } catch (error) {
+        logStep("Authentication failed, proceeding as guest", { error: error.message });
+      }
+    } else {
+      logStep("No auth header, proceeding as guest");
+    }
 
     const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", { apiVersion: "2023-10-16" });
-    const customers = await stripe.customers.list({ email: user.email, limit: 1 });
+    
+    // Check for existing customer only if we have a real email
     let customerId;
-    if (customers.data.length > 0) {
-      customerId = customers.data[0].id;
-      logStep("Found existing customer", { customerId });
-    } else {
-      logStep("No existing customer found");
+    if (email !== "guest@example.com") {
+      const customers = await stripe.customers.list({ email, limit: 1 });
+      if (customers.data.length > 0) {
+        customerId = customers.data[0].id;
+        logStep("Found existing customer", { customerId });
+      } else {
+        logStep("No existing customer found");
+      }
     }
 
     // Define pricing based on tier
@@ -70,7 +88,7 @@ serve(async (req) => {
 
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
-      customer_email: customerId ? undefined : user.email,
+      customer_email: customerId ? undefined : email,
       line_items: [
         {
           price_data: {
@@ -85,6 +103,10 @@ serve(async (req) => {
       mode: "subscription",
       success_url: `${req.headers.get("origin")}/payment-success?tier=${tier}`,
       cancel_url: `${req.headers.get("origin")}/`,
+      metadata: {
+        tier,
+        user_id: user?.id || "guest",
+      },
     });
 
     logStep("Checkout session created", { sessionId: session.id, url: session.url });
