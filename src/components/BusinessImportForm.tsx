@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -5,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { Upload, AlertCircle, CheckCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -40,10 +41,21 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
     const file = event.target.files?.[0];
     if (!file) return;
 
-    if (file.type !== 'text/csv') {
+    console.log('File type detected:', file.type);
+    console.log('File name:', file.name);
+
+    // More robust CSV file validation - check both MIME type and file extension
+    const fileName = file.name.toLowerCase();
+    const isCSVFile = file.type === 'text/csv' || 
+                     file.type === 'application/csv' || 
+                     file.type === 'text/plain' ||
+                     file.type === '' || // Some browsers don't set MIME type for CSV
+                     fileName.endsWith('.csv');
+
+    if (!isCSVFile) {
       toast({
         title: "Invalid file type",
-        description: "Please upload a CSV file.",
+        description: `Please upload a CSV file. Detected type: ${file.type}, File: ${fileName}`,
         variant: "destructive",
       });
       return;
