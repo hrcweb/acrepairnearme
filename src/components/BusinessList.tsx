@@ -19,9 +19,9 @@ interface Business {
   zip_code: string;
   phone: string | null;
   email: string | null;
-  website: string | null;
+  website?: string | null;
   services: string[] | null;
-  rating: number;
+  rating: number | null;
   review_count: number;
   created_at: string;
 }
@@ -162,7 +162,7 @@ const BusinessList: React.FC<BusinessListProps> = ({
           <CardContent>
             <div className="text-2xl font-bold">
               {businesses.length > 0 
-                ? (businesses.reduce((sum, b) => sum + b.rating, 0) / businesses.length).toFixed(1)
+                ? (businesses.reduce((sum, b) => sum + (b.rating || 0), 0) / businesses.length).toFixed(1)
                 : "0.0"
               }
             </div>
@@ -212,7 +212,7 @@ const BusinessList: React.FC<BusinessListProps> = ({
                 <div className="flex items-center space-x-2">
                   <div className="flex items-center">
                     <Star className="h-4 w-4 text-yellow-400 fill-current mr-1" />
-                    <span className="font-medium">{business.rating}</span>
+                    <span className="font-medium">{business.rating || 0}</span>
                     <span className="text-gray-500 ml-1">({business.review_count})</span>
                   </div>
                   {onEditBusiness && (

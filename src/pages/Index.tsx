@@ -13,24 +13,24 @@ import Footer from "@/components/Footer";
 export interface Business {
   id: number;
   name: string;
-  description: string;
-  phone: string;
-  email: string;
-  website?: string;
+  description: string | null;
+  phone: string | null;
+  email: string | null;
+  website?: string | null;
   address: string;
   city: string;
   state: string;
   zip_code: string;
-  services: string[];
-  rating: number;
+  services: string[] | null;
+  rating: number | null;
   review_count: number;
   featured: boolean;
   insurance_verified: boolean;
-  license_number?: string;
+  license_number?: string | null;
   created_at: string;
   updated_at: string;
-  latitude?: number;
-  longitude?: number;
+  latitude?: number | null;
+  longitude?: number | null;
   business_hours?: any;
 }
 
@@ -68,16 +68,16 @@ const Index = () => {
       const transformedBusinesses = businessData.map(business => ({
         id: business.id,
         name: business.name,
-        description: business.description || '',
-        phone: business.phone || '',
-        email: business.email || '',
+        description: business.description,
+        phone: business.phone,
+        email: business.email,
         website: business.website,
         address: business.address,
         city: business.city,
         state: business.state,
         zip_code: business.zip_code,
-        services: business.services || [],
-        rating: business.rating || 0,
+        services: business.services,
+        rating: business.rating,
         review_count: business.review_count || 0,
         featured: business.featured || false,
         insurance_verified: business.insurance_verified || false,
@@ -120,7 +120,7 @@ const Index = () => {
 
     if (service) {
       filtered = filtered.filter(business =>
-        business.services.some(s => 
+        business.services?.some(s => 
           s.toLowerCase().includes(service.toLowerCase())
         )
       );
@@ -128,7 +128,7 @@ const Index = () => {
 
     switch (sort) {
       case 'rating':
-        filtered.sort((a, b) => b.rating - a.rating);
+        filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
         break;
       case 'reviews':
         filtered.sort((a, b) => b.review_count - a.review_count);
@@ -143,6 +143,11 @@ const Index = () => {
 
   const handleSearch = () => {
     console.log('Search triggered');
+  };
+
+  const handleAreaSelect = (area: any) => {
+    setSearchLocation(area.city);
+    filterBusinesses(area.city, serviceFilter, sortBy);
   };
 
   if (error) {
@@ -170,7 +175,7 @@ const Index = () => {
           </div>
           
           <div className="space-y-8">
-            <ServiceAreaMap />
+            <ServiceAreaMap onAreaSelect={handleAreaSelect} />
             <LocalRebateFinder />
             <HeatIndexVisualization />
           </div>
