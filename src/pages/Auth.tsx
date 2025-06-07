@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
 
 const Auth = () => {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -14,6 +15,7 @@ const Auth = () => {
   const [fullName, setFullName] = useState("");
   const [loading, setLoading] = useState(false);
   const { user, signIn, signUp } = useAuth();
+  const { toast } = useToast();
 
   // Redirect if already authenticated
   if (user) {
@@ -24,12 +26,36 @@ const Auth = () => {
     e.preventDefault();
     setLoading(true);
 
+    console.log("Form submitted:", { isSignUp, email });
+
     try {
       if (isSignUp) {
-        await signUp(email, password, fullName);
+        console.log("Attempting sign up...");
+        const { error } = await signUp(email, password, fullName);
+        if (!error) {
+          toast({
+            title: "Account created!",
+            description: "Please check your email to verify your account before signing in.",
+          });
+          // Switch to sign in mode after successful sign up
+          setIsSignUp(false);
+          setPassword(""); // Clear password for security
+        }
       } else {
-        await signIn(email, password);
+        console.log("Attempting sign in...");
+        const { error } = await signIn(email, password);
+        if (!error) {
+          // Auth context will handle the redirect
+          console.log("Sign in successful");
+        }
       }
+    } catch (error) {
+      console.error("Auth error:", error);
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setLoading(false);
     }
