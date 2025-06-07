@@ -85,17 +85,20 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
 
           const business: any = {};
           
-          // Map headers to values
+          // Map headers to values with improved field mapping
           headers.forEach((header, index) => {
             let value = values[index]?.trim().replace(/^"|"$/g, '') || '';
             
-            // Map common header variations to our database fields
+            // Enhanced mapping for common header variations
             let dbField = header;
+            
+            // Common field mappings
             if (header === 'business_name' || header === 'company_name') dbField = 'name';
             if (header === 'zip' || header === 'zipcode' || header === 'postal_code') dbField = 'zip_code';
-            if (header === 'phone_number' || header === 'telephone') dbField = 'phone';
-            if (header === 'email_address') dbField = 'email';
+            if (header === 'phone_number' || header === 'telephone' || header === 'phone_1') dbField = 'phone';
+            if (header === 'email_address' || header === 'email_1') dbField = 'email';
             if (header === 'website_url' || header === 'url') dbField = 'website';
+            if (header === 'reviews' || header === 'review_count' || header === 'total_reviews') dbField = 'review_count';
             
             switch (dbField) {
               case 'services':
@@ -200,7 +203,8 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
           inQuotes = !inQuotes;
           i++;
         }
-      } else if (char === ',' && !inQuotes) {
+      } else if ((char === ',' || char === '\t') && !inQuotes) {
+        // Handle both comma and tab delimiters
         result.push(current);
         current = '';
         i++;
@@ -411,6 +415,18 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
           disabled={isUploading}
           className="hidden"
         />
+      </div>
+
+      {/* CSV Format Help */}
+      <div className="bg-blue-50 p-4 rounded-lg">
+        <h4 className="font-medium text-blue-900 mb-2">CSV Format Requirements:</h4>
+        <p className="text-sm text-blue-800 mb-2">
+          Your CSV should include these headers (the system will automatically map common variations):
+        </p>
+        <ul className="text-sm text-blue-800 list-disc list-inside space-y-1">
+          <li><strong>Required:</strong> name, address, city, state, zip_code (or postal_code)</li>
+          <li><strong>Optional:</strong> phone, email (or email_1), website, services, rating, reviews (or review_count)</li>
+        </ul>
       </div>
 
       {importResults && (
