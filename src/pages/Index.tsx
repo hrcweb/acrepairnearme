@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -222,18 +221,41 @@ const Index = () => {
           </section>
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
-            <div className="lg:col-span-2">
-              <BusinessList 
-                businesses={filteredBusinesses}
-                isLoading={isLoading}
-                searchLocation={searchLocation}
+            <div className="lg:col-span-1">
+              <CountyTownSelector 
+                onTownSelect={handleLocationFilter} 
+                selectedTown={searchLocation}
               />
             </div>
             
-            <aside className="space-y-8" role="complementary">
-              <LocalRebateFinder />
-              <HeatIndexVisualization />
-            </aside>
+            <div className="lg:col-span-2">
+              {searchLocation ? (
+                <BusinessList 
+                  businesses={filteredBusinesses}
+                  isLoading={isLoading}
+                  searchLocation={searchLocation}
+                />
+              ) : (
+                <div className="text-center py-16">
+                  <MapPin className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                    Select a City to View AC Repair Contractors
+                  </h3>
+                  <p className="text-gray-500">
+                    Choose a city from the location selector to see licensed AC repair and HVAC contractors in your area.
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
+            <div className="lg:col-span-2 lg:col-start-2">
+              <aside className="space-y-8" role="complementary">
+                <LocalRebateFinder />
+                <HeatIndexVisualization />
+              </aside>
+            </div>
           </div>
 
           {/* Additional SEO content */}
