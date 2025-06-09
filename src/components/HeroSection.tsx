@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Search, MapPin } from "lucide-react";
+import { Search, MapPin, Shield, Star, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -18,6 +18,15 @@ const HeroSection = ({ onSearch }: HeroSectionProps) => {
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       handleSearch();
+    }
+  };
+
+  const scrollToSearch = () => {
+    // Scroll to the main search area and trigger search
+    const searchElement = document.querySelector('input[placeholder*="Enter city"]');
+    if (searchElement) {
+      searchElement.scrollIntoView({ behavior: 'smooth' });
+      (searchElement as HTMLInputElement).focus();
     }
   };
 
@@ -80,6 +89,40 @@ const HeroSection = ({ onSearch }: HeroSectionProps) => {
             <div className="text-3xl font-bold text-blue-200">4.8★</div>
             <div className="text-blue-100">Average Customer Rating</div>
           </div>
+        </div>
+
+        {/* Beat the Heat Section */}
+        <div className="mt-16 bg-white/10 backdrop-blur-sm rounded-lg p-8">
+          <h2 className="text-3xl font-bold mb-4">Beat the Heat with Professional AC Service</h2>
+          <p className="text-xl mb-8 text-blue-100">
+            Don't let extreme heat put your family at risk. Find qualified, licensed AC contractors in your area.
+          </p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="text-center">
+              <Shield className="w-12 h-12 mx-auto mb-3 text-blue-200" />
+              <h3 className="font-semibold mb-2">Licensed & Verified</h3>
+              <p className="text-sm text-blue-100">All contractors are licensed, insured, and background-checked</p>
+            </div>
+            <div className="text-center">
+              <Star className="w-12 h-12 mx-auto mb-3 text-blue-200" />
+              <h3 className="font-semibold mb-2">Top-Rated Service</h3>
+              <p className="text-sm text-blue-100">Read reviews from real customers in your neighborhood</p>
+            </div>
+            <div className="text-center">
+              <Clock className="w-12 h-12 mx-auto mb-3 text-blue-200" />
+              <h3 className="font-semibold mb-2">24/7 Emergency</h3>
+              <p className="text-sm text-blue-100">Emergency AC repair available when you need it most</p>
+            </div>
+          </div>
+
+          <Button 
+            size="lg" 
+            className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3"
+            onClick={scrollToSearch}
+          >
+            Find AC Contractors Near You
+          </Button>
         </div>
       </div>
     </section>
