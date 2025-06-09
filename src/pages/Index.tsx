@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import BusinessList from "@/components/BusinessList";
 import HeroSection from "@/components/HeroSection";
+import CountyTownSelector from "@/components/CountyTownSelector";
 import LocalRebateFinder from "@/components/LocalRebateFinder";
 import HeatIndexVisualization from "@/components/HeatIndexVisualization";
 import Footer from "@/components/Footer";
