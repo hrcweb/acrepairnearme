@@ -10,9 +10,8 @@ interface CountyTownSelectorProps {
   selectedTown: string;
 }
 
-const FLORIDA_CITIES = {
-  "Florida AC Repair Centers": [
-    // Palm Beach County
+const FLORIDA_COUNTIES = {
+  "Palm Beach County": [
     "West Palm Beach",
     "Boca Raton",
     "Delray Beach",
@@ -41,8 +40,9 @@ const FLORIDA_CITIES = {
     "Pahokee",
     "Belle Glade",
     "South Bay",
-    "Canal Point",
-    // Martin County
+    "Canal Point"
+  ],
+  "Martin County": [
     "Stuart",
     "Palm City",
     "Jensen Beach",
@@ -51,8 +51,9 @@ const FLORIDA_CITIES = {
     "Indiantown",
     "Ocean Breeze Park",
     "Sewall's Point",
-    "Jupiter Island",
-    // Miami-Dade County
+    "Jupiter Island"
+  ],
+  "Miami-Dade County": [
     "Miami",
     "Miami Beach",
     "Coral Gables",
@@ -91,13 +92,13 @@ const FLORIDA_CITIES = {
 };
 
 const CountyTownSelector = ({ onTownSelect, selectedTown }: CountyTownSelectorProps) => {
-  const [selectedState, setSelectedState] = useState<string | null>(null);
+  const [selectedCounty, setSelectedCounty] = useState<string | null>(null);
 
-  const handleStateSelect = (state: string) => {
-    if (selectedState === state) {
-      setSelectedState(null);
+  const handleCountySelect = (county: string) => {
+    if (selectedCounty === county) {
+      setSelectedCounty(null);
     } else {
-      setSelectedState(state);
+      setSelectedCounty(county);
     }
   };
 
@@ -107,7 +108,7 @@ const CountyTownSelector = ({ onTownSelect, selectedTown }: CountyTownSelectorPr
 
   const clearSelection = () => {
     onTownSelect("");
-    setSelectedState(null);
+    setSelectedCounty(null);
   };
 
   return (
@@ -129,27 +130,27 @@ const CountyTownSelector = ({ onTownSelect, selectedTown }: CountyTownSelectorPr
         )}
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* State Selection */}
+        {/* County Selection */}
         <div className="space-y-2">
-          <h3 className="text-sm font-medium text-gray-700">Select State:</h3>
+          <h3 className="text-sm font-medium text-gray-700">Select County:</h3>
           <div className="grid grid-cols-1 gap-2">
-            {Object.keys(FLORIDA_CITIES).map((state) => (
+            {Object.keys(FLORIDA_COUNTIES).map((county) => (
               <Button
-                key={state}
-                variant={selectedState === state ? "default" : "outline"}
+                key={county}
+                variant={selectedCounty === county ? "default" : "outline"}
                 className="justify-start h-auto p-4"
-                onClick={() => handleStateSelect(state)}
+                onClick={() => handleCountySelect(county)}
               >
                 <div className="text-left">
-                  <div className="font-medium">{state}</div>
+                  <div className="font-medium">{county}</div>
                   <div className="text-xs text-gray-500 mt-1">
-                    {FLORIDA_CITIES[state as keyof typeof FLORIDA_CITIES].length} cities available
+                    {FLORIDA_COUNTIES[county as keyof typeof FLORIDA_COUNTIES].length} cities available
                   </div>
                 </div>
-                {selectedState === state && (
+                {selectedCounty === county && (
                   <span className="ml-auto">▼</span>
                 )}
-                {selectedState !== state && (
+                {selectedCounty !== county && (
                   <span className="ml-auto">▶</span>
                 )}
               </Button>
@@ -158,13 +159,13 @@ const CountyTownSelector = ({ onTownSelect, selectedTown }: CountyTownSelectorPr
         </div>
 
         {/* City Selection */}
-        {selectedState && (
+        {selectedCounty && (
           <div className="space-y-2">
             <h3 className="text-sm font-medium text-gray-700">
-              Select City in {selectedState}:
+              Select City in {selectedCounty}:
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 max-h-80 overflow-y-auto border rounded-lg p-3 bg-gray-50">
-              {FLORIDA_CITIES[selectedState as keyof typeof FLORIDA_CITIES].map((city) => (
+              {FLORIDA_COUNTIES[selectedCounty as keyof typeof FLORIDA_COUNTIES].map((city) => (
                 <Button
                   key={city}
                   variant={selectedTown === city ? "default" : "outline"}
@@ -179,9 +180,9 @@ const CountyTownSelector = ({ onTownSelect, selectedTown }: CountyTownSelectorPr
           </div>
         )}
 
-        {!selectedState && (
+        {!selectedCounty && (
           <p className="text-sm text-gray-500">
-            Select Florida above to view available cities and find AC repair contractors in your area.
+            Select a county above to view available cities and find AC repair contractors in your area.
           </p>
         )}
       </CardContent>

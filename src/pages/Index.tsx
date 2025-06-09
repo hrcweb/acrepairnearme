@@ -1,5 +1,7 @@
+
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { MapPin } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import BusinessList from "@/components/BusinessList";
 import HeroSection from "@/components/HeroSection";
