@@ -1,7 +1,6 @@
-
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { MapPin } from "lucide-react";
+import { MapPin, Star, Shield, Clock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import BusinessList from "@/components/BusinessList";
 import HeroSection from "@/components/HeroSection";
@@ -9,6 +8,7 @@ import CountyTownSelector from "@/components/CountyTownSelector";
 import LocalRebateFinder from "@/components/LocalRebateFinder";
 import HeatIndexVisualization from "@/components/HeatIndexVisualization";
 import Footer from "@/components/Footer";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export interface Business {
   id: number;
@@ -232,26 +232,78 @@ const Index = () => {
             
             <div className="lg:col-span-2">
               {searchLocation ? (
-                <BusinessList 
-                  businesses={filteredBusinesses}
-                  isLoading={isLoading}
-                  searchLocation={searchLocation}
-                />
+                <div className="space-y-6">
+                  {/* Location Summary Card */}
+                  <Card className="bg-gradient-to-r from-blue-50 to-orange-50 border-blue-200">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="flex items-center text-lg">
+                        <MapPin className="w-5 h-5 text-blue-600 mr-2" />
+                        AC Repair Services in {searchLocation}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+                        <div className="bg-white rounded-lg p-3 shadow-sm">
+                          <div className="text-2xl font-bold text-blue-600">{filteredBusinesses.length}</div>
+                          <div className="text-sm text-gray-600">Verified Contractors</div>
+                        </div>
+                        <div className="bg-white rounded-lg p-3 shadow-sm">
+                          <div className="text-2xl font-bold text-orange-600">
+                            {filteredBusinesses.length > 0 
+                              ? (filteredBusinesses.reduce((sum, b) => sum + (b.rating || 0), 0) / filteredBusinesses.length).toFixed(1)
+                              : "0.0"
+                            }★
+                          </div>
+                          <div className="text-sm text-gray-600">Average Rating</div>
+                        </div>
+                        <div className="bg-white rounded-lg p-3 shadow-sm">
+                          <div className="text-2xl font-bold text-green-600">24/7</div>
+                          <div className="text-sm text-gray-600">Emergency Service</div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+
+                  <BusinessList 
+                    businesses={filteredBusinesses}
+                    isLoading={isLoading}
+                    searchLocation={searchLocation}
+                  />
+                </div>
               ) : (
                 <div className="text-center py-16">
-                  <MapPin className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold text-gray-700 mb-2">
-                    Select a City to View AC Repair Contractors
-                  </h3>
-                  <p className="text-gray-500">
-                    Choose a city from the location selector to see licensed AC repair and HVAC contractors in your area.
-                  </p>
+                  <div className="max-w-md mx-auto">
+                    <MapPin className="w-16 h-16 text-gray-400 mx-auto mb-6" />
+                    <h3 className="text-2xl font-semibold text-gray-700 mb-4">
+                      Find AC Repair Contractors Near You
+                    </h3>
+                    <p className="text-gray-500 mb-6">
+                      Choose a county and city from the location selector to discover licensed AC repair and HVAC contractors in your area.
+                    </p>
+                    
+                    {/* Feature highlights */}
+                    <div className="grid grid-cols-1 gap-4 mt-8">
+                      <div className="flex items-center justify-center space-x-3 text-sm text-gray-600">
+                        <Shield className="w-5 h-5 text-blue-500" />
+                        <span>Licensed & Insured Professionals</span>
+                      </div>
+                      <div className="flex items-center justify-center space-x-3 text-sm text-gray-600">
+                        <Star className="w-5 h-5 text-yellow-500" />
+                        <span>Verified Customer Reviews</span>
+                      </div>
+                      <div className="flex items-center justify-center space-x-3 text-sm text-gray-600">
+                        <Clock className="w-5 h-5 text-green-500" />
+                        <span>24/7 Emergency Service Available</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               )}
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
+          {/* Additional content sections */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-12">
             <div className="lg:col-span-2 lg:col-start-2">
               <aside className="space-y-8" role="complementary">
                 <LocalRebateFinder />
@@ -260,33 +312,39 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Additional SEO content */}
+          {/* Enhanced SEO content */}
           <section className="mt-16 bg-gray-50 rounded-lg p-8">
             <h3 className="text-2xl font-bold mb-6 text-center">
               Why Choose Our AC Repair Directory?
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-gray-700">
-              <div>
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <Shield className="w-8 h-8 text-blue-500 mb-3" />
                 <h4 className="font-semibold mb-2">Licensed & Verified Contractors</h4>
                 <p className="text-sm">All AC repair contractors are verified for proper licensing, insurance, and credentials.</p>
               </div>
-              <div>
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <Star className="w-8 h-8 text-orange-500 mb-3" />
                 <h4 className="font-semibold mb-2">Commercial AC Repair Specialists</h4>
                 <p className="text-sm">Find contractors specializing in commercial heating and air conditioning repair for businesses.</p>
               </div>
-              <div>
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <Clock className="w-8 h-8 text-green-500 mb-3" />
                 <h4 className="font-semibold mb-2">24/7 Emergency Service</h4>
                 <p className="text-sm">Access emergency AC repair services available around the clock for urgent situations.</p>
               </div>
-              <div>
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <MapPin className="w-8 h-8 text-purple-500 mb-3" />
                 <h4 className="font-semibold mb-2">Local Florida Coverage</h4>
                 <p className="text-sm">Comprehensive coverage across Florida cities for both residential and commercial HVAC needs.</p>
               </div>
-              <div>
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <div className="w-8 h-8 bg-blue-500 rounded text-white flex items-center justify-center text-sm font-bold mb-3">$</div>
                 <h4 className="font-semibold mb-2">Instant Quotes & Reviews</h4>
                 <p className="text-sm">Get instant quotes and read verified customer reviews before choosing your AC repair contractor.</p>
               </div>
-              <div>
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <div className="w-8 h-8 bg-green-500 rounded text-white flex items-center justify-center text-sm font-bold mb-3">✓</div>
                 <h4 className="font-semibold mb-2">No Hidden Fees</h4>
                 <p className="text-sm">Transparent pricing with no hidden fees. Compare quotes from multiple AC repair contractors.</p>
               </div>
