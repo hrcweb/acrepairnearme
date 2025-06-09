@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Search, MapPin, DollarSign, Calendar, ExternalLink } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -247,22 +246,6 @@ const LocalRebateFinder = () => {
                       </CardContent>
                     </Card>
                   ))}
-                </div>
-
-                <div className="mt-12 text-center">
-                  <Card className="bg-blue-50 border-blue-200">
-                    <CardContent className="p-8">
-                      <h4 className="text-xl font-bold text-blue-900 mb-4">
-                        Maximize Your Savings with Professional Installation
-                      </h4>
-                      <p className="text-blue-700 mb-6">
-                        Our verified contractors are experienced with rebate applications and can help ensure your new HVAC system qualifies for all available incentives.
-                      </p>
-                      <Button className="bg-blue-600 hover:bg-blue-700">
-                        Find Qualified Contractors
-                      </Button>
-                    </CardContent>
-                  </Card>
                 </div>
               </>
             ) : (
