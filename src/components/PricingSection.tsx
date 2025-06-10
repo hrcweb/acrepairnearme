@@ -1,170 +1,283 @@
 
-import { Check } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Check, X, Star, Zap, Crown } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import SubscriptionButton from "./SubscriptionButton";
-import { useAuth } from "@/contexts/AuthContext";
+import AdvertisementButton from "@/components/AdvertisementButton";
 
 const PricingSection = () => {
-  const { subscriptionTier } = useAuth();
-
-  const plans = [
-    {
-      name: "Basic",
-      price: 29,
-      description: "Perfect for small AC repair businesses getting started",
-      tagline: "Great for new businesses",
-      features: [
-        "Complete business listing with contact information",
-        "Basic profile customization with company logo",
-        "Customer reviews display and management",
-        "Mobile-friendly listing optimized for local searches",
-        "Email support during business hours",
-        "Service area coverage up to 25 miles",
-        "Basic analytics dashboard"
-      ],
-      popular: false,
-      savings: "Save $120/year vs competitors"
-    },
-    {
-      name: "Premium",
-      price: 79,
-      description: "Most popular choice for growing AC businesses",
-      tagline: "Best value for established businesses",
-      features: [
-        "Everything included in Basic plan",
-        "Featured placement in search results (3x visibility)",
-        "Professional photo gallery (up to 10 high-res images)",
-        "Interactive service area mapping",
-        "Priority customer support (phone & email)",
-        "Monthly performance analytics and lead reports",
-        "Social media integration (Facebook, Google)",
-        "Emergency service badge and priority listing",
-        "Customer quote request notifications"
-      ],
-      popular: true,
-      savings: "Most contractors see 5-10 leads/month"
-    },
-    {
-      name: "Enterprise",
-      price: 149,
-      description: "For established AC companies dominating their market",
-      tagline: "Maximum exposure and leads",
-      features: [
-        "Everything included in Premium plan",
-        "Top search placement across all searches",
-        "Unlimited professional photo gallery",
-        "Multiple service locations support",
-        "24/7 priority support with dedicated account manager",
-        "Advanced analytics, competitor insights & ROI tracking",
-        "Professional lead generation tools and CRM integration",
-        "Custom branding and promotional banners",
-        "Featured in emergency service directory",
-        "Monthly strategy consultation calls"
-      ],
-      popular: false,
-      savings: "Average 15-25 leads/month"
-    }
-  ];
-
   return (
-    <section id="pricing" className="py-20 bg-gray-50">
+    <section className="py-16 bg-gray-50">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            Choose Your Business Plan
-          </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Get more customers with our proven directory platform. 
-            Join over 2,500 successful AC contractors already growing their business with our platform.
+        <div className="text-center mb-12">
+          <h2 className="text-3xl font-bold mb-4">Choose Your Business Plan</h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            Get your AC repair business listed and start attracting more customers today
           </p>
-          <div className="mt-4 text-sm text-gray-500">
-            All plans include instant activation • No setup fees • 30-day money-back guarantee
-          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {plans.map((plan, index) => {
-            const isCurrentPlan = subscriptionTier === plan.name;
-            
-            return (
-              <Card 
-                key={index} 
-                className={`relative ${plan.popular ? 'border-blue-500 shadow-lg scale-105' : ''} ${isCurrentPlan ? 'ring-2 ring-green-500' : ''}`}
-              >
-                {plan.popular && (
-                  <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-blue-600">
-                    Most Popular
-                  </Badge>
-                )}
-                {isCurrentPlan && (
-                  <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-green-600">
-                    Your Plan
-                  </Badge>
-                )}
-                
-                <CardHeader className="text-center pb-4">
-                  <CardTitle className="text-2xl">{plan.name}</CardTitle>
-                  <div className="text-sm text-blue-600 font-medium">{plan.tagline}</div>
-                  <CardDescription className="text-base mt-2">{plan.description}</CardDescription>
-                  <div className="mt-4">
-                    <span className="text-4xl font-bold">${plan.price}</span>
-                    <span className="text-gray-600">/month</span>
-                  </div>
-                  <div className="text-sm text-green-600 font-medium mt-1">
-                    {plan.savings}
-                  </div>
-                </CardHeader>
-                
-                <CardContent>
-                  <ul className="space-y-3 mb-8">
-                    {plan.features.map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-start">
-                        <Check className="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
-                        <span className="text-gray-700 text-sm">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  
-                  <SubscriptionButton 
-                    tier={plan.name as "Basic" | "Premium" | "Enterprise"}
-                    price={plan.price}
-                    className={`w-full ${plan.popular ? 'bg-blue-600 hover:bg-blue-700' : ''}`}
-                  >
-                    {isCurrentPlan ? 'Current Plan' : `Start ${plan.name} Plan`}
-                  </SubscriptionButton>
-                  
-                  {!isCurrentPlan && (
-                    <div className="text-center mt-3">
-                      <div className="text-xs text-gray-500">
-                        Cancel anytime • Instant activation
-                      </div>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+          {/* Free Plan */}
+          <Card className="relative border-2 border-gray-200">
+            <CardHeader className="text-center pb-4">
+              <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Star className="w-6 h-6 text-gray-600" />
+              </div>
+              <CardTitle className="text-xl">Free Listing</CardTitle>
+              <div className="text-3xl font-bold">$0</div>
+              <p className="text-gray-600">Forever</p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-3">
+                <div className="flex items-center">
+                  <Check className="w-4 h-4 text-green-500 mr-2" />
+                  <span className="text-sm">Basic business listing</span>
+                </div>
+                <div className="flex items-center">
+                  <Check className="w-4 h-4 text-green-500 mr-2" />
+                  <span className="text-sm">Contact information</span>
+                </div>
+                <div className="flex items-center">
+                  <Check className="w-4 h-4 text-green-500 mr-2" />
+                  <span className="text-sm">Up to 3 services listed</span>
+                </div>
+                <div className="flex items-center">
+                  <X className="w-4 h-4 text-red-500 mr-2" />
+                  <span className="text-sm text-gray-500">No photos</span>
+                </div>
+                <div className="flex items-center">
+                  <X className="w-4 h-4 text-red-500 mr-2" />
+                  <span className="text-sm text-gray-500">No priority placement</span>
+                </div>
+                <div className="flex items-center">
+                  <X className="w-4 h-4 text-red-500 mr-2" />
+                  <span className="text-sm text-gray-500">No customer reviews</span>
+                </div>
+              </div>
+              <Button className="w-full" variant="outline">
+                Get Started Free
+              </Button>
+            </CardContent>
+          </Card>
 
-        <div className="text-center mt-12">
-          <div className="max-w-2xl mx-auto">
-            <h3 className="text-lg font-semibold mb-4">All Plans Include:</h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-gray-600">
-              <div>✓ Instant listing activation</div>
-              <div>✓ Mobile-optimized pages</div>
-              <div>✓ Customer review management</div>
-              <div>✓ Lead tracking dashboard</div>
+          {/* Basic Plan */}
+          <Card className="relative border-2 border-blue-200">
+            <CardHeader className="text-center pb-4">
+              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Zap className="w-6 h-6 text-blue-600" />
+              </div>
+              <CardTitle className="text-xl">Basic</CardTitle>
+              <div className="text-3xl font-bold">$29</div>
+              <p className="text-gray-600">per month</p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-3">
+                <div className="flex items-center">
+                  <Check className="w-4 h-4 text-green-500 mr-2" />
+                  <span className="text-sm">Everything in Free</span>
+                </div>
+                <div className="flex items-center">
+                  <Check className="w-4 h-4 text-green-500 mr-2" />
+                  <span className="text-sm">Up to 5 business photos</span>
+                </div>
+                <div className="flex items-center">
+                  <Check className="w-4 h-4 text-green-500 mr-2" />
+                  <span className="text-sm">Customer reviews</span>
+                </div>
+                <div className="flex items-center">
+                  <Check className="w-4 h-4 text-green-500 mr-2" />
+                  <span className="text-sm">Business hours display</span>
+                </div>
+                <div className="flex items-center">
+                  <Check className="w-4 h-4 text-green-500 mr-2" />
+                  <span className="text-sm">Email support</span>
+                </div>
+              </div>
+              <Button className="w-full">
+                Choose Basic
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Premium Plan */}
+          <Card className="relative border-2 border-orange-200 bg-orange-50">
+            <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
+              <Badge className="bg-orange-500 text-white">Most Popular</Badge>
             </div>
+            <CardHeader className="text-center pb-4">
+              <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Crown className="w-6 h-6 text-orange-600" />
+              </div>
+              <CardTitle className="text-xl">Premium</CardTitle>
+              <div className="text-3xl font-bold">$79</div>
+              <p className="text-gray-600">per month</p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-3">
+                <div className="flex items-center">
+                  <Check className="w-4 h-4 text-green-500 mr-2" />
+                  <span className="text-sm">Everything in Basic</span>
+                </div>
+                <div className="flex items-center">
+                  <Check className="w-4 h-4 text-green-500 mr-2" />
+                  <span className="text-sm">Priority placement</span>
+                </div>
+                <div className="flex items-center">
+                  <Check className="w-4 h-4 text-green-500 mr-2" />
+                  <span className="text-sm">Featured badge</span>
+                </div>
+                <div className="flex items-center">
+                  <Check className="w-4 h-4 text-green-500 mr-2" />
+                  <span className="text-sm">Unlimited photos</span>
+                </div>
+                <div className="flex items-center">
+                  <Check className="w-4 h-4 text-green-500 mr-2" />
+                  <span className="text-sm">Lead notifications</span>
+                </div>
+                <div className="flex items-center">
+                  <Check className="w-4 h-4 text-green-500 mr-2" />
+                  <span className="text-sm">Analytics dashboard</span>
+                </div>
+              </div>
+              <Button className="w-full bg-orange-500 hover:bg-orange-600">
+                Choose Premium
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Enterprise Plan */}
+          <Card className="relative border-2 border-purple-200">
+            <CardHeader className="text-center pb-4">
+              <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Crown className="w-6 h-6 text-purple-600" />
+              </div>
+              <CardTitle className="text-xl">Enterprise</CardTitle>
+              <div className="text-3xl font-bold">$199</div>
+              <p className="text-gray-600">per month</p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-3">
+                <div className="flex items-center">
+                  <Check className="w-4 h-4 text-green-500 mr-2" />
+                  <span className="text-sm">Everything in Premium</span>
+                </div>
+                <div className="flex items-center">
+                  <Check className="w-4 h-4 text-green-500 mr-2" />
+                  <span className="text-sm">Multiple locations</span>
+                </div>
+                <div className="flex items-center">
+                  <Check className="w-4 h-4 text-green-500 mr-2" />
+                  <span className="text-sm">API access</span>
+                </div>
+                <div className="flex items-center">
+                  <Check className="w-4 h-4 text-green-500 mr-2" />
+                  <span className="text-sm">Custom branding</span>
+                </div>
+                <div className="flex items-center">
+                  <Check className="w-4 h-4 text-green-500 mr-2" />
+                  <span className="text-sm">Dedicated support</span>
+                </div>
+                <div className="flex items-center">
+                  <Check className="w-4 h-4 text-green-500 mr-2" />
+                  <span className="text-sm">Advanced analytics</span>
+                </div>
+              </div>
+              <Button className="w-full bg-purple-600 hover:bg-purple-700">
+                Contact Sales
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Advertisement Options */}
+        <div className="mt-16">
+          <h3 className="text-2xl font-bold text-center mb-8">Boost Your Visibility</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {/* Banner Advertisement */}
+            <Card className="border-2 border-yellow-200 bg-yellow-50">
+              <CardHeader className="text-center">
+                <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Star className="w-6 h-6 text-yellow-600" />
+                </div>
+                <CardTitle className="text-xl">Banner Advertisement</CardTitle>
+                <div className="text-3xl font-bold text-yellow-600">$149</div>
+                <p className="text-gray-600">30 days</p>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-3">
+                  <div className="flex items-center">
+                    <Check className="w-4 h-4 text-green-500 mr-2" />
+                    <span className="text-sm">Top banner placement</span>
+                  </div>
+                  <div className="flex items-center">
+                    <Check className="w-4 h-4 text-green-500 mr-2" />
+                    <span className="text-sm">High visibility across all pages</span>
+                  </div>
+                  <div className="flex items-center">
+                    <Check className="w-4 h-4 text-green-500 mr-2" />
+                    <span className="text-sm">Custom banner design included</span>
+                  </div>
+                  <div className="flex items-center">
+                    <Check className="w-4 h-4 text-green-500 mr-2" />
+                    <span className="text-sm">Click tracking & analytics</span>
+                  </div>
+                </div>
+                <AdvertisementButton 
+                  adType="banner" 
+                  price={149}
+                  className="w-full bg-yellow-500 hover:bg-yellow-600"
+                >
+                  Purchase Banner Ad
+                </AdvertisementButton>
+              </CardContent>
+            </Card>
+
+            {/* Sponsored Listing */}
+            <Card className="border-2 border-green-200 bg-green-50">
+              <CardHeader className="text-center">
+                <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Zap className="w-6 h-6 text-green-600" />
+                </div>
+                <CardTitle className="text-xl">Sponsored Listing</CardTitle>
+                <div className="text-3xl font-bold text-green-600">$99</div>
+                <p className="text-gray-600">30 days</p>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="space-y-3">
+                  <div className="flex items-center">
+                    <Check className="w-4 h-4 text-green-500 mr-2" />
+                    <span className="text-sm">Top 3 search results</span>
+                  </div>
+                  <div className="flex items-center">
+                    <Check className="w-4 h-4 text-green-500 mr-2" />
+                    <span className="text-sm">"Sponsored" badge</span>
+                  </div>
+                  <div className="flex items-center">
+                    <Check className="w-4 h-4 text-green-500 mr-2" />
+                    <span className="text-sm">Enhanced listing appearance</span>
+                  </div>
+                  <div className="flex items-center">
+                    <Check className="w-4 h-4 text-green-500 mr-2" />
+                    <span className="text-sm">Priority in location searches</span>
+                  </div>
+                </div>
+                <AdvertisementButton 
+                  adType="sponsored" 
+                  price={99}
+                  className="w-full bg-green-500 hover:bg-green-600"
+                >
+                  Purchase Sponsored Listing
+                </AdvertisementButton>
+              </CardContent>
+            </Card>
           </div>
-          
-          <div className="mt-8 p-4 bg-white rounded-lg max-w-xl mx-auto shadow-sm">
-            <p className="text-gray-600 mb-2 font-medium">
-              Questions about which plan is right for you?
-            </p>
-            <p className="text-sm text-gray-500">
-              Call us at 561-206-2624 or email support@acrepairnearme.pro for personalized recommendations
-            </p>
+        </div>
+
+        {/* Money Back Guarantee */}
+        <div className="text-center mt-12">
+          <div className="inline-flex items-center bg-green-100 text-green-800 px-4 py-2 rounded-full">
+            <Check className="w-4 h-4 mr-2" />
+            30-day money-back guarantee
           </div>
         </div>
       </div>
