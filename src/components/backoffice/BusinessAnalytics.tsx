@@ -101,15 +101,21 @@ const BusinessAnalytics = ({ businessId, subscriptionTier }: BusinessAnalyticsPr
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="text-center p-4 border rounded-lg">
-                <div className="text-xl font-bold">{data.searchAppearances}</div>
+                <div className="text-xl font-bold">
+                  {'searchAppearances' in data ? data.searchAppearances : 'N/A'}
+                </div>
                 <div className="text-sm text-gray-600">Search Appearances</div>
               </div>
               <div className="text-center p-4 border rounded-lg">
-                <div className="text-xl font-bold">{data.averagePosition}</div>
+                <div className="text-xl font-bold">
+                  {'averagePosition' in data ? data.averagePosition : 'N/A'}
+                </div>
                 <div className="text-sm text-gray-600">Avg. Search Position</div>
               </div>
               <div className="text-center p-4 border rounded-lg">
-                <div className="text-xl font-bold text-green-600">{data.monthlyTrend}</div>
+                <div className="text-xl font-bold text-green-600">
+                  {'monthlyTrend' in data ? data.monthlyTrend : 'N/A'}
+                </div>
                 <div className="text-sm text-gray-600">Monthly Growth</div>
               </div>
             </div>
@@ -126,14 +132,19 @@ const BusinessAnalytics = ({ businessId, subscriptionTier }: BusinessAnalyticsPr
             <div className="space-y-4">
               <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
                 <span className="font-medium">Conversion Rate</span>
-                <Badge variant="outline">{data.conversionRate}</Badge>
+                <Badge variant="outline">
+                  {'conversionRate' in data ? data.conversionRate : 'N/A'}
+                </Badge>
               </div>
               <div>
                 <h4 className="font-medium mb-2">Top Keywords</h4>
                 <div className="flex flex-wrap gap-2">
-                  {data.topKeywords?.map((keyword, index) => (
-                    <Badge key={index} variant="secondary">{keyword}</Badge>
-                  ))}
+                  {'topKeywords' in data && data.topKeywords ? 
+                    data.topKeywords.map((keyword, index) => (
+                      <Badge key={index} variant="secondary">{keyword}</Badge>
+                    )) : 
+                    <Badge variant="outline">No keywords available</Badge>
+                  }
                 </div>
               </div>
             </div>
