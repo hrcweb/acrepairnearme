@@ -21,15 +21,6 @@ const HeroSection = ({ onSearch }: HeroSectionProps) => {
     }
   };
 
-  const scrollToSearchBar = () => {
-    // Scroll to the search bar in the hero section
-    const searchElement = document.querySelector('input[placeholder*="Enter city, ZIP code, or area for AC repair near me"]');
-    if (searchElement) {
-      searchElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      (searchElement as HTMLInputElement).focus();
-    }
-  };
-
   return (
     <section className="relative bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 text-white py-20">
       {/* Background Image */}
@@ -98,7 +89,7 @@ const HeroSection = ({ onSearch }: HeroSectionProps) => {
             Don't let extreme heat put your family at risk. Find qualified, licensed AC contractors in your area.
           </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="text-center">
               <Shield className="w-12 h-12 mx-auto mb-3 text-blue-200" />
               <h3 className="font-semibold mb-2">Licensed & Verified</h3>
@@ -115,14 +106,6 @@ const HeroSection = ({ onSearch }: HeroSectionProps) => {
               <p className="text-sm text-blue-100">Emergency AC repair available when you need it most</p>
             </div>
           </div>
-
-          <Button 
-            size="lg" 
-            className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3"
-            onClick={scrollToSearchBar}
-          >
-            Find AC Contractors Near You
-          </Button>
         </div>
       </div>
     </section>
