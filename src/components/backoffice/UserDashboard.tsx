@@ -5,14 +5,13 @@ import { Button } from "@/components/ui/button";
 import { UserCheck, MessageSquare, Building2, Settings, Plus } from "lucide-react";
 import UserProfile from "./UserProfile";
 import UserReviews from "./UserReviews";
-import UserBusinesses from "./UserBusinesses";
-import UserBusinessManagement from "./UserBusinessManagement";
+import EnhancedBusinessManagement from "./EnhancedBusinessManagement";
 
 const UserDashboard = () => {
   const [activeTab, setActiveTab] = useState("businesses");
 
   const tabs = [
-    { id: "businesses", label: "My Businesses", icon: Building2, description: "Manage your business listings" },
+    { id: "businesses", label: "My Businesses", icon: Building2, description: "Manage your business listings with advanced features" },
     { id: "reviews", label: "My Reviews", icon: MessageSquare, description: "View your submitted reviews" },
     { id: "profile", label: "Profile", icon: Settings, description: "Update your account information" },
   ];
@@ -27,7 +26,7 @@ const UserDashboard = () => {
             User Dashboard
           </CardTitle>
           <CardDescription className="text-blue-700">
-            Manage your business listings, reviews, and profile information.
+            Manage your business listings with advanced features including photos, analytics, priority support, and more based on your subscription plan.
           </CardDescription>
         </CardHeader>
       </Card>
@@ -52,13 +51,13 @@ const UserDashboard = () => {
         {activeTab === "businesses" && (
           <Card>
             <CardHeader>
-              <CardTitle>Business Management</CardTitle>
+              <CardTitle>Enhanced Business Management</CardTitle>
               <CardDescription>
-                Add, edit, and manage your business listings.
+                Access all business features based on your subscription plan: Basic (5 photos, analytics), Premium (15 photos, advanced metrics), Enterprise (50 photos, custom domain, priority support).
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <UserBusinessManagement />
+              <EnhancedBusinessManagement />
             </CardContent>
           </Card>
         )}
