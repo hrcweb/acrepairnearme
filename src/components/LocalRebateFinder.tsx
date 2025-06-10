@@ -148,64 +148,98 @@ const LocalRebateFinder = () => {
   };
 
   return (
-    <section className="py-16 bg-gray-50">
-      <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+    <div className="w-full bg-gradient-to-br from-blue-50 via-white to-green-50 py-24">
+      <div className="container mx-auto px-4 max-w-7xl">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
             Current HVAC Rebates & Tax Credits
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Find up-to-date rebates and tax credits for energy-efficient AC and heat pump installations
+          <p className="text-xl md:text-2xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+            Discover thousands in savings with up-to-date rebates and tax credits for energy-efficient AC and heat pump installations. 
+            Take advantage of federal, state, utility, and local incentives to reduce your HVAC upgrade costs.
           </p>
         </div>
 
-        {/* Search Section */}
-        <Card className="max-w-2xl mx-auto mb-12">
-          <CardContent className="p-6">
-            <div className="flex gap-4">
+        {/* Enhanced Search Section */}
+        <Card className="max-w-4xl mx-auto mb-16 shadow-xl border-0 bg-white/90 backdrop-blur-sm">
+          <CardContent className="p-8">
+            <div className="text-center mb-8">
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">Find Your Local Rebates</h3>
+              <p className="text-gray-600 text-lg">Enter your ZIP code to discover available incentives in your area</p>
+            </div>
+            <div className="flex flex-col sm:flex-row gap-4 max-w-2xl mx-auto">
               <div className="flex-1">
                 <Input
-                  placeholder="Enter your ZIP code"
+                  placeholder="Enter your ZIP code (e.g., 33101)"
                   value={zipCode}
                   onChange={(e) => setZipCode(e.target.value)}
-                  className="w-full"
+                  className="w-full h-14 text-lg border-2 border-blue-200 focus:border-blue-400 bg-white"
                 />
               </div>
-              <Button onClick={handleSearch} className="bg-blue-600 hover:bg-blue-700">
-                <Search className="w-4 h-4 mr-2" />
+              <Button 
+                onClick={handleSearch} 
+                className="h-14 px-8 bg-gradient-to-r from-blue-600 to-green-600 hover:from-blue-700 hover:to-green-700 text-white font-semibold text-lg shadow-lg"
+              >
+                <Search className="w-5 h-5 mr-2" />
                 Find Rebates
               </Button>
+            </div>
+            
+            {/* Quick Stats */}
+            <div className="grid md:grid-cols-4 gap-6 mt-12 text-center">
+              <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <div className="text-2xl font-bold text-blue-600 mb-1">$50B+</div>
+                <div className="text-sm text-blue-700">Federal Funding Available</div>
+              </div>
+              <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                <div className="text-2xl font-bold text-green-600 mb-1">30%</div>
+                <div className="text-sm text-green-700">Maximum Tax Credit</div>
+              </div>
+              <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
+                <div className="text-2xl font-bold text-purple-600 mb-1">$8,000</div>
+                <div className="text-sm text-purple-700">Max Heat Pump Rebate</div>
+              </div>
+              <div className="p-4 bg-orange-50 rounded-lg border border-orange-200">
+                <div className="text-2xl font-bold text-orange-600 mb-1">2032</div>
+                <div className="text-sm text-orange-700">Program Ends</div>
+              </div>
             </div>
           </CardContent>
         </Card>
 
         {/* Results Section */}
         {hasSearched && (
-          <div className="max-w-6xl mx-auto">
+          <div className="max-w-7xl mx-auto">
             {searchResults.length > 0 ? (
               <>
-                <div className="mb-8">
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                <div className="mb-12 text-center">
+                  <h3 className="text-3xl font-bold text-gray-900 mb-4">
                     Available Rebates for {zipCode}
                   </h3>
-                  <p className="text-gray-600">
-                    Found {searchResults.length} current rebate{searchResults.length !== 1 ? 's' : ''} and tax credits
+                  <p className="text-xl text-gray-600">
+                    Found {searchResults.length} current rebate{searchResults.length !== 1 ? 's' : ''} and tax credits worth up to{' '}
+                    <span className="font-bold text-green-600">
+                      ${searchResults.reduce((total, rebate) => {
+                        const amount = parseInt(rebate.amount.replace(/[^\d]/g, '')) || 0;
+                        return total + amount;
+                      }, 0).toLocaleString()}
+                    </span>
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                   {searchResults.map((rebate) => (
-                    <Card key={rebate.id} className="hover:shadow-lg transition-shadow">
-                      <CardHeader>
+                    <Card key={rebate.id} className="hover:shadow-xl transition-all duration-300 border-0 bg-white/95 backdrop-blur-sm">
+                      <CardHeader className="pb-4">
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
-                            <CardTitle className="text-xl mb-2">{rebate.title}</CardTitle>
-                            <div className="flex items-center space-x-2 mb-2">
-                              <Badge className={getTypeColor(rebate.type)}>
+                            <CardTitle className="text-xl mb-3 text-gray-900">{rebate.title}</CardTitle>
+                            <div className="flex items-center space-x-3 mb-3">
+                              <Badge className={`${getTypeColor(rebate.type)} font-medium`}>
                                 {rebate.type}
                               </Badge>
-                              <div className="flex items-center text-green-600 font-semibold">
-                                <DollarSign className="w-4 h-4 mr-1" />
+                              <div className="flex items-center text-green-600 font-bold text-lg">
+                                <DollarSign className="w-5 h-5 mr-1" />
                                 {rebate.amount}
                               </div>
                             </div>
@@ -213,32 +247,32 @@ const LocalRebateFinder = () => {
                         </div>
                       </CardHeader>
                       <CardContent>
-                        <p className="text-gray-600 mb-4">{rebate.description}</p>
+                        <p className="text-gray-700 mb-6 leading-relaxed">{rebate.description}</p>
                         
-                        <div className="space-y-2 mb-4">
-                          <div className="flex items-start space-x-2">
-                            <MapPin className="w-4 h-4 text-gray-400 mt-0.5" />
+                        <div className="space-y-3 mb-6">
+                          <div className="flex items-start space-x-3">
+                            <MapPin className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
                             <div>
-                              <span className="font-medium text-sm">Eligibility: </span>
-                              <span className="text-sm text-gray-600">{rebate.eligibility}</span>
+                              <span className="font-semibold text-gray-900">Eligibility: </span>
+                              <span className="text-gray-700">{rebate.eligibility}</span>
                             </div>
                           </div>
-                          <div className="flex items-start space-x-2">
-                            <Calendar className="w-4 h-4 text-gray-400 mt-0.5" />
+                          <div className="flex items-start space-x-3">
+                            <Calendar className="w-5 h-5 text-gray-400 mt-0.5 flex-shrink-0" />
                             <div>
-                              <span className="font-medium text-sm">Deadline: </span>
-                              <span className="text-sm text-gray-600">{rebate.deadline}</span>
+                              <span className="font-semibold text-gray-900">Deadline: </span>
+                              <span className="text-gray-700">{rebate.deadline}</span>
                             </div>
                           </div>
                         </div>
 
-                        <div className="flex items-center justify-between pt-4 border-t">
-                          <span className="text-sm text-gray-500">
+                        <div className="flex items-center justify-between pt-4 border-t border-gray-200">
+                          <span className="text-gray-600 font-medium">
                             Provided by {rebate.provider}
                           </span>
-                          <Button variant="outline" size="sm" asChild>
+                          <Button variant="outline" size="sm" asChild className="hover:bg-blue-50 border-blue-200">
                             <a href={rebate.link} target="_blank" rel="noopener noreferrer">
-                              <ExternalLink className="w-4 h-4 mr-1" />
+                              <ExternalLink className="w-4 h-4 mr-2" />
                               Learn More
                             </a>
                           </Button>
@@ -249,16 +283,43 @@ const LocalRebateFinder = () => {
                 </div>
               </>
             ) : (
-              <div className="text-center py-12">
-                <p className="text-gray-600 text-lg">
-                  No location-specific rebates found for ZIP code {zipCode}. Federal tax credits may still be available nationwide.
-                </p>
+              <div className="text-center py-16">
+                <div className="max-w-2xl mx-auto bg-white/80 backdrop-blur-sm rounded-xl p-8 shadow-lg">
+                  <p className="text-gray-700 text-xl mb-4">
+                    No location-specific rebates found for ZIP code {zipCode}.
+                  </p>
+                  <p className="text-gray-600">
+                    Federal tax credits may still be available nationwide. Try searching with a Florida ZIP code for more local incentives.
+                  </p>
+                </div>
               </div>
             )}
           </div>
         )}
+
+        {/* Call to Action */}
+        {!hasSearched && (
+          <div className="text-center mt-16">
+            <Card className="max-w-4xl mx-auto bg-gradient-to-r from-blue-600 to-green-600 border-0 text-white shadow-xl">
+              <CardContent className="p-12">
+                <h3 className="text-3xl font-bold mb-4">Ready to Save Thousands on Your HVAC Upgrade?</h3>
+                <p className="text-xl mb-8 text-blue-100">
+                  Combine federal tax credits with local rebates to maximize your savings on energy-efficient cooling systems.
+                </p>
+                <Button 
+                  size="lg" 
+                  variant="secondary"
+                  className="bg-white text-blue-600 hover:bg-gray-100 font-semibold px-8 py-3"
+                  onClick={() => document.querySelector('input')?.focus()}
+                >
+                  Search Your ZIP Code Now
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        )}
       </div>
-    </section>
+    </div>
   );
 };
 
