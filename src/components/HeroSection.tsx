@@ -21,11 +21,12 @@ const HeroSection = ({ onSearch }: HeroSectionProps) => {
     }
   };
 
-  const scrollToLocationSelector = () => {
-    // Scroll to the Browse By Location section
-    const locationSection = document.querySelector('[data-section="location-selector"]');
-    if (locationSection) {
-      locationSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const scrollToSearchBar = () => {
+    // Scroll to the search bar in the hero section
+    const searchElement = document.querySelector('input[placeholder*="Enter city, ZIP code, or area for AC repair near me"]');
+    if (searchElement) {
+      searchElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      (searchElement as HTMLInputElement).focus();
     }
   };
 
@@ -118,7 +119,7 @@ const HeroSection = ({ onSearch }: HeroSectionProps) => {
           <Button 
             size="lg" 
             className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-8 py-3"
-            onClick={scrollToLocationSelector}
+            onClick={scrollToSearchBar}
           >
             Find AC Contractors Near You
           </Button>
