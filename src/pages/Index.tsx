@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { MapPin, Star, Shield, Clock } from "lucide-react";
@@ -7,6 +8,7 @@ import HeroSection from "@/components/HeroSection";
 import CountyTownSelector from "@/components/CountyTownSelector";
 import LocalRebateFinder from "@/components/LocalRebateFinder";
 import HeatIndexVisualization from "@/components/HeatIndexVisualization";
+import FeaturedListingsCarousel from "@/components/FeaturedListingsCarousel";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -301,8 +303,13 @@ const Index = () => {
               )}
             </div>
           </div>
+        </div>
 
-          {/* Enhanced content sections with more spacing */}
+        {/* Featured Listings Carousel - Added above rebates section */}
+        <FeaturedListingsCarousel />
+
+        {/* Enhanced content sections with more spacing */}
+        <div className="container mx-auto px-4">
           <div className="mt-24 space-y-24">
             <LocalRebateFinder />
             <HeatIndexVisualization />
