@@ -5,13 +5,6 @@ import { Users, Award, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const HeroSection = () => {
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
-  };
-
   return (
     <section className="bg-gradient-to-br from-blue-50 to-indigo-100 py-16">
       <div className="container mx-auto px-4">
@@ -59,17 +52,6 @@ const HeroSection = () => {
             </Button>
             <Button asChild variant="outline" size="lg" className="text-lg px-8 py-3">
               <Link to="/success-stories">See AC Contractor Success Stories</Link>
-            </Button>
-          </div>
-
-          {/* Bottom CTA Button */}
-          <div className="mt-12">
-            <Button 
-              onClick={scrollToTop}
-              size="lg" 
-              className="bg-orange-600 hover:bg-orange-700 text-white text-lg px-8 py-3"
-            >
-              Find AC Contractors Near You
             </Button>
           </div>
         </div>
