@@ -26,6 +26,7 @@ const BreadcrumbNavigation = () => {
     // Map common routes to user-friendly names
     const routeMap: Record<string, string> = {
       'list-business': 'List Your Business',
+      'success-stories': 'Success Stories',
       'emergency': 'Emergency Service',
       'faq': 'FAQ',
       'back-office': 'Back Office',

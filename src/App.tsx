@@ -22,6 +22,7 @@ import ContactSupport from "./pages/ContactSupport";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import ContractorGuidelines from "./pages/ContractorGuidelines";
+import SuccessStories from "./pages/SuccessStories";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -48,6 +49,7 @@ const App: React.FC = () => {
               <Route path="/business-static/:id" element={<BusinessDetail />} />
               <Route path="/faq" element={<FAQ />} />
               <Route path="/list-business" element={<ListBusiness />} />
+              <Route path="/success-stories" element={<SuccessStories />} />
               <Route path="/emergency" element={<Emergency />} />
               <Route path="/admin" element={<Admin />} />
               <Route path="/back-office" element={<BackOffice />} />

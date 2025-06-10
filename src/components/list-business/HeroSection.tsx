@@ -2,6 +2,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Users, Award, Clock } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const HeroSection = () => {
   return (
@@ -49,8 +50,8 @@ const HeroSection = () => {
             <Button size="lg" className="bg-blue-600 hover:bg-blue-700 text-lg px-8 py-3">
               View Pricing Plans Below
             </Button>
-            <Button variant="outline" size="lg" className="text-lg px-8 py-3">
-              See AC Contractor Success Stories
+            <Button asChild variant="outline" size="lg" className="text-lg px-8 py-3">
+              <Link to="/success-stories">See AC Contractor Success Stories</Link>
             </Button>
           </div>
         </div>
