@@ -19,70 +19,75 @@ const MobileNavigation = () => {
   ];
 
   return (
-    <div className="md:hidden">
-      {/* Mobile Menu Button */}
+    <div className="lg:hidden">
+      {/* Mobile Menu Button - Larger touch target */}
       <Button 
         variant="ghost" 
-        size="sm" 
+        size="lg" 
         onClick={toggleMenu}
-        className="p-2"
+        className="p-3 min-h-[44px] min-w-[44px]" // iOS recommended minimum touch target
       >
-        {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+        {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
       </Button>
 
       {/* Mobile Menu Overlay */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 bg-black bg-opacity-50" onClick={toggleMenu}>
+        <div className="fixed inset-0 z-50 bg-black bg-opacity-60" onClick={toggleMenu}>
           <div 
-            className="fixed right-0 top-0 h-full w-80 bg-white shadow-xl"
+            className="fixed right-0 top-0 h-full w-full max-w-sm bg-white shadow-xl transform transition-transform duration-300 ease-in-out"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="p-4">
+            <div className="p-6 h-full overflow-y-auto">
               {/* Header */}
-              <div className="flex items-center justify-between mb-6">
-                <div className="flex items-center space-x-2">
-                  <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                    <span className="text-white font-bold text-sm">AC</span>
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                    <span className="text-white font-bold text-base">AC</span>
                   </div>
-                  <span className="font-bold text-gray-900">AC Repair Near Me</span>
+                  <span className="font-bold text-gray-900 text-lg">AC Repair Near Me</span>
                 </div>
-                <Button variant="ghost" size="sm" onClick={toggleMenu}>
-                  <X className="w-5 h-5" />
+                <Button 
+                  variant="ghost" 
+                  size="lg" 
+                  onClick={toggleMenu}
+                  className="p-3 min-h-[44px] min-w-[44px]"
+                >
+                  <X className="w-6 h-6" />
                 </Button>
               </div>
 
               {/* User Section */}
               {user ? (
-                <Card className="mb-6">
-                  <CardContent className="p-4">
-                    <p className="font-medium text-gray-900 mb-2">
+                <Card className="mb-8">
+                  <CardContent className="p-6">
+                    <p className="font-medium text-gray-900 mb-3 text-lg">
                       Welcome back!
                     </p>
-                    <p className="text-sm text-gray-600 mb-3">
+                    <p className="text-base text-gray-600 mb-4">
                       {user.email}
                     </p>
                     <Button 
                       variant="outline" 
-                      size="sm" 
+                      size="lg" 
                       onClick={() => {
                         signOut();
                         toggleMenu();
                       }}
-                      className="w-full"
+                      className="w-full min-h-[48px] text-base"
                     >
                       Sign Out
                     </Button>
                   </CardContent>
                 </Card>
               ) : (
-                <Card className="mb-6">
-                  <CardContent className="p-4">
-                    <p className="font-medium text-gray-900 mb-3">
+                <Card className="mb-8">
+                  <CardContent className="p-6">
+                    <p className="font-medium text-gray-900 mb-4 text-lg">
                       Sign in to access more features
                     </p>
                     <Button 
-                      size="sm" 
-                      className="w-full"
+                      size="lg" 
+                      className="w-full min-h-[48px] text-base"
                       onClick={() => {
                         window.location.href = '/auth';
                         toggleMenu();
@@ -95,44 +100,44 @@ const MobileNavigation = () => {
               )}
 
               {/* Navigation Items */}
-              <nav className="space-y-2">
+              <nav className="space-y-3 mb-8">
                 {menuItems.map((item, index) => (
                   <a
                     key={index}
                     href={item.href}
-                    className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100 transition-colors"
+                    className="flex items-center space-x-4 p-4 rounded-lg hover:bg-gray-100 transition-colors min-h-[56px]"
                     onClick={toggleMenu}
                   >
-                    <item.icon className="w-5 h-5 text-gray-500" />
-                    <span className="font-medium text-gray-900">{item.label}</span>
+                    <item.icon className="w-6 h-6 text-gray-500" />
+                    <span className="font-medium text-gray-900 text-lg">{item.label}</span>
                   </a>
                 ))}
               </nav>
 
               {/* Quick Actions */}
-              <div className="mt-8 space-y-3">
-                <Button className="w-full bg-red-600 hover:bg-red-700">
-                  <Phone className="w-4 h-4 mr-2" />
+              <div className="space-y-4 mb-8">
+                <Button className="w-full bg-red-600 hover:bg-red-700 min-h-[52px] text-base">
+                  <Phone className="w-5 h-5 mr-3" />
                   Emergency Service
                 </Button>
-                <Button variant="outline" className="w-full">
+                <Button variant="outline" className="w-full min-h-[52px] text-base">
                   Get Free Quote
                 </Button>
               </div>
 
               {/* Footer */}
-              <div className="mt-8 pt-6 border-t text-center">
-                <p className="text-xs text-gray-500">
+              <div className="pt-6 border-t text-center">
+                <p className="text-sm text-gray-500 mb-3">
                   © 2024 AC Repair Near Me
                 </p>
-                <div className="flex justify-center space-x-4 mt-2">
-                  <a href="#" className="text-xs text-gray-500 hover:text-blue-600">
+                <div className="flex justify-center space-x-6">
+                  <a href="#" className="text-sm text-gray-500 hover:text-blue-600 py-2">
                     Privacy
                   </a>
-                  <a href="#" className="text-xs text-gray-500 hover:text-blue-600">
+                  <a href="#" className="text-sm text-gray-500 hover:text-blue-600 py-2">
                     Terms
                   </a>
-                  <a href="/faq" className="text-xs text-gray-500 hover:text-blue-600">
+                  <a href="/faq" className="text-sm text-gray-500 hover:text-blue-600 py-2">
                     FAQ
                   </a>
                 </div>
