@@ -6,7 +6,11 @@ import { Badge } from "@/components/ui/badge";
 import AdvertisementButton from "@/components/AdvertisementButton";
 import SubscriptionButton from "@/components/SubscriptionButton";
 
-const PricingSection = () => {
+interface PricingSectionProps {
+  onGetStartedFree?: () => void;
+}
+
+const PricingSection = ({ onGetStartedFree }: PricingSectionProps) => {
   return (
     <section className="py-16 bg-gray-50">
       <div className="container mx-auto px-4">
@@ -64,7 +68,11 @@ const PricingSection = () => {
                   <span className="text-sm text-gray-500">No lead tracking or analytics</span>
                 </div>
               </div>
-              <Button className="w-full" variant="outline">
+              <Button 
+                className="w-full" 
+                variant="outline"
+                onClick={onGetStartedFree}
+              >
                 Get Started Free
               </Button>
               <p className="text-xs text-gray-500 text-center">No credit card required</p>

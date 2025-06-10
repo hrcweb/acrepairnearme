@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 
 interface BusinessData {
@@ -17,13 +18,23 @@ interface BusinessData {
   email: string;
   website: string;
   address: string;
+  city: string;
+  state: string;
+  zip_code: string;
   hours: string;
   services: string[];
   emergencyService: boolean;
   verified: boolean;
+  subscription_tier: string;
+  license_number: string;
+  insurance_verified: boolean;
 }
 
-const BusinessListingForm = () => {
+interface BusinessListingFormProps {
+  initialTier?: string;
+}
+
+const BusinessListingForm = ({ initialTier = 'free' }: BusinessListingFormProps) => {
   const [businessData, setBusinessData] = useState<BusinessData>({
     name: '',
     description: '',
@@ -31,10 +42,16 @@ const BusinessListingForm = () => {
     email: '',
     website: '',
     address: '',
+    city: '',
+    state: 'FL',
+    zip_code: '',
     hours: '',
     services: [],
     emergencyService: false,
-    verified: false
+    verified: false,
+    subscription_tier: initialTier,
+    license_number: '',
+    insurance_verified: false
   });
   const [newService, setNewService] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -64,10 +81,10 @@ const BusinessListingForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!businessData.name || !businessData.phone || !businessData.address) {
+    if (!businessData.name || !businessData.phone || !businessData.address || !businessData.city || !businessData.zip_code) {
       toast({
         title: "Please fill in required fields",
-        description: "Business name, phone, and address are required.",
+        description: "Business name, phone, address, city, and ZIP code are required.",
         variant: "destructive",
       });
       return;
@@ -80,7 +97,7 @@ const BusinessListingForm = () => {
 
     toast({
       title: "Business listing submitted!",
-      description: "Your listing will be reviewed and published within 24 hours.",
+      description: `Your ${businessData.subscription_tier} listing will be reviewed and published within 24 hours.`,
     });
 
     // Reset form
@@ -91,10 +108,16 @@ const BusinessListingForm = () => {
       email: '',
       website: '',
       address: '',
+      city: '',
+      state: 'FL',
+      zip_code: '',
       hours: '',
       services: [],
       emergencyService: false,
-      verified: false
+      verified: false,
+      subscription_tier: initialTier,
+      license_number: '',
+      insurance_verified: false
     });
     
     setIsSubmitting(false);
@@ -105,10 +128,33 @@ const BusinessListingForm = () => {
       <Card>
         <CardHeader>
           <CardTitle>List Your AC Business</CardTitle>
-          <p className="text-gray-600">Create or update your business listing to reach more customers</p>
+          <p className="text-gray-600">
+            Create your business listing. All information will be collected, and what's displayed will depend on your subscription plan.
+          </p>
+          <div className="mt-2">
+            <Badge variant="outline" className="capitalize">
+              {businessData.subscription_tier} Plan
+            </Badge>
+          </div>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Plan Selection */}
+            <div>
+              <Label>Subscription Plan</Label>
+              <Select value={businessData.subscription_tier} onValueChange={(value) => handleInputChange('subscription_tier', value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select plan" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="free">Free Listing</SelectItem>
+                  <SelectItem value="basic">Basic Plan</SelectItem>
+                  <SelectItem value="premium">Premium Plan</SelectItem>
+                  <SelectItem value="enterprise">Enterprise Plan</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
             {/* Basic Information */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -156,15 +202,50 @@ const BusinessListingForm = () => {
               </div>
             </div>
 
+            {/* Address Information */}
             <div>
-              <Label htmlFor="address">Business Address *</Label>
+              <Label htmlFor="address">Street Address *</Label>
               <Input
                 id="address"
                 value={businessData.address}
                 onChange={(e) => handleInputChange('address', e.target.value)}
-                placeholder="123 Main St, Miami, FL 33139"
+                placeholder="123 Main St"
                 required
               />
+            </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              <div>
+                <Label htmlFor="city">City *</Label>
+                <Input
+                  id="city"
+                  value={businessData.city}
+                  onChange={(e) => handleInputChange('city', e.target.value)}
+                  placeholder="Miami"
+                  required
+                />
+              </div>
+              <div>
+                <Label htmlFor="state">State</Label>
+                <Select value={businessData.state} onValueChange={(value) => handleInputChange('state', value)}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="FL">Florida</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="zip_code">ZIP Code *</Label>
+                <Input
+                  id="zip_code"
+                  value={businessData.zip_code}
+                  onChange={(e) => handleInputChange('zip_code', e.target.value)}
+                  placeholder="33139"
+                  required
+                />
+              </div>
             </div>
 
             <div>
@@ -186,6 +267,18 @@ const BusinessListingForm = () => {
                 placeholder="Describe your business, experience, and what makes you unique..."
                 rows={4}
               />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="license_number">License Number</Label>
+                <Input
+                  id="license_number"
+                  value={businessData.license_number}
+                  onChange={(e) => handleInputChange('license_number', e.target.value)}
+                  placeholder="CAC1234567"
+                />
+              </div>
             </div>
 
             {/* Services */}
@@ -230,6 +323,14 @@ const BusinessListingForm = () => {
                 />
                 <Label htmlFor="emergencyService">24/7 Emergency Service Available</Label>
               </div>
+              <div className="flex items-center space-x-2">
+                <Checkbox 
+                  id="insurance_verified"
+                  checked={businessData.insurance_verified}
+                  onCheckedChange={(checked) => handleInputChange('insurance_verified', !!checked)}
+                />
+                <Label htmlFor="insurance_verified">Fully Insured and Bonded</Label>
+              </div>
             </div>
 
             {/* Photo Upload Section */}
@@ -244,6 +345,11 @@ const BusinessListingForm = () => {
                 <p className="text-xs text-gray-500 mt-2">
                   Supported formats: JPG, PNG, GIF (Max 5MB each)
                 </p>
+                {businessData.subscription_tier === 'free' && (
+                  <p className="text-xs text-orange-600 mt-1">
+                    Photo uploads available with paid plans
+                  </p>
+                )}
               </div>
             </div>
 
