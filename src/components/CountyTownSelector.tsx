@@ -54,6 +54,19 @@ const FLORIDA_COUNTIES = {
     "Sewall's Point",
     "Jupiter Island"
   ],
+  "Saint Lucie County": [
+    "Port St. Lucie",
+    "Fort Pierce",
+    "St. Lucie West",
+    "Tradition",
+    "White City",
+    "Lakewood Park",
+    "Fort Pierce South",
+    "Indian River Estates",
+    "River Park",
+    "St. Lucie Village",
+    "Hutchinson Island South"
+  ],
   "Miami-Dade County": [
     "Miami",
     "Miami Beach",
