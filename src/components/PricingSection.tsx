@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import AdvertisementButton from "@/components/AdvertisementButton";
+import SubscriptionButton from "@/components/SubscriptionButton";
 
 const PricingSection = () => {
   return (
@@ -93,9 +94,9 @@ const PricingSection = () => {
                   <span className="text-sm">Email support</span>
                 </div>
               </div>
-              <Button className="w-full">
+              <SubscriptionButton tier="Basic" price={29} className="w-full">
                 Choose Basic
-              </Button>
+              </SubscriptionButton>
             </CardContent>
           </Card>
 
@@ -139,9 +140,9 @@ const PricingSection = () => {
                   <span className="text-sm">Analytics dashboard</span>
                 </div>
               </div>
-              <Button className="w-full bg-orange-500 hover:bg-orange-600">
+              <SubscriptionButton tier="Premium" price={79} className="w-full bg-orange-500 hover:bg-orange-600">
                 Choose Premium
-              </Button>
+              </SubscriptionButton>
             </CardContent>
           </Card>
 
@@ -182,9 +183,9 @@ const PricingSection = () => {
                   <span className="text-sm">Advanced analytics</span>
                 </div>
               </div>
-              <Button className="w-full bg-purple-600 hover:bg-purple-700">
+              <SubscriptionButton tier="Enterprise" price={199} className="w-full bg-purple-600 hover:bg-purple-700">
                 Contact Sales
-              </Button>
+              </SubscriptionButton>
             </CardContent>
           </Card>
         </div>
