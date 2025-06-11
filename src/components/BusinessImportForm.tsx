@@ -42,7 +42,7 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
     'name', 'description', 'address', 'city', 'state', 'zip_code',
     'phone', 'email', 'website', 'services', 'rating', 'review_count',
     'license_number', 'insurance_verified', 'latitude', 'longitude',
-    'business_hours', 'featured'
+    'business_hours', 'featured', 'category', 'type', 'photo'
   ];
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -111,8 +111,28 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
             // Map CSV headers to database column names
             let dbField = mapHeaderToDbColumn(header);
             
-            // Only process valid database columns
-            if (!validColumns.includes(dbField)) {
+            // Special handling for certain fields
+            if (dbField === 'street') {
+              dbField = 'address'; // Map street to address
+            }
+            
+            // Handle category and type fields to potentially add to services
+            if (dbField === 'category' || dbField === 'type') {
+              if (!business['services']) {
+                business['services'] = [];
+              }
+              
+              if (value) {
+                // Add category/type as a service if it's not empty
+                if (Array.isArray(business['services'])) {
+                  business['services'].push(value);
+                }
+              }
+              return; // Skip regular assignment since we're handling it specially
+            }
+            
+            // Only process standard database columns
+            if (!validColumns.includes(dbField) && dbField !== 'street') {
               console.log(`Skipping unknown column: ${header} -> ${dbField}`);
               return;
             }
@@ -128,7 +148,8 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
                 business[dbField] = value ? parseFloat(value) || null : null;
                 break;
               case 'review_count':
-                business[dbField] = value ? parseInt(value) || 0 : 0;
+              case 'reviews': // Handle 'reviews' mapping to 'review_count'
+                business['review_count'] = value ? parseInt(value) || 0 : 0;
                 break;
               case 'insurance_verified':
               case 'featured':
@@ -140,6 +161,16 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
                 break;
               case 'business_hours':
                 business[dbField] = value ? JSON.parse(value) : null;
+                break;
+              case 'postal_code':
+                business['zip_code'] = value || null;
+                break;
+              case 'photo':
+                // Store photo URL if needed (not directly storing in database)
+                business['photo_url'] = value || null;
+                break;
+              case 'email_1':
+                business['email'] = value || null;
                 break;
               default:
                 business[dbField] = value || null;
@@ -176,9 +207,13 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
         let successCount = 0;
         for (const business of businesses) {
           try {
+            // Remove any non-database fields before insert
+            const cleanedBusiness = { ...business };
+            if ('photo_url' in cleanedBusiness) delete cleanedBusiness.photo_url;
+            
             const { error } = await supabase
               .from('businesses')
-              .insert([business]);
+              .insert([cleanedBusiness]);
 
             if (error) {
               console.error('Supabase insert error for business:', business.name, error);
@@ -258,7 +293,16 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
       'license #': 'license_number',
       'insured': 'insurance_verified',
       'insurance': 'insurance_verified',
-      'verified': 'insurance_verified'
+      'verified': 'insurance_verified',
+      'street': 'street',
+      'address_line_1': 'address',
+      'address1': 'address',
+      'category': 'category',
+      'business_type': 'type',
+      'type': 'type',
+      'photo': 'photo',
+      'image': 'photo',
+      'photo_url': 'photo'
     };
 
     return headerMap[header] || header.replace(/\s+/g, '_');
@@ -500,13 +544,13 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
       <div className="bg-blue-50 p-4 rounded-lg">
         <h4 className="font-medium text-blue-900 mb-2">CSV Import Guide:</h4>
         <p className="text-sm text-blue-800 mb-2">
-          <strong>Required fields:</strong> name, address, city, state, zip_code (or postal_code)
+          <strong>Required fields:</strong> name, address (or street), city, state, zip_code (or postal_code)
         </p>
         <p className="text-sm text-blue-800 mb-2">
-          <strong>Optional fields:</strong> phone, email, website, services, rating, review_count, license_number, insurance_verified
+          <strong>Optional fields:</strong> phone, email (or email_1), website, services, category, type, rating, reviews, license_number, insurance_verified, photo
         </p>
         <p className="text-sm text-blue-800">
-          <strong>Auto-mapped headers:</strong> business_name→name, postal_code→zip_code, email_1→email, reviews→review_count
+          <strong>Auto-mapped headers:</strong> street→address, postal_code→zip_code, email_1→email, reviews→review_count, category/type→services
         </p>
       </div>
 
