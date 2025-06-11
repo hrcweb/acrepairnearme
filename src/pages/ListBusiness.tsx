@@ -13,6 +13,7 @@ import BusinessListingForm from "@/components/BusinessListingForm";
 
 const ListBusiness = () => {
   const [showForm, setShowForm] = useState(false);
+  const [selectedTier, setSelectedTier] = useState<string>('free');
 
   // Enhanced SEO optimization
   useEffect(() => {
@@ -105,6 +106,11 @@ const ListBusiness = () => {
     };
   }, []);
 
+  const handleGetStarted = (tier: string = 'free') => {
+    setSelectedTier(tier);
+    setShowForm(true);
+  };
+
   if (showForm) {
     return (
       <div className="min-h-screen bg-background">
@@ -130,7 +136,7 @@ const ListBusiness = () => {
         </header>
 
         <main className="container mx-auto px-4 py-8">
-          <BusinessListingForm />
+          <BusinessListingForm initialTier={selectedTier} />
         </main>
         
         <Footer />
@@ -163,7 +169,7 @@ const ListBusiness = () => {
       <main className="container mx-auto px-4 py-8">
         {/* Pricing Section with ID anchor */}
         <div id="pricing">
-          <PricingSection onGetStartedFree={() => setShowForm(true)} />
+          <PricingSection onGetStartedFree={() => handleGetStarted('free')} />
         </div>
 
         <BenefitsSection />

@@ -23,6 +23,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import ContractorGuidelines from "./pages/ContractorGuidelines";
 import SuccessStories from "./pages/SuccessStories";
+import EnterpriseWelcome from "./pages/EnterpriseWelcome";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -54,6 +55,7 @@ const App: React.FC = () => {
               <Route path="/admin" element={<Admin />} />
               <Route path="/back-office" element={<BackOffice />} />
               <Route path="/payment-success" element={<PaymentSuccess />} />
+              <Route path="/enterprise-welcome" element={<EnterpriseWelcome />} />
               <Route path="/contact-support" element={<ContactSupport />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-of-service" element={<TermsOfService />} />

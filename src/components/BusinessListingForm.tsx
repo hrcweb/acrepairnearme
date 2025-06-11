@@ -10,6 +10,8 @@ import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 
 interface BusinessData {
   name: string;
@@ -56,6 +58,7 @@ const BusinessListingForm = ({ initialTier = 'free' }: BusinessListingFormProps)
   const [newService, setNewService] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const { session } = useAuth();
 
   const handleInputChange = (field: keyof BusinessData, value: string | boolean) => {
     setBusinessData(prev => ({ ...prev, [field]: value }));
@@ -78,8 +81,54 @@ const BusinessListingForm = ({ initialTier = 'free' }: BusinessListingFormProps)
     }));
   };
 
+  const handleEnterprisePayment = async () => {
+    if (!businessData.name || !businessData.phone || !businessData.address || !businessData.city || !businessData.zip_code) {
+      toast({
+        title: "Please fill in required fields",
+        description: "Business name, phone, address, city, and ZIP code are required before proceeding to payment.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      // Create checkout session for Enterprise plan
+      const { data, error } = await supabase.functions.invoke('create-checkout', {
+        body: { tier: 'Enterprise' },
+        headers: session ? { Authorization: `Bearer ${session.access_token}` } : {}
+      });
+
+      if (error) throw error;
+
+      // Store business data in localStorage for after payment
+      localStorage.setItem('enterpriseBusinessData', JSON.stringify(businessData));
+
+      // Redirect to Stripe checkout
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch (error) {
+      console.error('Error creating Enterprise checkout session:', error);
+      toast({
+        title: "Error",
+        description: "Failed to process Enterprise payment. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // For Enterprise plan, handle payment first
+    if (businessData.subscription_tier === 'enterprise') {
+      await handleEnterprisePayment();
+      return;
+    }
     
     if (!businessData.name || !businessData.phone || !businessData.address || !businessData.city || !businessData.zip_code) {
       toast({
@@ -92,7 +141,7 @@ const BusinessListingForm = ({ initialTier = 'free' }: BusinessListingFormProps)
 
     setIsSubmitting(true);
 
-    // Simulate API call
+    // Simulate API call for non-Enterprise plans
     await new Promise(resolve => setTimeout(resolve, 2000));
 
     toast({
@@ -129,7 +178,10 @@ const BusinessListingForm = ({ initialTier = 'free' }: BusinessListingFormProps)
         <CardHeader>
           <CardTitle>List Your AC Business</CardTitle>
           <p className="text-gray-600">
-            Create your business listing. All information will be collected, and what's displayed will depend on your subscription plan.
+            {businessData.subscription_tier === 'enterprise' 
+              ? "Complete your business information and proceed to secure payment for your Enterprise listing."
+              : "Create your business listing. All information will be collected, and what's displayed will depend on your subscription plan."
+            }
           </p>
           <div className="mt-2">
             <Badge variant="outline" className="capitalize">
@@ -359,7 +411,8 @@ const BusinessListingForm = ({ initialTier = 'free' }: BusinessListingFormProps)
               </Button>
               <Button type="submit" disabled={isSubmitting}>
                 <Save className="w-4 h-4 mr-2" />
-                {isSubmitting ? 'Submitting...' : 'Submit for Review'}
+                {isSubmitting ? 'Processing...' : 
+                 businessData.subscription_tier === 'enterprise' ? 'Proceed to Payment' : 'Submit for Review'}
               </Button>
             </div>
           </form>

@@ -24,6 +24,14 @@ const PaymentSuccess = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    // If Enterprise tier, redirect to special page after a delay
+    if (tier === "Enterprise" && user) {
+      const timer = setTimeout(() => {
+        window.location.href = `/enterprise-welcome?tier=Enterprise`;
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+
     // If user is not logged in, show account creation form
     if (!user) {
       setShowAccountCreation(true);
@@ -35,7 +43,7 @@ const PaymentSuccess = () => {
 
       return () => clearTimeout(timer);
     }
-  }, [user, checkSubscription]);
+  }, [user, checkSubscription, tier]);
 
   const handleCreateAccount = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,6 +73,14 @@ const PaymentSuccess = () => {
         message: `Your ${adTypeName} is now active and will run for 30 days.`,
       };
     }
+    
+    if (tier === "Enterprise") {
+      return {
+        title: "Enterprise Subscription Activated!",
+        message: "Welcome to our premium Enterprise tier! You'll be redirected to your exclusive Enterprise dashboard in a moment.",
+      };
+    }
+    
     return {
       title: "Payment Successful!",
       message: `Thank you for your subscription! Your ${tier || 'business'} listing is now active.`,
@@ -155,13 +171,20 @@ const PaymentSuccess = () => {
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-gray-600">{message}</p>
+          {tier === "Enterprise" && (
+            <p className="text-sm text-blue-600 font-medium">
+              Redirecting to your Enterprise dashboard...
+            </p>
+          )}
           <p className="text-sm text-gray-500">
             You'll receive a confirmation email shortly with your receipt and details.
           </p>
           <div className="space-y-2 pt-4">
-            <Button asChild className="w-full">
-              <Link to="/">Return to Homepage</Link>
-            </Button>
+            {tier !== "Enterprise" && (
+              <Button asChild className="w-full">
+                <Link to="/">Return to Homepage</Link>
+              </Button>
+            )}
           </div>
         </CardContent>
       </Card>
