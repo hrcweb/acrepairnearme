@@ -1,7 +1,71 @@
 
+import { useEffect } from "react";
 import Footer from "@/components/Footer";
 
 const PrivacyPolicy = () => {
+  useEffect(() => {
+    // SEO optimization for Privacy Policy
+    document.title = "Privacy Policy | AC Repair Near Me - How We Protect Your Data";
+    
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 
+        'Read our privacy policy to understand how AC Repair Near Me collects, uses, and protects your personal information when using our HVAC contractor directory.'
+      );
+    }
+
+    const metaKeywords = document.querySelector('meta[name="keywords"]');
+    if (metaKeywords) {
+      metaKeywords.setAttribute('content', 
+        'privacy policy, data protection, ac repair near me privacy, hvac directory privacy, personal information protection'
+      );
+    }
+
+    // Update Open Graph tags
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    if (ogTitle) {
+      ogTitle.setAttribute('content', 'Privacy Policy | AC Repair Near Me');
+    }
+
+    const ogDescription = document.querySelector('meta[property="og:description"]');
+    if (ogDescription) {
+      ogDescription.setAttribute('content', 'Learn how we protect your privacy and handle your personal information on our HVAC contractor directory.');
+    }
+
+    const ogUrl = document.querySelector('meta[property="og:url"]');
+    if (ogUrl) {
+      ogUrl.setAttribute('content', window.location.href);
+    }
+
+    // Add structured data
+    const structuredData = {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Privacy Policy",
+      "description": "Privacy policy for AC Repair Near Me HVAC contractor directory",
+      "url": window.location.href,
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "AC Repair Near Me Pro",
+        "url": "https://acrepairnearme.pro"
+      }
+    };
+
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(structuredData);
+    document.head.appendChild(script);
+
+    return () => {
+      const scripts = document.querySelectorAll('script[type="application/ld+json"]');
+      scripts.forEach(script => {
+        if (script.textContent?.includes('"Privacy Policy"') && script.textContent?.includes('AC Repair Near Me')) {
+          script.remove();
+        }
+      });
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}

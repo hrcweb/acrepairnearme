@@ -14,15 +14,40 @@ import BusinessListingForm from "@/components/BusinessListingForm";
 const ListBusiness = () => {
   const [showForm, setShowForm] = useState(false);
 
-  // SEO optimization
+  // Enhanced SEO optimization
   useEffect(() => {
-    document.title = "List Your AC Repair Business | Join Florida's Top HVAC Directory";
+    // Update title and meta description
+    document.title = "List Your AC Repair Business | Join Florida's Top HVAC Directory - AC Repair Near Me";
     
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
       metaDescription.setAttribute('content', 
-        'List your AC repair business in Florida\'s premier HVAC directory. Get more customers for commercial AC repair and heating services. Join 2,500+ verified contractors today!'
+        'List your AC repair business in Florida\'s premier HVAC directory. Get more customers, featured listings, analytics & priority support. Join 2,500+ verified contractors. Free basic listing!'
       );
+    }
+
+    // Update keywords
+    const metaKeywords = document.querySelector('meta[name="keywords"]');
+    if (metaKeywords) {
+      metaKeywords.setAttribute('content', 
+        'list ac repair business, hvac contractor directory, commercial ac repair listing, florida hvac directory, ac repair marketing, hvac lead generation'
+      );
+    }
+
+    // Update Open Graph tags
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    if (ogTitle) {
+      ogTitle.setAttribute('content', 'List Your AC Repair Business | Join Florida\'s Top HVAC Directory');
+    }
+
+    const ogDescription = document.querySelector('meta[property="og:description"]');
+    if (ogDescription) {
+      ogDescription.setAttribute('content', 'Get more customers for your AC repair business. Featured listings, analytics, priority support. Join 2,500+ verified contractors in Florida\'s top HVAC directory.');
+    }
+
+    const ogUrl = document.querySelector('meta[property="og:url"]');
+    if (ogUrl) {
+      ogUrl.setAttribute('content', window.location.href);
     }
 
     // Add business listing structured data
@@ -30,14 +55,36 @@ const ListBusiness = () => {
       "@context": "https://schema.org",
       "@type": "WebPage",
       "name": "List Your AC Repair Business",
-      "description": "Join Florida's premier AC repair and HVAC contractor directory",
+      "description": "Join Florida's premier AC repair and HVAC contractor directory to get more customers",
       "url": window.location.href,
+      "breadcrumb": {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://acrepairnearme.pro"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "List Your Business"
+          }
+        ]
+      },
       "mainEntity": {
         "@type": "Service",
         "name": "Business Directory Listing",
+        "description": "Professional HVAC contractor directory listing service",
         "provider": {
           "@type": "Organization",
-          "name": "AC Repair Near Me Pro"
+          "name": "AC Repair Near Me Pro",
+          "url": "https://acrepairnearme.pro"
+        },
+        "areaServed": {
+          "@type": "State",
+          "name": "Florida"
         }
       }
     };
@@ -48,6 +95,7 @@ const ListBusiness = () => {
     document.head.appendChild(script);
 
     return () => {
+      // Cleanup script on unmount
       const scripts = document.querySelectorAll('script[type="application/ld+json"]');
       scripts.forEach(script => {
         if (script.textContent?.includes('"List Your AC Repair Business"')) {

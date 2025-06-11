@@ -1,7 +1,71 @@
 
+import { useEffect } from "react";
 import Footer from "@/components/Footer";
 
 const TermsOfService = () => {
+  useEffect(() => {
+    // SEO optimization for Terms of Service
+    document.title = "Terms of Service | AC Repair Near Me - Directory Usage Terms";
+    
+    const metaDescription = document.querySelector('meta[name="description"]');
+    if (metaDescription) {
+      metaDescription.setAttribute('content', 
+        'Read our terms of service for using AC Repair Near Me HVAC contractor directory. Learn about user responsibilities, contractor guidelines, and service terms.'
+      );
+    }
+
+    const metaKeywords = document.querySelector('meta[name="keywords"]');
+    if (metaKeywords) {
+      metaKeywords.setAttribute('content', 
+        'terms of service, hvac directory terms, ac repair terms, contractor directory rules, service agreement'
+      );
+    }
+
+    // Update Open Graph tags
+    const ogTitle = document.querySelector('meta[property="og:title"]');
+    if (ogTitle) {
+      ogTitle.setAttribute('content', 'Terms of Service | AC Repair Near Me');
+    }
+
+    const ogDescription = document.querySelector('meta[property="og:description"]');
+    if (ogDescription) {
+      ogDescription.setAttribute('content', 'Terms and conditions for using our HVAC contractor directory and connecting with AC repair professionals.');
+    }
+
+    const ogUrl = document.querySelector('meta[property="og:url"]');
+    if (ogUrl) {
+      ogUrl.setAttribute('content', window.location.href);
+    }
+
+    // Add structured data
+    const structuredData = {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": "Terms of Service",
+      "description": "Terms of service for AC Repair Near Me HVAC contractor directory",
+      "url": window.location.href,
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "AC Repair Near Me Pro",
+        "url": "https://acrepairnearme.pro"
+      }
+    };
+
+    const script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(structuredData);
+    document.head.appendChild(script);
+
+    return () => {
+      const scripts = document.querySelectorAll('script[type="application/ld+json"]');
+      scripts.forEach(script => {
+        if (script.textContent?.includes('"Terms of Service"') && script.textContent?.includes('AC Repair Near Me')) {
+          script.remove();
+        }
+      });
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
