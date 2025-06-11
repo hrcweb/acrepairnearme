@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { MapPin, Search, X } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -43,6 +42,37 @@ const FLORIDA_COUNTIES = {
     "South Bay",
     "Canal Point"
   ],
+  "Broward County": [
+    "Fort Lauderdale",
+    "Hollywood",
+    "Pembroke Pines",
+    "Coral Springs",
+    "Miramar",
+    "Sunrise",
+    "Plantation",
+    "Davie",
+    "Pompano Beach",
+    "Deerfield Beach",
+    "Weston",
+    "Tamarac",
+    "Margate",
+    "Coconut Creek",
+    "Lauderhill",
+    "Oakland Park",
+    "Cooper City",
+    "Parkland",
+    "Hallandale Beach",
+    "Wilton Manors",
+    "Aventura",
+    "Dania Beach",
+    "Lighthouse Point",
+    "North Lauderdale",
+    "Lauderdale Lakes",
+    "Southwest Ranches",
+    "Sea Ranch Lakes",
+    "Hillsboro Beach",
+    "Lazy Lake"
+  ],
   "Martin County": [
     "Stuart",
     "Palm City",
@@ -66,6 +96,49 @@ const FLORIDA_COUNTIES = {
     "River Park",
     "St. Lucie Village",
     "Hutchinson Island South"
+  ],
+  "Orange County": [
+    "Orlando",
+    "Winter Park",
+    "Apopka",
+    "Ocoee",
+    "Winter Garden",
+    "Maitland",
+    "Altamonte Springs",
+    "Casselberry",
+    "Sanford",
+    "Lake Mary",
+    "Longwood",
+    "Winter Springs",
+    "Clermont",
+    "Windermere",
+    "Belle Isle",
+    "Edgewood",
+    "Lake Buena Vista",
+    "Oakland",
+    "Eatonville",
+    "Bay Lake"
+  ],
+  "Hendry County": [
+    "Clewiston",
+    "LaBelle",
+    "Harlem",
+    "Felda",
+    "Pioneer",
+    "Port LaBelle",
+    "Montura"
+  ],
+  "Highlands County": [
+    "Sebring",
+    "Lake Placid",
+    "Avon Park",
+    "Frostproof",
+    "Venus",
+    "Lorida",
+    "Lake Stearns",
+    "Spring Lake",
+    "Sun 'n Lake",
+    "Placid Lakes"
   ],
   "Miami-Dade County": [
     "Miami",
