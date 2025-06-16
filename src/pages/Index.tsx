@@ -1,13 +1,16 @@
+
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { MapPin, Star, Shield, Clock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import BusinessList from "@/components/BusinessList";
+import ImprovedBusinessList from "@/components/ImprovedBusinessList";
 import HeroSection from "@/components/HeroSection";
 import CountyTownSelector from "@/components/CountyTownSelector";
 import LocalRebateFinder from "@/components/LocalRebateFinder";
 import HeatIndexVisualization from "@/components/HeatIndexVisualization";
 import FeaturedListingsCarousel from "@/components/FeaturedListingsCarousel";
+import QuoteRequestCTA from "@/components/QuoteRequestCTA";
+import FAQSection from "@/components/FAQSection";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -46,13 +49,13 @@ const Index = () => {
 
   // Add SEO metadata effect
   useEffect(() => {
-    document.title = "AC Repair Near Me | Commercial AC Repair Florida | 24/7 Emergency HVAC Service";
+    document.title = "Find Top-Rated AC Repair Near Me | Licensed HVAC Contractors Florida | Free Quotes";
     
     // Update meta description
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
       metaDescription.setAttribute('content', 
-        'Find top-rated AC repair near me in Florida. Professional commercial AC repair, heating and air conditioning repair services. Licensed HVAC contractors available 24/7. Get quotes today!'
+        'Connect with verified AC repair contractors near you in Florida. Get free quotes from licensed, insured HVAC professionals. Emergency service available 24/7. Compare top-rated contractors today!'
       );
     }
 
@@ -61,7 +64,7 @@ const Index = () => {
       "@context": "https://schema.org",
       "@type": "WebPage",
       "name": "AC Repair Near Me - Find Local HVAC Contractors",
-      "description": "Directory of professional AC repair and commercial HVAC services across Florida",
+      "description": "Directory of verified AC repair and HVAC contractors across Florida with free quotes and emergency service",
       "url": window.location.href,
       "mainEntity": {
         "@type": "ItemList",
@@ -94,7 +97,7 @@ const Index = () => {
       const { data, error } = await supabase
         .from('businesses')
         .select('*')
-        .order('name', { ascending: true }); // Changed to sort by name alphabetically
+        .order('name', { ascending: true });
       
       if (error) {
         console.error('Error fetching businesses:', error);
@@ -145,7 +148,7 @@ const Index = () => {
   const handleLocationFilter = (location: string) => {
     console.log('Location filter changed:', location);
     setSearchLocation(location);
-    setShowAllContractors(false); // Reset show all when filtering by location
+    setShowAllContractors(false);
   };
 
   const handleServiceFilter = (service: string) => {
@@ -163,7 +166,7 @@ const Index = () => {
     setShowAllContractors(true);
     setSearchLocation("");
     setServiceFilter("");
-    setSortBy("name"); // Ensure alphabetical sort
+    setSortBy("name");
   };
 
   const filterBusinesses = (location: string, service: string, sort: string) => {
@@ -212,18 +215,44 @@ const Index = () => {
       <main role="main">
         <HeroSection onSearch={handleHeroSearch} />
         
+        {/* Sticky CTA Bar */}
+        <QuoteRequestCTA variant="sticky" />
+        
         <div className="container mx-auto px-4 py-8">
-          {/* SEO content section */}
+          {/* Enhanced SEO content section */}
           <section className="mb-8 text-center">
             <h2 className="text-3xl font-bold mb-4 text-gray-900">
-              Find Trusted AC Repair Near Me & Commercial HVAC Services
+              How Our AC Repair Directory Works
             </h2>
             <p className="text-lg text-gray-600 max-w-4xl mx-auto mb-6">
-              Our directory connects you with licensed and verified AC repair contractors specializing in 
-              residential and commercial heating and air conditioning repair near me. Whether you need 
-              emergency AC repair, routine maintenance, or commercial HVAC services, find qualified 
-              professionals in your area with verified reviews and instant quotes.
+              We've simplified finding reliable AC repair contractors. Our platform connects you with 
+              pre-screened, licensed professionals who specialize in residential and commercial HVAC services. 
+              Get free quotes, compare reviews, and hire with confidence - all in one place.
             </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 mb-8">
+              <div className="bg-blue-50 rounded-lg p-6">
+                <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-white font-bold text-xl">1</span>
+                </div>
+                <h3 className="font-semibold text-lg mb-2">Tell Us Your Needs</h3>
+                <p className="text-gray-600">Submit your location and service requirements through our simple form</p>
+              </div>
+              <div className="bg-orange-50 rounded-lg p-6">
+                <div className="w-12 h-12 bg-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-white font-bold text-xl">2</span>
+                </div>
+                <h3 className="font-semibold text-lg mb-2">Get Matched</h3>
+                <p className="text-gray-600">We connect you with up to 3 qualified contractors in your area</p>
+              </div>
+              <div className="bg-green-50 rounded-lg p-6">
+                <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <span className="text-white font-bold text-xl">3</span>
+                </div>
+                <h3 className="font-semibold text-lg mb-2">Compare & Hire</h3>
+                <p className="text-gray-600">Review quotes, read reviews, and choose the best contractor for your job</p>
+              </div>
+            </div>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
@@ -290,7 +319,7 @@ const Index = () => {
                     </CardContent>
                   </Card>
 
-                  <BusinessList 
+                  <ImprovedBusinessList 
                     businesses={filteredBusinesses}
                     isLoading={isLoading}
                     searchLocation={showAllContractors ? "" : searchLocation}
@@ -328,8 +357,13 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Featured Listings Carousel - Added above rebates section */}
+        {/* Featured Listings Carousel */}
         <FeaturedListingsCarousel />
+
+        {/* Quote Request Section */}
+        <div className="container mx-auto px-4 py-16">
+          <QuoteRequestCTA variant="inline" className="max-w-4xl mx-auto" />
+        </div>
 
         {/* Enhanced content sections with more spacing */}
         <div className="container mx-auto px-4">
@@ -377,6 +411,9 @@ const Index = () => {
             </div>
           </section>
         </div>
+
+        {/* FAQ Section */}
+        <FAQSection />
       </main>
       
       <Footer />
