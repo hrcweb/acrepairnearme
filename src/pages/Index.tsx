@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { MapPin, Star, Shield, Clock } from "lucide-react";
@@ -42,7 +41,7 @@ const Index = () => {
   const [filteredBusinesses, setFilteredBusinesses] = useState<Business[]>([]);
   const [searchLocation, setSearchLocation] = useState("");
   const [serviceFilter, setServiceFilter] = useState("");
-  const [sortBy, setSortBy] = useState("name"); // Changed default to alphabetical
+  const [sortBy, setSortBy] = useState("name");
   const [showAllContractors, setShowAllContractors] = useState(false);
 
   // Add SEO metadata effect
@@ -171,7 +170,7 @@ const Index = () => {
     console.log('Filtering businesses:', { location, service, sort, showAllContractors });
     let filtered = [...businesses];
 
-    // If showing all contractors, don't apply location filter
+    // Only apply location filter if NOT showing all contractors
     if (!showAllContractors && location.trim()) {
       filtered = filtered.filter(business => 
         business.city.toLowerCase().includes(location.toLowerCase()) ||
@@ -181,6 +180,7 @@ const Index = () => {
       );
     }
 
+    // Apply service filter regardless of showAllContractors
     if (service && service !== "") {
       filtered = filtered.filter(business =>
         business.services?.some(s => 
@@ -189,19 +189,8 @@ const Index = () => {
       );
     }
 
-    // Sort businesses - default to alphabetical
-    switch (sort) {
-      case 'rating':
-        filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
-        break;
-      case 'reviews':
-        filtered.sort((a, b) => b.review_count - a.review_count);
-        break;
-      case 'name':
-      default:
-        filtered.sort((a, b) => a.name.localeCompare(b.name));
-        break;
-    }
+    // Always sort alphabetically by name
+    filtered.sort((a, b) => a.name.localeCompare(b.name));
 
     console.log('Filtered businesses:', filtered);
     setFilteredBusinesses(filtered);
@@ -236,13 +225,25 @@ const Index = () => {
               professionals in your area with verified reviews and instant quotes.
             </p>
             
-            {/* Browse All Contractors Button */}
-            <Button 
-              onClick={handleBrowseAllContractors}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 text-lg"
-            >
-              Browse All Contractors
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button 
+                onClick={handleBrowseAllContractors}
+                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 text-lg"
+              >
+                Browse All Contractors
+              </Button>
+              <Button 
+                onClick={() => {
+                  setSearchLocation("");
+                  setServiceFilter("");
+                  setShowAllContractors(true);
+                }}
+                variant="outline"
+                className="px-6 py-3 text-lg"
+              >
+                View All AC Repair Services
+              </Button>
+            </div>
           </section>
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
@@ -306,7 +307,6 @@ const Index = () => {
                       Choose a county and city from the location selector to discover licensed AC repair and HVAC contractors in your area.
                     </p>
                     
-                    {/* Feature highlights */}
                     <div className="grid grid-cols-1 gap-4 mt-8">
                       <div className="flex items-center justify-center space-x-3 text-sm text-gray-600">
                         <Shield className="w-5 h-5 text-blue-500" />
