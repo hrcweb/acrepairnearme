@@ -104,7 +104,7 @@ const SearchFiltersComponent = ({ onLocationChange, onServiceChange, onSortChang
                       <SelectValue placeholder="Select service" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="">All Services</SelectItem>
+                      <SelectItem value="all">All Services</SelectItem>
                       <SelectItem value="repair">AC Repair</SelectItem>
                       <SelectItem value="installation">Installation</SelectItem>
                       <SelectItem value="maintenance">Maintenance</SelectItem>
@@ -132,13 +132,14 @@ const SearchFiltersComponent = ({ onLocationChange, onServiceChange, onSortChang
                 <div className="space-y-2">
                   <Label>Distance</Label>
                   <Select 
-                    value={filters.distance || ""} 
-                    onValueChange={(value) => updateFilter('distance', value)}
+                    value={filters.distance || "any"} 
+                    onValueChange={(value) => updateFilter('distance', value === "any" ? undefined : value)}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Any distance" />
                     </SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="any">Any distance</SelectItem>
                       <SelectItem value="5">Within 5 miles</SelectItem>
                       <SelectItem value="10">Within 10 miles</SelectItem>
                       <SelectItem value="25">Within 25 miles</SelectItem>
@@ -151,13 +152,14 @@ const SearchFiltersComponent = ({ onLocationChange, onServiceChange, onSortChang
                 <div className="space-y-2">
                   <Label>Price Range</Label>
                   <Select 
-                    value={filters.priceRange || ""} 
-                    onValueChange={(value) => updateFilter('priceRange', value)}
+                    value={filters.priceRange || "any"} 
+                    onValueChange={(value) => updateFilter('priceRange', value === "any" ? undefined : value)}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Any price" />
                     </SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="any">Any price</SelectItem>
                       <SelectItem value="budget">$ Budget-friendly</SelectItem>
                       <SelectItem value="moderate">$$ Moderate</SelectItem>
                       <SelectItem value="premium">$$$ Premium</SelectItem>
@@ -170,13 +172,14 @@ const SearchFiltersComponent = ({ onLocationChange, onServiceChange, onSortChang
                 <div className="space-y-2">
                   <Label>Availability</Label>
                   <Select 
-                    value={filters.businessHours || ""} 
-                    onValueChange={(value) => updateFilter('businessHours', value)}
+                    value={filters.businessHours || "any"} 
+                    onValueChange={(value) => updateFilter('businessHours', value === "any" ? undefined : value)}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Any time" />
                     </SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="any">Any time</SelectItem>
                       <SelectItem value="open-now">Open Now</SelectItem>
                       <SelectItem value="weekends">Weekend Service</SelectItem>
                       <SelectItem value="extended">Extended Hours</SelectItem>
@@ -198,13 +201,14 @@ const SearchFiltersComponent = ({ onLocationChange, onServiceChange, onSortChang
                 <div className="space-y-2">
                   <Label>Minimum Rating</Label>
                   <Select 
-                    value={filters.minRating?.toString() || ""} 
-                    onValueChange={(value) => updateFilter('minRating', parseFloat(value))}
+                    value={filters.minRating?.toString() || "any"} 
+                    onValueChange={(value) => updateFilter('minRating', value === "any" ? undefined : parseFloat(value))}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Any rating" />
                     </SelectTrigger>
                     <SelectContent>
+                      <SelectItem value="any">Any rating</SelectItem>
                       <SelectItem value="4.5">4.5+ stars</SelectItem>
                       <SelectItem value="4.0">4.0+ stars</SelectItem>
                       <SelectItem value="3.5">3.5+ stars</SelectItem>
@@ -226,7 +230,7 @@ const SearchFiltersComponent = ({ onLocationChange, onServiceChange, onSortChang
               <span>{selectedService === 'repair' ? 'AC Repair' : selectedService === 'installation' ? 'Installation' : selectedService === 'maintenance' ? 'Maintenance' : 'Emergency Service'}</span>
               <X 
                 className="w-3 h-3 cursor-pointer" 
-                onClick={() => handleServiceChange("")}
+                onClick={() => handleServiceChange("all")}
               />
             </Badge>
           )}
