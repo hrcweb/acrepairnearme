@@ -1,11 +1,10 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MapPin, Phone, Mail, ArrowRight } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 interface QuoteRequestCTAProps {
   variant?: "hero" | "sticky" | "inline";
@@ -30,6 +29,20 @@ const QuoteRequestCTA = ({ variant = "inline", className = "" }: QuoteRequestCTA
     setFormData({ location: "", phone: "", email: "", serviceType: "" });
   };
 
+  const handleStickyButtonClick = () => {
+    // Scroll to the hero form or show a quick quote modal
+    const heroForm = document.querySelector('[data-hero-form]');
+    if (heroForm) {
+      heroForm.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      // If no hero form is visible, show a toast with instructions
+      toast({
+        title: "Ready to Get Your Quote?",
+        description: "Scroll up to fill out the quote form or call us directly for immediate assistance.",
+      });
+    }
+  };
+
   const serviceTypes = [
     "AC Repair",
     "AC Installation", 
@@ -48,7 +61,10 @@ const QuoteRequestCTA = ({ variant = "inline", className = "" }: QuoteRequestCTA
             <h3 className="font-semibold">Need AC Repair? Get Free Quotes Now!</h3>
             <p className="text-sm text-blue-100">Connect with licensed contractors in minutes</p>
           </div>
-          <Button className="bg-orange-500 hover:bg-orange-600 text-white">
+          <Button 
+            className="bg-orange-500 hover:bg-orange-600 text-white"
+            onClick={handleStickyButtonClick}
+          >
             Get Free Quote <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
         </div>
@@ -58,7 +74,7 @@ const QuoteRequestCTA = ({ variant = "inline", className = "" }: QuoteRequestCTA
 
   if (variant === "hero") {
     return (
-      <Card className={`bg-white/95 backdrop-blur-sm border-0 shadow-xl ${className}`}>
+      <Card className={`bg-white/95 backdrop-blur-sm border-0 shadow-xl ${className}`} data-hero-form>
         <CardHeader className="pb-4">
           <CardTitle className="text-xl text-gray-900 text-center">
             Get Free Quotes from Top-Rated AC Contractors
