@@ -72,8 +72,8 @@ const ImprovedBusinessList: React.FC<ImprovedBusinessListProps> = ({
       );
     }
 
-    // Apply service filter
-    if (serviceFilter) {
+    // Apply service filter - only filter if not "all"
+    if (serviceFilter && serviceFilter !== "all") {
       filtered = filtered.filter(business =>
         business.services?.some(service => 
           service.toLowerCase().includes(serviceFilter.toLowerCase())
@@ -81,8 +81,8 @@ const ImprovedBusinessList: React.FC<ImprovedBusinessListProps> = ({
       );
     }
 
-    // Apply rating filter
-    if (ratingFilter) {
+    // Apply rating filter - only filter if not "all"
+    if (ratingFilter && ratingFilter !== "all") {
       const minRating = parseFloat(ratingFilter);
       filtered = filtered.filter(business => 
         (business.rating || 0) >= minRating
@@ -151,7 +151,7 @@ const ImprovedBusinessList: React.FC<ImprovedBusinessListProps> = ({
                 <SelectValue placeholder="Service Type" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All Services</SelectItem>
+                <SelectItem value="all">All Services</SelectItem>
                 {allServices.map((service) => (
                   <SelectItem key={service} value={service}>{service}</SelectItem>
                 ))}
@@ -163,7 +163,7 @@ const ImprovedBusinessList: React.FC<ImprovedBusinessListProps> = ({
                 <SelectValue placeholder="Minimum Rating" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Any Rating</SelectItem>
+                <SelectItem value="all">Any Rating</SelectItem>
                 <SelectItem value="4.5">4.5+ Stars</SelectItem>
                 <SelectItem value="4.0">4.0+ Stars</SelectItem>
                 <SelectItem value="3.5">3.5+ Stars</SelectItem>
@@ -200,12 +200,12 @@ const ImprovedBusinessList: React.FC<ImprovedBusinessListProps> = ({
                 Search: {searchQuery} ✕
               </Badge>
             )}
-            {serviceFilter && (
+            {serviceFilter && serviceFilter !== "all" && (
               <Badge variant="secondary" className="cursor-pointer" onClick={() => setServiceFilter("")}>
                 Service: {serviceFilter} ✕
               </Badge>
             )}
-            {ratingFilter && (
+            {ratingFilter && ratingFilter !== "all" && (
               <Badge variant="secondary" className="cursor-pointer" onClick={() => setRatingFilter("")}>
                 Rating: {ratingFilter}+ ✕
               </Badge>
