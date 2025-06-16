@@ -1,4 +1,3 @@
-
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Star, MapPin, Phone } from "lucide-react";
@@ -169,6 +168,13 @@ const FeaturedListingsCarousel = () => {
     "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=250&fit=crop",
   ];
 
+  const scrollToLocationSelector = () => {
+    const element = document.getElementById('location-selector');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   if (isLoading) {
     return (
       <section className="py-16 bg-gradient-to-r from-blue-50 to-orange-50">
@@ -306,10 +312,12 @@ const FeaturedListingsCarousel = () => {
         </Carousel>
 
         <div className="text-center mt-8">
-          <Button variant="outline" size="lg" asChild>
-            <Link to="#location-selector">
-              Browse All Contractors
-            </Link>
+          <Button 
+            variant="outline" 
+            size="lg" 
+            onClick={scrollToLocationSelector}
+          >
+            Browse All Contractors
           </Button>
         </div>
       </div>

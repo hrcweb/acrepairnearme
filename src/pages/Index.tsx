@@ -247,7 +247,7 @@ const Index = () => {
           </section>
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
-            <div className="lg:col-span-1" data-section="location-selector">
+            <div className="lg:col-span-1" id="location-selector" data-section="location-selector">
               {!showAllContractors && (
                 <CountyTownSelector 
                   onTownSelect={handleLocationFilter} 
