@@ -9,6 +9,57 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      admin_api_keys: {
+        Row: {
+          created_at: string | null
+          id: string
+          key_name: string
+          key_value: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          key_name: string
+          key_value: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          key_name?: string
+          key_value?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      ai_usage_logs: {
+        Row: {
+          created_at: string | null
+          id: string
+          metadata: Json | null
+          prompt: string | null
+          response: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          prompt?: string | null
+          response?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          metadata?: Json | null
+          prompt?: string | null
+          response?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       businesses: {
         Row: {
           address: string
@@ -81,6 +132,162 @@ export type Database = {
         }
         Relationships: []
       }
+      conversions: {
+        Row: {
+          created_at: string | null
+          detail: string | null
+          id: string
+          stage: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          detail?: string | null
+          id?: string
+          stage: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          detail?: string | null
+          id?: string
+          stage?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      custom_personas: {
+        Row: {
+          age: number | null
+          biggest_fear: string | null
+          core_belief: string
+          created_at: string
+          defining_moment: string | null
+          greatest_desire: string | null
+          id: string
+          name: string
+          relationship: string | null
+          traits: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          age?: number | null
+          biggest_fear?: string | null
+          core_belief: string
+          created_at?: string
+          defining_moment?: string | null
+          greatest_desire?: string | null
+          id?: string
+          name: string
+          relationship?: string | null
+          traits: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          age?: number | null
+          biggest_fear?: string | null
+          core_belief?: string
+          created_at?: string
+          defining_moment?: string | null
+          greatest_desire?: string | null
+          id?: string
+          name?: string
+          relationship?: string | null
+          traits?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      custom_prompts: {
+        Row: {
+          description: string | null
+          id: string
+          last_modified: string | null
+          prompt_body: string
+          prompt_key: string
+        }
+        Insert: {
+          description?: string | null
+          id?: string
+          last_modified?: string | null
+          prompt_body: string
+          prompt_key: string
+        }
+        Update: {
+          description?: string | null
+          id?: string
+          last_modified?: string | null
+          prompt_body?: string
+          prompt_key?: string
+        }
+        Relationships: []
+      }
+      feature_requests: {
+        Row: {
+          admin_response: string | null
+          created_at: string | null
+          description: string
+          id: string
+          status: string
+          title: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          admin_response?: string | null
+          created_at?: string | null
+          description: string
+          id?: string
+          status?: string
+          title: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          admin_response?: string | null
+          created_at?: string | null
+          description?: string
+          id?: string
+          status?: string
+          title?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      feedback: {
+        Row: {
+          admin_response: string | null
+          created_at: string | null
+          id: string
+          message: string
+          status: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          admin_response?: string | null
+          created_at?: string | null
+          id?: string
+          message: string
+          status?: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          admin_response?: string | null
+          created_at?: string | null
+          id?: string
+          message?: string
+          status?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       orders: {
         Row: {
           amount: number | null
@@ -114,6 +321,39 @@ export type Database = {
           stripe_session_id?: string | null
           updated_at?: string
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      personas: {
+        Row: {
+          category: string
+          created_at: string
+          description: string
+          details: Json
+          icon: string
+          id: string
+          name: string
+          simulation: Json
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          description: string
+          details: Json
+          icon: string
+          id: string
+          name: string
+          simulation: Json
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string
+          details?: Json
+          icon?: string
+          id?: string
+          name?: string
+          simulation?: Json
         }
         Relationships: []
       }
@@ -193,6 +433,7 @@ export type Database = {
           stripe_customer_id: string | null
           subscribed: boolean
           subscription_end: string | null
+          subscription_status: string | null
           subscription_tier: string | null
           updated_at: string
           user_id: string | null
@@ -204,6 +445,7 @@ export type Database = {
           stripe_customer_id?: string | null
           subscribed?: boolean
           subscription_end?: string | null
+          subscription_status?: string | null
           subscription_tier?: string | null
           updated_at?: string
           user_id?: string | null
@@ -215,9 +457,97 @@ export type Database = {
           stripe_customer_id?: string | null
           subscribed?: boolean
           subscription_end?: string | null
+          subscription_status?: string | null
           subscription_tier?: string | null
           updated_at?: string
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      tool_popularity: {
+        Row: {
+          category: string | null
+          id: string
+          last_used: string | null
+          tool_name: string
+          usage_count: number | null
+        }
+        Insert: {
+          category?: string | null
+          id?: string
+          last_used?: string | null
+          tool_name: string
+          usage_count?: number | null
+        }
+        Update: {
+          category?: string | null
+          id?: string
+          last_used?: string | null
+          tool_name?: string
+          usage_count?: number | null
+        }
+        Relationships: []
+      }
+      user_entitlements: {
+        Row: {
+          created_at: string | null
+          id: string
+          journeys_limit: number
+          journeys_used: number
+          last_reset: string | null
+          tier: string
+          updated_at: string | null
+          user_id: string
+          visionary_purchased: boolean
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          journeys_limit?: number
+          journeys_used?: number
+          last_reset?: string | null
+          tier?: string
+          updated_at?: string | null
+          user_id: string
+          visionary_purchased?: boolean
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          journeys_limit?: number
+          journeys_used?: number
+          last_reset?: string | null
+          tier?: string
+          updated_at?: string | null
+          user_id?: string
+          visionary_purchased?: boolean
+        }
+        Relationships: []
+      }
+      user_events: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          event_data: Json | null
+          event_type: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          event_data?: Json | null
+          event_type: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          event_data?: Json | null
+          event_type?: string
+          id?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -249,6 +579,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_sessions: {
+        Row: {
+          created_at: string
+          ended_at: string | null
+          id: string
+          metadata: Json | null
+          started_at: string
+          summary: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          ended_at?: string | null
+          id?: string
+          metadata?: Json | null
+          started_at?: string
+          summary?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          ended_at?: string | null
+          id?: string
+          metadata?: Json | null
+          started_at?: string
+          summary?: string | null
+          user_id?: string
+        }
+        Relationships: []
       }
     }
     Views: {

@@ -11,6 +11,7 @@ import HeatIndexVisualization from "@/components/HeatIndexVisualization";
 import FeaturedListingsCarousel from "@/components/FeaturedListingsCarousel";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 export interface Business {
   id: number;
@@ -41,7 +42,8 @@ const Index = () => {
   const [filteredBusinesses, setFilteredBusinesses] = useState<Business[]>([]);
   const [searchLocation, setSearchLocation] = useState("");
   const [serviceFilter, setServiceFilter] = useState("");
-  const [sortBy, setSortBy] = useState("rating");
+  const [sortBy, setSortBy] = useState("name"); // Changed default to alphabetical
+  const [showAllContractors, setShowAllContractors] = useState(false);
 
   // Add SEO metadata effect
   useEffect(() => {
@@ -93,8 +95,7 @@ const Index = () => {
       const { data, error } = await supabase
         .from('businesses')
         .select('*')
-        .order('featured', { ascending: false })
-        .order('rating', { ascending: false });
+        .order('name', { ascending: true }); // Changed to sort by name alphabetically
       
       if (error) {
         console.error('Error fetching businesses:', error);
@@ -140,11 +141,12 @@ const Index = () => {
   // Apply filters whenever any filter changes
   useEffect(() => {
     filterBusinesses(searchLocation, serviceFilter, sortBy);
-  }, [businesses, searchLocation, serviceFilter, sortBy]);
+  }, [businesses, searchLocation, serviceFilter, sortBy, showAllContractors]);
 
   const handleLocationFilter = (location: string) => {
     console.log('Location filter changed:', location);
     setSearchLocation(location);
+    setShowAllContractors(false); // Reset show all when filtering by location
   };
 
   const handleServiceFilter = (service: string) => {
@@ -157,11 +159,20 @@ const Index = () => {
     setSortBy(sort);
   };
 
+  const handleBrowseAllContractors = () => {
+    console.log('Browse all contractors clicked');
+    setShowAllContractors(true);
+    setSearchLocation("");
+    setServiceFilter("");
+    setSortBy("name"); // Ensure alphabetical sort
+  };
+
   const filterBusinesses = (location: string, service: string, sort: string) => {
-    console.log('Filtering businesses:', { location, service, sort });
+    console.log('Filtering businesses:', { location, service, sort, showAllContractors });
     let filtered = [...businesses];
 
-    if (location.trim()) {
+    // If showing all contractors, don't apply location filter
+    if (!showAllContractors && location.trim()) {
       filtered = filtered.filter(business => 
         business.city.toLowerCase().includes(location.toLowerCase()) ||
         business.zip_code.includes(location.trim()) ||
@@ -178,7 +189,7 @@ const Index = () => {
       );
     }
 
-    // Sort businesses
+    // Sort businesses - default to alphabetical
     switch (sort) {
       case 'rating':
         filtered.sort((a, b) => (b.rating || 0) - (a.rating || 0));
@@ -187,6 +198,7 @@ const Index = () => {
         filtered.sort((a, b) => b.review_count - a.review_count);
         break;
       case 'name':
+      default:
         filtered.sort((a, b) => a.name.localeCompare(b.name));
         break;
     }
@@ -198,6 +210,7 @@ const Index = () => {
   const handleHeroSearch = (location: string) => {
     console.log('Hero search triggered with location:', location);
     setSearchLocation(location);
+    setShowAllContractors(false);
   };
 
   if (error) {
@@ -216,31 +229,41 @@ const Index = () => {
             <h2 className="text-3xl font-bold mb-4 text-gray-900">
               Find Trusted AC Repair Near Me & Commercial HVAC Services
             </h2>
-            <p className="text-lg text-gray-600 max-w-4xl mx-auto">
+            <p className="text-lg text-gray-600 max-w-4xl mx-auto mb-6">
               Our directory connects you with licensed and verified AC repair contractors specializing in 
               residential and commercial heating and air conditioning repair near me. Whether you need 
               emergency AC repair, routine maintenance, or commercial HVAC services, find qualified 
               professionals in your area with verified reviews and instant quotes.
             </p>
+            
+            {/* Browse All Contractors Button */}
+            <Button 
+              onClick={handleBrowseAllContractors}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 text-lg"
+            >
+              Browse All Contractors
+            </Button>
           </section>
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
             <div className="lg:col-span-1" data-section="location-selector">
-              <CountyTownSelector 
-                onTownSelect={handleLocationFilter} 
-                selectedTown={searchLocation}
-              />
+              {!showAllContractors && (
+                <CountyTownSelector 
+                  onTownSelect={handleLocationFilter} 
+                  selectedTown={searchLocation}
+                />
+              )}
             </div>
             
             <div className="lg:col-span-2">
-              {searchLocation ? (
+              {searchLocation || showAllContractors ? (
                 <div className="space-y-6">
                   {/* Location Summary Card */}
                   <Card className="bg-gradient-to-r from-blue-50 to-orange-50 border-blue-200">
                     <CardHeader className="pb-3">
                       <CardTitle className="flex items-center text-lg">
                         <MapPin className="w-5 h-5 text-blue-600 mr-2" />
-                        AC Repair Services in {searchLocation}
+                        {showAllContractors ? "All AC Repair Contractors" : `AC Repair Services in ${searchLocation}`}
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
@@ -269,7 +292,7 @@ const Index = () => {
                   <BusinessList 
                     businesses={filteredBusinesses}
                     isLoading={isLoading}
-                    searchLocation={searchLocation}
+                    searchLocation={showAllContractors ? "" : searchLocation}
                   />
                 </div>
               ) : (
