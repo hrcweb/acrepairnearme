@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -46,17 +45,28 @@ const ImprovedBusinessList: React.FC<ImprovedBusinessListProps> = ({
   const [verifiedFilter, setVerifiedFilter] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
 
-  // Business images for display
-  const businessImages = [
-    "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=250&fit=crop",
-    "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=250&fit=crop", 
-    "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400&h=250&fit=crop",
-    "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=400&h=250&fit=crop",
-    "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=400&h=250&fit=crop",
-    "https://images.unsplash.com/photo-1604709177225-055f99402ea3?w=400&h=250&fit=crop"
+  // Air conditioning related images from Unsplash
+  const acImages = [
+    "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=250&fit=crop", // AC technician working
+    "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=250&fit=crop", // HVAC equipment
+    "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400&h=250&fit=crop", // AC unit installation
+    "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=400&h=250&fit=crop", // Indoor AC unit
+    "https://images.unsplash.com/photo-1513475382585-d06e58bcb0e0?w=400&h=250&fit=crop", // HVAC technician
+    "https://images.unsplash.com/photo-1604709177225-055f99402ea3?w=400&h=250&fit=crop", // AC repair tools
+    "https://images.unsplash.com/photo-1551522435-a13afa10f103?w=400&h=250&fit=crop", // Modern AC unit
+    "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=250&fit=crop", // AC maintenance
+    "https://images.unsplash.com/photo-1555963633-1bb0c20b54f5?w=400&h=250&fit=crop", // HVAC system
+    "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&h=250&fit=crop", // AC condenser unit
+    "https://images.unsplash.com/photo-1592928302636-c83cf0fa1a2a?w=400&h=250&fit=crop", // Professional technician
+    "https://images.unsplash.com/photo-1563453392212-326d32d2d1e9?w=400&h=250&fit=crop"  // AC installation work
   ];
 
   const allServices = ["AC Repair", "Installation", "Emergency Service", "Maintenance", "Commercial HVAC", "Duct Cleaning", "Heat Pump"];
+
+  const getRandomAcImage = (businessId: number) => {
+    // Use business ID to ensure consistent image assignment
+    return acImages[businessId % acImages.length];
+  };
 
   useEffect(() => {
     let filtered = [...businesses];
@@ -230,11 +240,11 @@ const ImprovedBusinessList: React.FC<ImprovedBusinessListProps> = ({
       {/* Business Grid */}
       {filteredBusinesses.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredBusinesses.map((business, index) => (
+          {filteredBusinesses.map((business) => (
             <EnhancedBusinessCard
               key={business.id}
               business={business}
-              imageUrl={businessImages[index % businessImages.length]}
+              imageUrl={getRandomAcImage(business.id)}
               showPricing={true}
             />
           ))}
