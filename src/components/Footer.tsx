@@ -28,6 +28,11 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
+                <Link to="/about" className="hover:text-white transition-colors py-1 block min-h-[24px]">
+                  About Us
+                </Link>
+              </li>
+              <li>
                 <Link to="/list-business" className="hover:text-white transition-colors py-1 block min-h-[24px]">
                   List Your Business
                 </Link>

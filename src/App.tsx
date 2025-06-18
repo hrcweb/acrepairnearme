@@ -24,6 +24,7 @@ import TermsOfService from "./pages/TermsOfService";
 import ContractorGuidelines from "./pages/ContractorGuidelines";
 import SuccessStories from "./pages/SuccessStories";
 import EnterpriseWelcome from "./pages/EnterpriseWelcome";
+import About from "./pages/About";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -60,6 +61,7 @@ const App: React.FC = () => {
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route path="/terms-of-service" element={<TermsOfService />} />
               <Route path="/contractor-guidelines" element={<ContractorGuidelines />} />
+              <Route path="/about" element={<About />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
