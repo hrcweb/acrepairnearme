@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Upload, AlertCircle, CheckCircle } from "lucide-react";
+import { Upload, AlertCircle, CheckCircle, FileText, Info } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 interface BusinessImportFormProps {
@@ -18,6 +18,7 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
   const { toast } = useToast();
   const [isUploading, setIsUploading] = useState(false);
   const [importResults, setImportResults] = useState<{ success: number; errors: string[] } | null>(null);
+  const [fileInfo, setFileInfo] = useState<{ name: string; size: number; rows: number } | null>(null);
   
   // Single business form state
   const [formData, setFormData] = useState({
@@ -42,60 +43,72 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
     'name', 'description', 'address', 'city', 'state', 'zip_code',
     'phone', 'email', 'website', 'services', 'rating', 'review_count',
     'license_number', 'insurance_verified', 'latitude', 'longitude',
-    'business_hours', 'featured', 'category', 'type', 'photo'
+    'business_hours', 'featured', 'category', 'type'
   ];
+
+  const validateFile = async (file: File) => {
+    console.log('Validating file:', file.name, 'Type:', file.type, 'Size:', file.size);
+    
+    if (file.size > 10 * 1024 * 1024) { // 10MB limit
+      throw new Error('File size too large. Please keep files under 10MB.');
+    }
+
+    const fileName = file.name.toLowerCase();
+    const validTypes = ['text/csv', 'application/csv', 'text/plain', ''];
+    const isValidType = validTypes.includes(file.type) || fileName.endsWith('.csv');
+    
+    if (!isValidType) {
+      throw new Error(`Invalid file type. Expected CSV file, got: ${file.type || 'unknown'}`);
+    }
+
+    // Read and validate CSV structure
+    const text = await file.text();
+    const lines = text.split('\n').filter(line => line.trim());
+    
+    if (lines.length < 2) {
+      throw new Error('CSV file must contain at least a header row and one data row.');
+    }
+
+    const headers = parseCSVLine(lines[0]).map(h => h.trim().toLowerCase().replace(/"/g, ''));
+    const requiredFields = ['name', 'address', 'city', 'state', 'zip_code'];
+    const mappedHeaders = headers.map(h => mapHeaderToDbColumn(h));
+    
+    const missingRequired = requiredFields.filter(field => 
+      !mappedHeaders.includes(field) && !mappedHeaders.includes(mapHeaderToDbColumn(field))
+    );
+
+    if (missingRequired.length > 0) {
+      throw new Error(`Missing required columns: ${missingRequired.join(', ')}. Please ensure your CSV has these columns.`);
+    }
+
+    setFileInfo({
+      name: file.name,
+      size: file.size,
+      rows: lines.length - 1
+    });
+
+    return { text, lines, headers };
+  };
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    console.log('File type detected:', file.type);
-    console.log('File name:', file.name);
-
-    const fileName = file.name.toLowerCase();
-    const isCSVFile = file.type === 'text/csv' || 
-                     file.type === 'application/csv' || 
-                     file.type === 'text/plain' ||
-                     file.type === '' || 
-                     fileName.endsWith('.csv');
-
-    if (!isCSVFile) {
-      toast({
-        title: "Invalid file type",
-        description: `Please upload a CSV file. Detected type: ${file.type}, File: ${fileName}`,
-        variant: "destructive",
-      });
-      return;
-    }
-
     setIsUploading(true);
-    const text = await file.text();
-    
-    try {
-      const lines = text.split('\n').filter(line => line.trim());
-      if (lines.length === 0) {
-        toast({
-          title: "Empty file",
-          description: "The CSV file appears to be empty.",
-          variant: "destructive",
-        });
-        setIsUploading(false);
-        return;
-      }
+    setImportResults(null);
+    setFileInfo(null);
 
-      const headers = parseCSVLine(lines[0]).map(h => h.trim().toLowerCase().replace(/"/g, ''));
-      console.log("Original headers:", headers);
+    try {
+      const { text, lines, headers } = await validateFile(file);
       
+      console.log("Processing file with headers:", headers);
       const dataRows = lines.slice(1);
-      console.log(`Processing ${dataRows.length} data rows`);
-      
       const businesses = [];
       const errors = [];
 
       for (let i = 0; i < dataRows.length; i++) {
         try {
           const values = parseCSVLine(dataRows[i]);
-          console.log(`Row ${i + 2} values:`, values);
           
           if (values.length === 0 || values.every(v => !v.trim())) {
             console.log(`Skipping empty row ${i + 2}`);
@@ -107,37 +120,16 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
           // Map headers to values with proper field mapping
           headers.forEach((header, index) => {
             let value = values[index]?.trim().replace(/^"|"$/g, '') || '';
-            
-            // Map CSV headers to database column names
             let dbField = mapHeaderToDbColumn(header);
             
-            // Special handling for certain fields
+            // Handle special field mappings
             if (dbField === 'street') {
-              dbField = 'address'; // Map street to address
+              dbField = 'address';
             }
             
-            // Handle category and type fields to potentially add to services
-            if (dbField === 'category' || dbField === 'type') {
-              if (!business['services']) {
-                business['services'] = [];
-              }
-              
-              if (value) {
-                // Add category/type as a service if it's not empty
-                if (Array.isArray(business['services'])) {
-                  business['services'].push(value);
-                }
-              }
-              return; // Skip regular assignment since we're handling it specially
+            if (!validColumns.includes(dbField)) {
+              return; // Skip unknown columns
             }
-            
-            // Only process standard database columns
-            if (!validColumns.includes(dbField) && dbField !== 'street') {
-              console.log(`Skipping unknown column: ${header} -> ${dbField}`);
-              return;
-            }
-            
-            console.log(`Mapping ${header} -> ${dbField} with value: "${value}"`);
             
             // Process the value based on the database field type
             switch (dbField) {
@@ -145,85 +137,80 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
                 business[dbField] = value ? value.split(',').map(s => s.trim()).filter(s => s) : null;
                 break;
               case 'rating':
-                business[dbField] = value ? parseFloat(value) || null : null;
+                business[dbField] = value ? Math.min(5, Math.max(0, parseFloat(value) || 0)) : null;
                 break;
               case 'review_count':
-              case 'reviews': // Handle 'reviews' mapping to 'review_count'
-                business['review_count'] = value ? parseInt(value) || 0 : 0;
+                business[dbField] = value ? Math.max(0, parseInt(value) || 0) : 0;
                 break;
               case 'insurance_verified':
               case 'featured':
-                business[dbField] = value ? (value.toLowerCase() === 'true' || value === '1') : false;
+                business[dbField] = value ? (value.toLowerCase() === 'true' || value === '1' || value.toLowerCase() === 'yes') : false;
                 break;
               case 'latitude':
               case 'longitude':
-                business[dbField] = value ? parseFloat(value) || null : null;
+                const numValue = parseFloat(value);
+                business[dbField] = (!isNaN(numValue) && isFinite(numValue)) ? numValue : null;
                 break;
               case 'business_hours':
-                business[dbField] = value ? JSON.parse(value) : null;
-                break;
-              case 'postal_code':
-                business['zip_code'] = value || null;
-                break;
-              case 'photo':
-                // Store photo URL if needed (not directly storing in database)
-                business['photo_url'] = value || null;
-                break;
-              case 'email_1':
-                business['email'] = value || null;
+                try {
+                  business[dbField] = value ? JSON.parse(value) : null;
+                } catch {
+                  business[dbField] = null;
+                }
                 break;
               default:
                 business[dbField] = value || null;
             }
           });
 
-          console.log(`Row ${i + 2} business object:`, business);
-
           // Validate required fields
           const requiredFields = ['name', 'address', 'city', 'state', 'zip_code'];
           const missingFields = requiredFields.filter(field => !business[field] || business[field].trim() === '');
           
           if (missingFields.length > 0) {
-            const errorMsg = `Row ${i + 2}: Missing required fields: ${missingFields.join(', ')}`;
-            errors.push(errorMsg);
-            console.log(errorMsg);
-            console.log(`Business object for failed row:`, business);
+            errors.push(`Row ${i + 2}: Missing required fields: ${missingFields.join(', ')}`);
             continue;
+          }
+
+          // Additional validation
+          if (business.email && !isValidEmail(business.email)) {
+            errors.push(`Row ${i + 2}: Invalid email format: ${business.email}`);
+          }
+
+          if (business.rating && (business.rating < 0 || business.rating > 5)) {
+            errors.push(`Row ${i + 2}: Rating must be between 0 and 5`);
           }
 
           businesses.push(business);
         } catch (error) {
-          const errorMsg = `Row ${i + 2}: ${error instanceof Error ? error.message : 'Parse error'}`;
-          errors.push(errorMsg);
-          console.error(errorMsg, error);
+          errors.push(`Row ${i + 2}: ${error instanceof Error ? error.message : 'Parse error'}`);
         }
       }
 
       console.log(`Processed ${businesses.length} valid businesses out of ${dataRows.length} rows`);
-      console.log('Sample business object:', businesses[0]);
 
       if (businesses.length > 0) {
-        // Insert businesses one by one to get better error messages
+        // Batch insert for better performance
+        const batchSize = 50;
         let successCount = 0;
-        for (const business of businesses) {
+
+        for (let i = 0; i < businesses.length; i += batchSize) {
+          const batch = businesses.slice(i, i + batchSize);
+          
           try {
-            // Remove any non-database fields before insert
-            const cleanedBusiness = { ...business };
-            if ('photo_url' in cleanedBusiness) delete cleanedBusiness.photo_url;
-            
             const { error } = await supabase
               .from('businesses')
-              .insert([cleanedBusiness]);
+              .insert(batch);
 
             if (error) {
-              console.error('Supabase insert error for business:', business.name, error);
-              errors.push(`Failed to insert ${business.name}: ${error.message}`);
+              console.error('Batch insert error:', error);
+              errors.push(`Batch ${Math.floor(i / batchSize) + 1}: ${error.message}`);
             } else {
-              successCount++;
+              successCount += batch.length;
             }
           } catch (insertError) {
             console.error('Insert error:', insertError);
-            errors.push(`Failed to insert ${business.name}: ${insertError instanceof Error ? insertError.message : 'Unknown error'}`);
+            errors.push(`Batch ${Math.floor(i / batchSize) + 1}: ${insertError instanceof Error ? insertError.message : 'Unknown error'}`);
           }
         }
 
@@ -242,7 +229,6 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
           });
         }
       } else {
-        console.log('No valid businesses to import. Errors:', errors);
         setImportResults({ success: 0, errors });
         toast({
           title: "No valid businesses found",
@@ -261,6 +247,11 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
     } finally {
       setIsUploading(false);
     }
+  };
+
+  const isValidEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
   };
 
   const mapHeaderToDbColumn = (header: string): string => {
@@ -294,15 +285,9 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
       'insured': 'insurance_verified',
       'insurance': 'insurance_verified',
       'verified': 'insurance_verified',
-      'street': 'street',
+      'street': 'address',
       'address_line_1': 'address',
-      'address1': 'address',
-      'category': 'category',
-      'business_type': 'type',
-      'type': 'type',
-      'photo': 'photo',
-      'image': 'photo',
-      'photo_url': 'photo'
+      'address1': 'address'
     };
 
     return headerMap[header] || header.replace(/\s+/g, '_');
@@ -344,11 +329,34 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
     setIsUploading(true);
 
     try {
+      // Validate required fields
+      const requiredFields = ['name', 'address', 'city', 'state', 'zip_code'];
+      const missingFields = requiredFields.filter(field => !formData[field as keyof typeof formData]);
+      
+      if (missingFields.length > 0) {
+        toast({
+          title: "Missing required fields",
+          description: `Please fill in: ${missingFields.join(', ')}`,
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Validate email format if provided
+      if (formData.email && !isValidEmail(formData.email)) {
+        toast({
+          title: "Invalid email format",
+          description: "Please enter a valid email address",
+          variant: "destructive",
+        });
+        return;
+      }
+
       const businessData = {
         ...formData,
-        services: formData.services ? formData.services.split(',').map(s => s.trim()) : null,
-        rating: formData.rating ? parseFloat(formData.rating) || null : null,
-        review_count: formData.review_count ? parseInt(formData.review_count) || 0 : 0,
+        services: formData.services ? formData.services.split(',').map(s => s.trim()).filter(s => s) : null,
+        rating: formData.rating ? Math.min(5, Math.max(0, parseFloat(formData.rating) || 0)) : null,
+        review_count: formData.review_count ? Math.max(0, parseInt(formData.review_count) || 0) : 0,
       };
 
       const { error } = await supabase
@@ -367,6 +375,7 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
           title: "Business added successfully",
           description: `${formData.name} has been added to the database.`,
         });
+        // Reset form
         setFormData({
           name: "",
           description: "",
@@ -528,7 +537,7 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
         <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
         <Label htmlFor="csv-upload" className="cursor-pointer">
           <span className="text-lg font-medium">Upload CSV File</span>
-          <p className="text-sm text-gray-500 mt-1">Click to select a CSV file or drag and drop</p>
+          <p className="text-sm text-gray-500 mt-1">Click to select a CSV file or drag and drop (Max 10MB)</p>
         </Label>
         <Input
           id="csv-upload"
@@ -540,18 +549,40 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
         />
       </div>
 
+      {/* File Info */}
+      {fileInfo && (
+        <Card className="bg-blue-50 border-blue-200">
+          <CardContent className="pt-4">
+            <div className="flex items-center space-x-2">
+              <FileText className="h-5 w-5 text-blue-600" />
+              <div>
+                <p className="font-medium text-blue-900">{fileInfo.name}</p>
+                <p className="text-sm text-blue-700">
+                  {(fileInfo.size / 1024).toFixed(1)} KB • {fileInfo.rows} data rows
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* CSV Format Help */}
       <div className="bg-blue-50 p-4 rounded-lg">
-        <h4 className="font-medium text-blue-900 mb-2">CSV Import Guide:</h4>
-        <p className="text-sm text-blue-800 mb-2">
-          <strong>Required fields:</strong> name, address (or street), city, state, zip_code (or postal_code)
-        </p>
-        <p className="text-sm text-blue-800 mb-2">
-          <strong>Optional fields:</strong> phone, email (or email_1), website, services, category, type, rating, reviews, license_number, insurance_verified, photo
-        </p>
-        <p className="text-sm text-blue-800">
-          <strong>Auto-mapped headers:</strong> street→address, postal_code→zip_code, email_1→email, reviews→review_count, category/type→services
-        </p>
+        <div className="flex items-start space-x-2">
+          <Info className="h-5 w-5 text-blue-600 mt-0.5" />
+          <div>
+            <h4 className="font-medium text-blue-900 mb-2">CSV Import Guide:</h4>
+            <p className="text-sm text-blue-800 mb-2">
+              <strong>Required fields:</strong> name, address, city, state, zip_code
+            </p>
+            <p className="text-sm text-blue-800 mb-2">
+              <strong>Optional fields:</strong> phone, email, website, services, rating, review_count, license_number, insurance_verified, latitude, longitude, business_hours, featured
+            </p>
+            <p className="text-sm text-blue-800">
+              <strong>Auto-mapped headers:</strong> business_name→name, postal_code→zip_code, phone_1→phone, email_1→email, reviews→review_count
+            </p>
+          </div>
+        </div>
       </div>
 
       {importResults && (

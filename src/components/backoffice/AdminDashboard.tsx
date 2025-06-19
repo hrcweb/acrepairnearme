@@ -2,11 +2,13 @@
 import React, { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Shield, Building2, Users, MessageSquare, FileText, Settings, BarChart3 } from "lucide-react";
+import { Shield, Building2, Users, MessageSquare, FileText, Settings, BarChart3, Database, Globe } from "lucide-react";
 import AdminBusinessManagement from "./AdminBusinessManagement";
 import AdminUserManagement from "./AdminUserManagement";
 import AdminReviewManagement from "./AdminReviewManagement";
 import AdminAnalytics from "./AdminAnalytics";
+import AdminSystemSettings from "./AdminSystemSettings";
+import AdminContentManager from "./AdminContentManager";
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState("businesses");
@@ -15,7 +17,9 @@ const AdminDashboard = () => {
     { id: "businesses", label: "Manage Businesses", icon: Building2, description: "Add, edit, and manage all business listings" },
     { id: "users", label: "Manage Users", icon: Users, description: "View and manage user accounts" },
     { id: "reviews", label: "Manage Reviews", icon: MessageSquare, description: "Moderate and manage reviews" },
+    { id: "content", label: "Content Manager", icon: FileText, description: "Manage site content and pages" },
     { id: "analytics", label: "Analytics", icon: BarChart3, description: "View platform statistics and insights" },
+    { id: "settings", label: "System Settings", icon: Settings, description: "Configure system settings and maintenance" },
   ];
 
   return (
@@ -34,16 +38,17 @@ const AdminDashboard = () => {
       </Card>
 
       {/* Tab Navigation */}
-      <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg w-fit">
+      <div className="flex flex-wrap gap-1 bg-gray-100 p-1 rounded-lg">
         {tabs.map((tab) => (
           <Button
             key={tab.id}
             variant={activeTab === tab.id ? "default" : "ghost"}
             onClick={() => setActiveTab(tab.id)}
-            className="px-6"
+            className="px-3 sm:px-6 py-2 text-sm"
           >
-            <tab.icon className="w-4 h-4 mr-2" />
-            {tab.label}
+            <tab.icon className="w-4 h-4 mr-1 sm:mr-2" />
+            <span className="hidden sm:inline">{tab.label}</span>
+            <span className="sm:hidden">{tab.label.split(' ')[0]}</span>
           </Button>
         ))}
       </div>
@@ -92,6 +97,20 @@ const AdminDashboard = () => {
           </Card>
         )}
 
+        {activeTab === "content" && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Content Management</CardTitle>
+              <CardDescription>
+                Manage site content, pages, FAQs, and announcements.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <AdminContentManager />
+            </CardContent>
+          </Card>
+        )}
+
         {activeTab === "analytics" && (
           <Card>
             <CardHeader>
@@ -102,6 +121,20 @@ const AdminDashboard = () => {
             </CardHeader>
             <CardContent>
               <AdminAnalytics />
+            </CardContent>
+          </Card>
+        )}
+
+        {activeTab === "settings" && (
+          <Card>
+            <CardHeader>
+              <CardTitle>System Settings</CardTitle>
+              <CardDescription>
+                Configure system settings, maintenance, and database operations.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <AdminSystemSettings />
             </CardContent>
           </Card>
         )}
