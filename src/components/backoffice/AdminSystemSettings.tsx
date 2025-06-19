@@ -37,20 +37,34 @@ const AdminSystemSettings = () => {
 
   const loadDatabaseStats = async () => {
     try {
-      const [businessesResult, usersResult, reviewsResult] = await Promise.all([
-        supabase.from('businesses').select('id', { count: 'exact' }),
-        supabase.from('profiles').select('id', { count: 'exact' }),
-        supabase.from('reviews').select('id', { count: 'exact' })
+      console.log('Loading database statistics...');
+      
+      // Load statistics with proper error handling
+      const [businessesResult, usersResult, reviewsResult] = await Promise.allSettled([
+        supabase.from('businesses').select('id', { count: 'exact', head: true }),
+        supabase.from('profiles').select('id', { count: 'exact', head: true }),
+        supabase.from('reviews').select('id', { count: 'exact', head: true })
       ]);
 
+      const businessCount = businessesResult.status === 'fulfilled' ? businessesResult.value.count || 0 : 0;
+      const userCount = usersResult.status === 'fulfilled' ? usersResult.value.count || 0 : 0;
+      const reviewCount = reviewsResult.status === 'fulfilled' ? reviewsResult.value.count || 0 : 0;
+
       setDbStats({
-        totalBusinesses: businessesResult.count || 0,
-        totalUsers: usersResult.count || 0,
-        totalReviews: reviewsResult.count || 0,
+        totalBusinesses: businessCount,
+        totalUsers: userCount,
+        totalReviews: reviewCount,
         pendingApprovals: 0 // This would need a status column in businesses table
       });
+
+      console.log('Database statistics loaded:', { businessCount, userCount, reviewCount });
     } catch (error) {
       console.error('Error loading database stats:', error);
+      toast({
+        title: "Error loading statistics",
+        description: "Could not load database statistics. Please try again.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -58,11 +72,17 @@ const AdminSystemSettings = () => {
     setLoading(true);
     try {
       // In a real implementation, you'd save these to a settings table
+      console.log('Saving settings:', settings);
+      
+      // Simulate save operation
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
       toast({
         title: "Settings saved",
         description: "System settings have been updated successfully.",
       });
     } catch (error) {
+      console.error('Error saving settings:', error);
       toast({
         title: "Error saving settings",
         description: error instanceof Error ? error.message : "An error occurred",
@@ -76,6 +96,8 @@ const AdminSystemSettings = () => {
   const handleDatabaseMaintenance = async (action: string) => {
     setLoading(true);
     try {
+      console.log(`Starting database maintenance: ${action}`);
+      
       switch (action) {
         case 'vacuum':
           toast({
@@ -95,8 +117,15 @@ const AdminSystemSettings = () => {
             description: "Analyzing database statistics for query optimization.",
           });
           break;
+        default:
+          throw new Error(`Unknown maintenance action: ${action}`);
       }
+      
+      // Simulate maintenance operation
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
     } catch (error) {
+      console.error('Maintenance error:', error);
       toast({
         title: "Maintenance error",
         description: error instanceof Error ? error.message : "An error occurred",

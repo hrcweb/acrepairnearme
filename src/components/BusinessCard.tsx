@@ -1,3 +1,4 @@
+
 import { Phone, MapPin, Star, CheckCircle, ExternalLink } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,15 +8,16 @@ import { Link } from "react-router-dom";
 interface Business {
   id: number;
   name: string;
-  rating: number;
+  rating: number | null;
   reviewCount: number;
-  phone: string;
+  phone: string | null;
   address: string;
   services: string[];
-  description: string;
-  image: string;
-  sponsored: boolean;
-  verified: boolean;
+  description: string | null;
+  image?: string;
+  sponsored?: boolean;
+  verified?: boolean;
+  insurance_verified?: boolean;
 }
 
 interface BusinessCardProps {
@@ -44,10 +46,17 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
     return acImages[businessId % acImages.length];
   };
 
-  const imageUrl = getRandomAcImage(business.id);
+  const imageUrl = business.image || getRandomAcImage(business.id);
+  const rating = business.rating || 0;
+  const reviewCount = business.reviewCount || 0;
+  const phone = business.phone || "Contact for details";
+  const description = business.description || "Professional AC repair and HVAC services";
+  const services = business.services || [];
+  const isVerified = business.verified || business.insurance_verified || false;
+  const isSponsored = business.sponsored || false;
 
   return (
-    <Card className={`transition-all duration-200 hover:shadow-lg ${business.sponsored ? 'border-blue-200 bg-blue-50/30' : ''}`}>
+    <Card className={`transition-all duration-200 hover:shadow-lg ${isSponsored ? 'border-blue-200 bg-blue-50/30' : ''}`}>
       <CardHeader>
         <div className="flex justify-between items-start">
           <div className="flex items-start space-x-4">
@@ -56,6 +65,11 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
                 src={imageUrl} 
                 alt={`${business.name} - AC Repair and HVAC Services`}
                 className="w-16 h-16 rounded-lg object-cover bg-gray-200 hover:opacity-80 transition-opacity cursor-pointer"
+                onError={(e) => {
+                  // Fallback to a default image if the current one fails
+                  const target = e.target as HTMLImageElement;
+                  target.src = acImages[0];
+                }}
               />
             </Link>
             <div className="flex-1">
@@ -65,10 +79,10 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
                     {business.name}
                   </h3>
                 </Link>
-                {business.verified && (
+                {isVerified && (
                   <CheckCircle className="w-5 h-5 text-green-500" />
                 )}
-                {business.sponsored && (
+                {isSponsored && (
                   <Badge variant="secondary" className="bg-blue-100 text-blue-800">
                     Sponsored
                   </Badge>
@@ -77,9 +91,9 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
               <div className="flex items-center space-x-2 mt-1">
                 <div className="flex items-center">
                   <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                  <span className="text-sm font-medium ml-1">{business.rating}</span>
+                  <span className="text-sm font-medium ml-1">{rating.toFixed(1)}</span>
                 </div>
-                <span className="text-sm text-gray-600">({business.reviewCount} reviews)</span>
+                <span className="text-sm text-gray-600">({reviewCount} reviews)</span>
               </div>
             </div>
           </div>
@@ -96,33 +110,44 @@ const BusinessCard = ({ business }: BusinessCardProps) => {
         </div>
       </CardHeader>
       <CardContent>
-        <p className="text-gray-600 mb-4">{business.description}</p>
+        <p className="text-gray-600 mb-4">{description}</p>
         
-        <div className="flex flex-wrap gap-2 mb-4">
-          {business.services.map((service, index) => (
-            <Badge key={index} variant="outline" className="text-xs">
-              {service}
-            </Badge>
-          ))}
-        </div>
+        {services.length > 0 && (
+          <div className="flex flex-wrap gap-2 mb-4">
+            {services.slice(0, 4).map((service, index) => (
+              <Badge key={index} variant="outline" className="text-xs">
+                {service}
+              </Badge>
+            ))}
+            {services.length > 4 && (
+              <Badge variant="outline" className="text-xs text-gray-500">
+                +{services.length - 4} more
+              </Badge>
+            )}
+          </div>
+        )}
 
         <div className="flex items-center justify-between pt-4 border-t">
           <div className="space-y-1">
-            <div className="flex items-center text-sm text-gray-600">
-              <Phone className="w-4 h-4 mr-1" />
-              <a href={`tel:${business.phone}`} className="hover:text-blue-600 transition-colors">
-                {business.phone}
-              </a>
-            </div>
+            {business.phone && (
+              <div className="flex items-center text-sm text-gray-600">
+                <Phone className="w-4 h-4 mr-1" />
+                <a href={`tel:${business.phone}`} className="hover:text-blue-600 transition-colors">
+                  {business.phone}
+                </a>
+              </div>
+            )}
             <div className="flex items-center text-sm text-gray-600">
               <MapPin className="w-4 h-4 mr-1" />
               {business.address}
             </div>
           </div>
           <div className="flex space-x-2">
-            <Button size="sm" variant="outline" asChild>
-              <a href={`tel:${business.phone}`}>Call Now</a>
-            </Button>
+            {business.phone && (
+              <Button size="sm" variant="outline" asChild>
+                <a href={`tel:${business.phone}`}>Call Now</a>
+              </Button>
+            )}
             <Button size="sm" className="bg-blue-600 hover:bg-blue-700" asChild>
               <Link to={`/business/${business.id}`}>Get Quote</Link>
             </Button>

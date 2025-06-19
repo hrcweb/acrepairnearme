@@ -25,6 +25,7 @@ import ContractorGuidelines from "./pages/ContractorGuidelines";
 import SuccessStories from "./pages/SuccessStories";
 import EnterpriseWelcome from "./pages/EnterpriseWelcome";
 import About from "./pages/About";
+import Advertising from "./pages/Advertising";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -62,6 +63,7 @@ const App: React.FC = () => {
               <Route path="/terms-of-service" element={<TermsOfService />} />
               <Route path="/contractor-guidelines" element={<ContractorGuidelines />} />
               <Route path="/about" element={<About />} />
+              <Route path="/advertising" element={<Advertising />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
