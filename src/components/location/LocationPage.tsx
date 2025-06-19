@@ -13,6 +13,7 @@ import TrustBadges from "@/components/TrustBadges";
 import Footer from "@/components/Footer";
 import LocationLinks from "./LocationLinks";
 import { getCityDataBySlug, CityData } from "@/data/cities";
+import { getBusinessesByCity, SampleBusiness } from "@/data/sampleBusinesses";
 import { updatePageSEO } from "@/utils/seoUtils";
 import { Business } from "@/pages/Index";
 
@@ -28,8 +29,8 @@ const LocationPage = () => {
     }
   }, [citySlug]);
 
-  // Fetch businesses for this specific city
-  const { data: businesses = [], isLoading, error } = useQuery({
+  // Fetch businesses for this specific city from database
+  const { data: databaseBusinesses = [], isLoading, error } = useQuery({
     queryKey: ['location-businesses', cityData?.name],
     queryFn: async () => {
       if (!cityData?.name) return [];
@@ -73,6 +74,37 @@ const LocationPage = () => {
     },
     enabled: !!cityData?.name
   });
+
+  // Get sample businesses if no database businesses found
+  const sampleBusinesses = cityData ? getBusinessesByCity(cityData.name) : [];
+  
+  // Convert sample businesses to the format expected by BusinessCard
+  const convertedSampleBusinesses = sampleBusinesses.map((business, index) => ({
+    id: 1000 + index, // Use high numbers to avoid conflicts with real business IDs
+    name: business.name,
+    description: business.description,
+    phone: business.phone,
+    email: business.email,
+    website: business.website,
+    address: business.address,
+    city: business.city,
+    state: business.state,
+    zip_code: business.zip_code,
+    services: business.services,
+    rating: business.rating,
+    review_count: business.review_count,
+    featured: business.featured,
+    insurance_verified: business.insurance_verified,
+    license_number: business.license_number,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    latitude: null,
+    longitude: null,
+    business_hours: business.business_hours
+  }));
+
+  // Use database businesses if available, otherwise use sample businesses
+  const businesses = databaseBusinesses.length > 0 ? databaseBusinesses : convertedSampleBusinesses;
 
   // Update SEO when city data is available
   useEffect(() => {
@@ -233,7 +265,7 @@ const LocationPage = () => {
               </div>
               <div className="bg-white rounded-lg p-3 shadow-sm">
                 <div className="text-2xl font-bold text-orange-600">
-                  {businesses.length >  0 
+                  {businesses.length > 0 
                     ? (businesses.reduce((sum, b) => sum + (b.rating || 0), 0) / businesses.length).toFixed(1)
                     : "4.8"
                   }★
@@ -256,9 +288,16 @@ const LocationPage = () => {
 
         {/* Business Listings */}
         <div className="space-y-6">
-          <h2 className="text-2xl font-bold text-gray-900">
-            Top-Rated AC Repair Contractors in {cityData.name}
-          </h2>
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold text-gray-900">
+              Top-Rated AC Repair Contractors in {cityData.name}
+            </h2>
+            {databaseBusinesses.length ===0 && sampleBusinesses.length > 0 && (
+              <div className="text-sm text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
+                Sample Listings
+              </div>
+            )}
+          </div>
           
           {isLoading ? (
             <div className="text-center py-8">Loading contractors...</div>
@@ -290,9 +329,36 @@ const LocationPage = () => {
           )}
         </div>
 
-        {/* Location-specific content sections */}
+        {/* Enhanced Location-specific content sections */}
         <div className="mt-16 space-y-12">
-          {/* Why Choose Our {City} AC Contractors */}
+          {/* Climate and AC Considerations for this city */}
+          <section className="bg-gradient-to-r from-orange-50 to-red-50 rounded-lg p-8">
+            <h3 className="text-2xl font-bold mb-6 text-center">
+              AC Repair Considerations for {cityData.name} Climate
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <h4 className="font-semibold text-lg mb-3 text-orange-800">Local Weather Challenges</h4>
+                <ul className="space-y-2 text-gray-700">
+                  <li>• High humidity levels stress AC systems year-round</li>
+                  <li>• Salt air exposure in coastal areas accelerates corrosion</li>
+                  <li>• Frequent thunderstorms can cause power surge damage</li>
+                  <li>• Hurricane season requires system weatherproofing</li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-semibold text-lg mb-3 text-orange-800">Maintenance Recommendations</h4>
+                <ul className="space-y-2 text-gray-700">
+                  <li>• Change filters monthly during peak season</li>
+                  <li>• Annual coil cleaning to prevent efficiency loss</li>
+                  <li>• Surge protector installation recommended</li>
+                  <li>• Bi-annual professional inspections advised</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          {/* Why Choose Our Contractors */}
           <section className="bg-gray-50 rounded-lg p-8">
             <h3 className="text-2xl font-bold mb-6 text-center">
               Why Choose Our {cityData.name} AC Repair Contractors?
@@ -313,13 +379,28 @@ const LocationPage = () => {
                 <h4 className="font-semibold mb-2">Top-Rated Local Experts</h4>
                 <p className="text-sm text-gray-600">Verified customer reviews from {cityData.name} residents ensure quality service.</p>
               </div>
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <CheckCircle className="w-8 h-8 text-purple-500 mb-3" />
+                <h4 className="font-semibold mb-2">Same-Day Service Available</h4>
+                <p className="text-sm text-gray-600">Most repairs completed the same day with fully stocked service vehicles.</p>
+              </div>
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <Phone className="w-8 h-8 text-red-500 mb-3" />
+                <h4 className="font-semibold mb-2">Local Response Team</h4>
+                <p className="text-sm text-gray-600">Contractors based in {cityData.name} area for faster response times.</p>
+              </div>
+              <div className="bg-white rounded-lg p-6 shadow-sm">
+                <MapPin className="w-8 h-8 text-indigo-500 mb-3" />
+                <h4 className="font-semibold mb-2">Service Area Coverage</h4>
+                <p className="text-sm text-gray-600">Complete coverage of {cityData.name} and surrounding {cityData.county} areas.</p>
+              </div>
             </div>
           </section>
 
           {/* Local AC Repair FAQ */}
           <section>
             <h3 className="text-2xl font-bold mb-6">
-              Frequently Asked Questions - AC Repair in {cityData.name}
+              {cityData.name} AC Repair - Frequently Asked Questions
             </h3>
             <div className="space-y-4">
               <Card>
@@ -328,7 +409,7 @@ const LocationPage = () => {
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-600">
-                    Most of our {cityData.name} contractors offer same-day service and emergency repairs. During peak summer months in Florida, response times may vary, but emergency services are typically available within 2-4 hours.
+                    Most of our {cityData.name} contractors offer same-day service and emergency repairs. During peak summer months in Florida, response times may vary, but emergency services are typically available within 2-4 hours. Our local contractors maintain service vehicles in {cityData.name} to ensure rapid response.
                   </p>
                 </CardContent>
               </Card>
@@ -339,7 +420,7 @@ const LocationPage = () => {
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-600">
-                    AC repair costs in {cityData.name} typically range from $150-$800 depending on the issue. Common repairs like capacitor replacement cost $150-$400, while compressor issues may cost $800-$2,500. Get free quotes to compare prices from local contractors.
+                    AC repair costs in {cityData.name} typically range from $150-$800 depending on the issue. Common repairs like capacitor replacement cost $150-$400, while compressor issues may cost $800-$2,500. {cityData.county} rates are competitive with state averages. Get free quotes to compare prices from local contractors.
                   </p>
                 </CardContent>
               </Card>
@@ -350,10 +431,48 @@ const LocationPage = () => {
                 </CardHeader>
                 <CardContent>
                   <p className="text-gray-600">
-                    Yes, our network of {cityData.name} HVAC professionals service all major AC brands including Trane, Carrier, Lennox, Goodman, Rheem, York, and more. They carry parts for most residential and commercial systems.
+                    Yes, our network of {cityData.name} HVAC professionals service all major AC brands including Trane, Carrier, Lennox, Goodman, Rheem, York, American Standard, and more. They carry parts for most residential and commercial systems and can source specialized parts for older units.
                   </p>
                 </CardContent>
               </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">What permits are needed for AC work in {cityData.name}?</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600">
+                    In {cityData.name}, {cityData.county}, permits are required for new AC installations, major system replacements, and significant ductwork modifications. Minor repairs typically don't require permits. All our contractors are familiar with local permitting requirements and will handle necessary paperwork for you.
+                  </p>
+                </CardContent>
+              </Card>
+            </div>
+          </section>
+
+          {/* Local Resources and Rebates */}
+          <section className="bg-green-50 rounded-lg p-8">
+            <h3 className="text-2xl font-bold mb-6 text-center">
+              {cityData.name} Energy Efficiency Resources
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <h4 className="font-semibold text-lg mb-3 text-green-800">Available Rebates & Incentives</h4>
+                <ul className="space-y-2 text-gray-700">
+                  <li>• Florida Power & Light (FPL) AC rebates up to $1,600</li>
+                  <li>• Federal tax credits for high-efficiency systems</li>
+                  <li>• {cityData.county} energy efficiency programs</li>
+                  <li>• Manufacturer rebates on select HVAC brands</li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-semibold text-lg mb-3 text-green-800">Energy Saving Tips</h4>
+                <ul className="space-y-2 text-gray-700">
+                  <li>• Set thermostat to 78°F when home</li>
+                  <li>• Use ceiling fans to feel 4°F cooler</li>
+                  <li>• Seal air leaks around windows and doors</li>
+                  <li>• Install programmable or smart thermostats</li>
+                </ul>
+              </div>
             </div>
           </section>
 

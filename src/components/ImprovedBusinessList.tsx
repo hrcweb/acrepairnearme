@@ -1,10 +1,12 @@
+
 import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Filter, SlidersHorizontal } from "lucide-react";
+import { Search, Filter, SlidersHorizontal, Info } from "lucide-react";
 import EnhancedBusinessCard from "./EnhancedBusinessCard";
+import { getBusinessesByCity, getCitiesWithBusinesses } from "@/data/sampleBusinesses";
 
 interface Business {
   id: number;
@@ -44,6 +46,7 @@ const ImprovedBusinessList: React.FC<ImprovedBusinessListProps> = ({
   const [emergencyFilter, setEmergencyFilter] = useState(false);
   const [verifiedFilter, setVerifiedFilter] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  const [usingSampleData, setUsingSampleData] = useState(false);
 
   // Verified AC/HVAC related images from Unsplash
   const acImages = [
@@ -68,8 +71,49 @@ const ImprovedBusinessList: React.FC<ImprovedBusinessListProps> = ({
     return acImages[businessId % acImages.length];
   };
 
+  // Get sample data if real businesses are empty or very limited
+  const getSampleBusinessesForLocation = () => {
+    if (searchLocation) {
+      const sampleForLocation = getBusinessesByCity(searchLocation);
+      return sampleForLocation.map((business, index) => ({
+        id: 2000 + index, // Use different ID range for sample data
+        name: business.name,
+        description: business.description,
+        address: business.address,
+        city: business.city,
+        state: business.state,
+        zip_code: business.zip_code,
+        phone: business.phone,
+        email: business.email,
+        website: business.website,
+        services: business.services,
+        rating: business.rating,
+        review_count: business.review_count,
+        featured: business.featured,
+        insurance_verified: business.insurance_verified,
+        license_number: business.license_number,
+        created_at: new Date().toISOString()
+      }));
+    }
+    return [];
+  };
+
+  // Determine which businesses to show
+  const allBusinesses = (() => {
+    const sampleBusinesses = getSampleBusinessesForLocation();
+    
+    // If we have very few real businesses but sample data available, combine them
+    if (businesses.length < 3 && sampleBusinesses.length > 0) {
+      setUsingSampleData(true);
+      return [...businesses, ...sampleBusinesses];
+    }
+    
+    setUsingSampleData(businesses.length === 0 && sampleBusinesses.length > 0);
+    return businesses.length > 0 ? businesses : sampleBusinesses;
+  })();
+
   useEffect(() => {
-    let filtered = [...businesses];
+    let filtered = [...allBusinesses];
 
     // Apply search filter
     if (searchQuery) {
@@ -112,7 +156,7 @@ const ImprovedBusinessList: React.FC<ImprovedBusinessListProps> = ({
     });
 
     setFilteredBusinesses(filtered);
-  }, [businesses, searchQuery, serviceFilter, ratingFilter, verifiedFilter, emergencyFilter]);
+  }, [allBusinesses, searchQuery, serviceFilter, ratingFilter, verifiedFilter, emergencyFilter]);
 
   if (isLoading) {
     return (
@@ -128,6 +172,20 @@ const ImprovedBusinessList: React.FC<ImprovedBusinessListProps> = ({
 
   return (
     <div className="space-y-6">
+      {/* Sample Data Notice */}
+      {usingSampleData && (
+        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-start space-x-3">
+          <Info className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+          <div>
+            <p className="text-blue-800 font-medium">Sample Listings</p>
+            <p className="text-blue-700 text-sm">
+              These are example contractors to show you the types of services available in {searchLocation}. 
+              We're actively adding real contractor listings for your area.
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Search and Filters */}
       <div className="bg-white rounded-lg p-6 shadow-sm border">
         <div className="flex flex-col lg:flex-row gap-4">
@@ -235,6 +293,14 @@ const ImprovedBusinessList: React.FC<ImprovedBusinessListProps> = ({
           {searchLocation ? `AC Contractors in ${searchLocation}` : "AC Repair Contractors"}
           <span className="text-gray-500 font-normal ml-2">({filteredBusinesses.length} found)</span>
         </h2>
+        
+        {/* Cities with sample data available */}
+        {!searchLocation && getCitiesWithBusinesses().length > 0 && (
+          <div className="text-sm text-gray-600">
+            Sample data available for: {getCitiesWithBusinesses().slice(0, 3).join(', ')}
+            {getCitiesWithBusinesses().length > 3 && ` +${getCitiesWithBusinesses().length - 3} more`}
+          </div>
+        )}
       </div>
 
       {/* Business Grid */}
@@ -256,8 +322,20 @@ const ImprovedBusinessList: React.FC<ImprovedBusinessListProps> = ({
               No contractors found
             </h3>
             <p className="text-gray-500 mb-6">
-              Try adjusting your search criteria or browse all contractors in the area.
+              Try adjusting your search criteria or browse contractors in nearby cities with available sample data.
             </p>
+            {getCitiesWithBusinesses().length > 0 && (
+              <div className="mb-6">
+                <p className="text-sm text-gray-600 mb-3">Cities with sample contractors:</p>
+                <div className="flex flex-wrap gap-2 justify-center">
+                  {getCitiesWithBusinesses().slice(0, 6).map(city => (
+                    <Badge key={city} variant="outline" className="text-xs">
+                      {city}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
             <Button onClick={() => {
               setSearchQuery("");
               setServiceFilter("");
