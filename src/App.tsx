@@ -41,6 +41,7 @@ const queryClient = new QueryClient({
 const App: React.FC = () => {
   // Get all city slugs for routing
   const citySlugs = getAllCitySlugs();
+  console.log('Available city slugs for routing:', citySlugs);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -71,13 +72,16 @@ const App: React.FC = () => {
               <Route path="/advertising" element={<Advertising />} />
               
               {/* Dynamic city-specific routes */}
-              {citySlugs.map(citySlug => (
-                <Route 
-                  key={citySlug}
-                  path={`/ac-repair-${citySlug}`} 
-                  element={<LocationPage />} 
-                />
-              ))}
+              {citySlugs.map(citySlug => {
+                console.log('Adding route for city:', citySlug);
+                return (
+                  <Route 
+                    key={citySlug}
+                    path={`/ac-repair-${citySlug}`} 
+                    element={<LocationPage />} 
+                  />
+                );
+              })}
               
               {/* Generic location route for dynamic handling */}
               <Route path="/ac-repair-:citySlug" element={<LocationPage />} />

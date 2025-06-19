@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -21,10 +20,14 @@ const LocationPage = () => {
   const { citySlug } = useParams<{ citySlug: string }>();
   const [cityData, setCityData] = useState<CityData | null>(null);
 
+  console.log('LocationPage rendered with citySlug:', citySlug);
+
   // Get city data
   useEffect(() => {
     if (citySlug) {
+      console.log('Looking up city data for slug:', citySlug);
       const data = getCityDataBySlug(citySlug);
+      console.log('Found city data:', data);
       setCityData(data || null);
     }
   }, [citySlug]);
@@ -33,7 +36,10 @@ const LocationPage = () => {
   const { data: databaseBusinesses = [], isLoading, error } = useQuery({
     queryKey: ['location-businesses', cityData?.name],
     queryFn: async () => {
-      if (!cityData?.name) return [];
+      if (!cityData?.name) {
+        console.log('No city data available for business query');
+        return [];
+      }
       
       console.log('Fetching businesses for city:', cityData.name);
       const { data, error } = await supabase
@@ -48,6 +54,7 @@ const LocationPage = () => {
         throw error;
       }
       
+      console.log('Database businesses found:', data?.length || 0);
       return data?.map(business => ({
         id: business.id,
         name: business.name,
@@ -77,6 +84,7 @@ const LocationPage = () => {
 
   // Get sample businesses if no database businesses found
   const sampleBusinesses = cityData ? getBusinessesByCity(cityData.name) : [];
+  console.log('Sample businesses found:', sampleBusinesses.length);
   
   // Convert sample businesses to the format expected by BusinessCard
   const convertedSampleBusinesses = sampleBusinesses.map((business, index) => ({
@@ -105,6 +113,7 @@ const LocationPage = () => {
 
   // Use database businesses if available, otherwise use sample businesses
   const businesses = databaseBusinesses.length > 0 ? databaseBusinesses : convertedSampleBusinesses;
+  console.log('Total businesses to display:', businesses.length);
 
   // Update SEO when city data is available
   useEffect(() => {
@@ -171,12 +180,24 @@ const LocationPage = () => {
     }
   }, [cityData]);
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Loading...</h1>
+          <p className="text-gray-600">Fetching AC repair contractors for {citySlug}...</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!cityData) {
+    console.log('No city data found for slug:', citySlug);
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Location Not Found</h1>
-          <p className="text-gray-600">The requested location could not be found.</p>
+          <p className="text-gray-600">The requested location "{citySlug}" could not be found.</p>
           <Button 
             onClick={() => window.location.href = '/'} 
             className="mt-4"
@@ -187,6 +208,8 @@ const LocationPage = () => {
       </div>
     );
   }
+
+  console.log('Rendering LocationPage for:', cityData.name, 'with', businesses.length, 'businesses');
 
   return (
     <div className="min-h-screen bg-background">
@@ -249,42 +272,19 @@ const LocationPage = () => {
 
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8">
-        {/* Location Summary */}
-        <Card className="bg-gradient-to-r from-blue-50 to-orange-50 border-blue-200 mb-8">
-          <CardHeader className="pb-3">
-            <CardTitle className="flex items-center text-lg">
-              <MapPin className="w-5 h-5 text-blue-600 mr-2" />
-              AC Repair Services in {cityData.name}, {cityData.county}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center mb-4">
-              <div className="bg-white rounded-lg p-3 shadow-sm">
-                <div className="text-2xl font-bold text-blue-600">{businesses.length}</div>
-                <div className="text-sm text-gray-600">Verified Contractors</div>
-              </div>
-              <div className="bg-white rounded-lg p-3 shadow-sm">
-                <div className="text-2xl font-bold text-orange-600">
-                  {businesses.length > 0 
-                    ? (businesses.reduce((sum, b) => sum + (b.rating || 0), 0) / businesses.length).toFixed(1)
-                    : "4.8"
-                  }★
-                </div>
-                <div className="text-sm text-gray-600">Average Rating</div>
-              </div>
-              <div className="bg-white rounded-lg p-3 shadow-sm">
-                <div className="text-2xl font-bold text-green-600">Same Day</div>
-                <div className="text-sm text-gray-600">Service Available</div>
-              </div>
+        {/* Sample Data Notice */}
+        {databaseBusinesses.length === 0 && sampleBusinesses.length > 0 && (
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-start space-x-3 mb-8">
+            <div className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0">ℹ️</div>
+            <div>
+              <p className="text-blue-800 font-medium">Sample Listings</p>
+              <p className="text-blue-700 text-sm">
+                These are example contractors to show you the types of services available in {cityData.name}. 
+                We're actively adding real contractor listings for your area.
+              </p>
             </div>
-            
-            {cityData.zipCodes && cityData.zipCodes.length > 0 && (
-              <div className="text-sm text-gray-600">
-                <strong>Service Areas:</strong> {cityData.zipCodes.join(', ')}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+          </div>
+        )}
 
         {/* Business Listings */}
         <div className="space-y-6">
@@ -292,16 +292,14 @@ const LocationPage = () => {
             <h2 className="text-2xl font-bold text-gray-900">
               Top-Rated AC Repair Contractors in {cityData.name}
             </h2>
-            {databaseBusinesses.length ===0 && sampleBusinesses.length > 0 && (
+            {databaseBusinesses.length === 0 && sampleBusinesses.length > 0 && (
               <div className="text-sm text-blue-600 bg-blue-50 px-3 py-1 rounded-full">
                 Sample Listings
               </div>
             )}
           </div>
           
-          {isLoading ? (
-            <div className="text-center py-8">Loading contractors...</div>
-          ) : businesses.length > 0 ? (
+          {businesses.length > 0 ? (
             <div className="grid gap-6">
               {businesses.map((business) => (
                 <BusinessCard 
