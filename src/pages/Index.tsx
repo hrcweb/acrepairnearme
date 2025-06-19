@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { MapPin, Star, Shield, Clock } from "lucide-react";
@@ -12,8 +11,10 @@ import FeaturedListingsCarousel from "@/components/FeaturedListingsCarousel";
 import QuoteRequestCTA from "@/components/QuoteRequestCTA";
 import FAQSection from "@/components/FAQSection";
 import Footer from "@/components/Footer";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import SEOContent from "@/components/index/SEOContent";
+import LocationSummaryCard from "@/components/index/LocationSummaryCard";
+import NoLocationSelected from "@/components/index/NoLocationSelected";
+import WhyChooseUs from "@/components/index/WhyChooseUs";
 
 export interface Business {
   id: number;
@@ -51,7 +52,6 @@ const Index = () => {
   useEffect(() => {
     document.title = "Find Top-Rated AC Repair Near Me | Licensed HVAC Contractors Florida | Free Quotes";
     
-    // Update meta description
     const metaDescription = document.querySelector('meta[name="description"]');
     if (metaDescription) {
       metaDescription.setAttribute('content', 
@@ -59,7 +59,6 @@ const Index = () => {
       );
     }
 
-    // Add structured data for better SEO
     const structuredData = {
       "@context": "https://schema.org",
       "@type": "WebPage",
@@ -79,7 +78,6 @@ const Index = () => {
     document.head.appendChild(script);
 
     return () => {
-      // Cleanup script on unmount
       const scripts = document.querySelectorAll('script[type="application/ld+json"]');
       scripts.forEach(script => {
         if (script.textContent?.includes('"AC Repair Near Me - Find Local HVAC Contractors"')) {
@@ -146,34 +144,27 @@ const Index = () => {
   }, [businesses, searchLocation, serviceFilter, sortBy, showAllContractors]);
 
   const handleLocationFilter = (location: string) => {
-    console.log('Location filter changed:', location);
     setSearchLocation(location);
     setShowAllContractors(false);
   };
 
-  const handleServiceFilter = (service: string) => {
-    console.log('Service filter changed:', service);
-    setServiceFilter(service);
-  };
-
-  const handleSortChange = (sort: string) => {
-    console.log('Sort changed:', sort);
-    setSortBy(sort);
-  };
-
   const handleBrowseAllContractors = () => {
-    console.log('Browse all contractors clicked');
     setShowAllContractors(true);
     setSearchLocation("");
     setServiceFilter("");
     setSortBy("name");
   };
 
+  const handleViewAllServices = () => {
+    setSearchLocation("");
+    setServiceFilter("");
+    setShowAllContractors(true);
+  };
+
   const filterBusinesses = (location: string, service: string, sort: string) => {
     console.log('Filtering businesses:', { location, service, sort, showAllContractors });
     let filtered = [...businesses];
 
-    // Only apply location filter if NOT showing all contractors
     if (!showAllContractors && location.trim()) {
       filtered = filtered.filter(business => 
         business.city.toLowerCase().includes(location.toLowerCase()) ||
@@ -183,7 +174,6 @@ const Index = () => {
       );
     }
 
-    // Apply service filter regardless of showAllContractors
     if (service && service !== "") {
       filtered = filtered.filter(business =>
         business.services?.some(s => 
@@ -192,17 +182,8 @@ const Index = () => {
       );
     }
 
-    // Always sort alphabetically by name
     filtered.sort((a, b) => a.name.localeCompare(b.name));
-
-    console.log('Filtered businesses:', filtered);
     setFilteredBusinesses(filtered);
-  };
-
-  const handleHeroSearch = (location: string) => {
-    console.log('Hero search triggered with location:', location);
-    setSearchLocation(location);
-    setShowAllContractors(false);
   };
 
   if (error) {
@@ -213,70 +194,20 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       {/* SEO-optimized main content area */}
       <main role="main">
-        <HeroSection onSearch={handleHeroSearch} />
+        <HeroSection onSearch={handleLocationFilter} />
         
         {/* Sticky CTA Bar */}
         <QuoteRequestCTA variant="sticky" />
         
         <div className="container mx-auto px-4 py-8">
           {/* Enhanced SEO content section */}
-          <section className="mb-8 text-center">
-            <h2 className="text-3xl font-bold mb-4 text-gray-900">
-              How Our AC Repair Directory Works
-            </h2>
-            <p className="text-lg text-gray-600 max-w-4xl mx-auto mb-6">
-              We've simplified finding reliable AC repair contractors. Our platform connects you with 
-              pre-screened, licensed professionals who specialize in residential and commercial HVAC services. 
-              Get free quotes, compare reviews, and hire with confidence - all in one place.
-            </p>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8 mb-8">
-              <div className="bg-blue-50 rounded-lg p-6">
-                <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-white font-bold text-xl">1</span>
-                </div>
-                <h3 className="font-semibold text-lg mb-2">Tell Us Your Needs</h3>
-                <p className="text-gray-600">Submit your location and service requirements through our simple form</p>
-              </div>
-              <div className="bg-orange-50 rounded-lg p-6">
-                <div className="w-12 h-12 bg-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-white font-bold text-xl">2</span>
-                </div>
-                <h3 className="font-semibold text-lg mb-2">Get Matched</h3>
-                <p className="text-gray-600">We connect you with up to 3 qualified contractors in your area</p>
-              </div>
-              <div className="bg-green-50 rounded-lg p-6">
-                <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <span className="text-white font-bold text-xl">3</span>
-                </div>
-                <h3 className="font-semibold text-lg mb-2">Compare & Hire</h3>
-                <p className="text-gray-600">Review quotes, read reviews, and choose the best contractor for your job</p>
-              </div>
-            </div>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                onClick={handleBrowseAllContractors}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 text-lg"
-              >
-                Browse All Contractors
-              </Button>
-              <Button 
-                onClick={() => {
-                  setSearchLocation("");
-                  setServiceFilter("");
-                  setShowAllContractors(true);
-                }}
-                variant="outline"
-                className="px-6 py-3 text-lg"
-              >
-                View All AC Repair Services
-              </Button>
-            </div>
-          </section>
+          <SEOContent 
+            onBrowseAll={handleBrowseAllContractors}
+            onViewAll={handleViewAllServices}
+          />
           
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
-            <div className="lg:col-span-1" id="location-selector" data-section="location-selector">
+            <div className="lg:col-span-1">
               {!showAllContractors && (
                 <CountyTownSelector 
                   onTownSelect={handleLocationFilter} 
@@ -288,37 +219,11 @@ const Index = () => {
             <div className="lg:col-span-2">
               {searchLocation || showAllContractors ? (
                 <div className="space-y-6">
-                  {/* Location Summary Card */}
-                  <Card className="bg-gradient-to-r from-blue-50 to-orange-50 border-blue-200">
-                    <CardHeader className="pb-3">
-                      <CardTitle className="flex items-center text-lg">
-                        <MapPin className="w-5 h-5 text-blue-600 mr-2" />
-                        {showAllContractors ? "All AC Repair Contractors" : `AC Repair Services in ${searchLocation}`}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
-                        <div className="bg-white rounded-lg p-3 shadow-sm">
-                          <div className="text-2xl font-bold text-blue-600">{filteredBusinesses.length}</div>
-                          <div className="text-sm text-gray-600">Verified Contractors</div>
-                        </div>
-                        <div className="bg-white rounded-lg p-3 shadow-sm">
-                          <div className="text-2xl font-bold text-orange-600">
-                            {filteredBusinesses.length > 0 
-                              ? (filteredBusinesses.reduce((sum, b) => sum + (b.rating || 0), 0) / filteredBusinesses.length).toFixed(1)
-                              : "0.0"
-                            }★
-                          </div>
-                          <div className="text-sm text-gray-600">Average Rating</div>
-                        </div>
-                        <div className="bg-white rounded-lg p-3 shadow-sm">
-                          <div className="text-2xl font-bold text-green-600">24/7</div>
-                          <div className="text-sm text-gray-600">Emergency Service</div>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-
+                  <LocationSummaryCard 
+                    filteredBusinesses={filteredBusinesses}
+                    searchLocation={searchLocation}
+                    showAllContractors={showAllContractors}
+                  />
                   <ImprovedBusinessList 
                     businesses={filteredBusinesses}
                     isLoading={isLoading}
@@ -326,32 +231,7 @@ const Index = () => {
                   />
                 </div>
               ) : (
-                <div className="text-center py-16">
-                  <div className="max-w-md mx-auto">
-                    <MapPin className="w-16 h-16 text-gray-400 mx-auto mb-6" />
-                    <h3 className="text-2xl font-semibold text-gray-700 mb-4">
-                      Find AC Repair Contractors Near You
-                    </h3>
-                    <p className="text-gray-500 mb-6">
-                      Choose a county and city from the location selector to discover licensed AC repair and HVAC contractors in your area.
-                    </p>
-                    
-                    <div className="grid grid-cols-1 gap-4 mt-8">
-                      <div className="flex items-center justify-center space-x-3 text-sm text-gray-600">
-                        <Shield className="w-5 h-5 text-blue-500" />
-                        <span>Licensed & Insured Professionals</span>
-                      </div>
-                      <div className="flex items-center justify-center space-x-3 text-sm text-gray-600">
-                        <Star className="w-5 h-5 text-yellow-500" />
-                        <span>Verified Customer Reviews</span>
-                      </div>
-                      <div className="flex items-center justify-center space-x-3 text-sm text-gray-600">
-                        <Clock className="w-5 h-5 text-green-500" />
-                        <span>24/7 Emergency Service Available</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <NoLocationSelected />
               )}
             </div>
           </div>
@@ -371,45 +251,7 @@ const Index = () => {
             <LocalRebateFinder />
             <HeatIndexVisualization />
           </div>
-
-          {/* Enhanced SEO content */}
-          <section className="mt-24 bg-gray-50 rounded-lg p-8">
-            <h3 className="text-2xl font-bold mb-6 text-center">
-              Why Choose Our AC Repair Directory?
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-gray-700">
-              <div className="bg-white rounded-lg p-6 shadow-sm">
-                <Shield className="w-8 h-8 text-blue-500 mb-3" />
-                <h4 className="font-semibold mb-2">Licensed & Verified Contractors</h4>
-                <p className="text-sm">All AC repair contractors are verified for proper licensing, insurance, and credentials.</p>
-              </div>
-              <div className="bg-white rounded-lg p-6 shadow-sm">
-                <Star className="w-8 h-8 text-orange-500 mb-3" />
-                <h4 className="font-semibold mb-2">Commercial AC Repair Specialists</h4>
-                <p className="text-sm">Find contractors specializing in commercial heating and air conditioning repair for businesses.</p>
-              </div>
-              <div className="bg-white rounded-lg p-6 shadow-sm">
-                <Clock className="w-8 h-8 text-green-500 mb-3" />
-                <h4 className="font-semibold mb-2">24/7 Emergency Service</h4>
-                <p className="text-sm">Access emergency AC repair services available around the clock for urgent situations.</p>
-              </div>
-              <div className="bg-white rounded-lg p-6 shadow-sm">
-                <MapPin className="w-8 h-8 text-purple-500 mb-3" />
-                <h4 className="font-semibold mb-2">Local Florida Coverage</h4>
-                <p className="text-sm">Comprehensive coverage across Florida cities for both residential and commercial HVAC needs.</p>
-              </div>
-              <div className="bg-white rounded-lg p-6 shadow-sm">
-                <div className="w-8 h-8 bg-blue-500 rounded text-white flex items-center justify-center text-sm font-bold mb-3">$</div>
-                <h4 className="font-semibold mb-2">Instant Quotes & Reviews</h4>
-                <p className="text-sm">Get instant quotes and read verified customer reviews before choosing your AC repair contractor.</p>
-              </div>
-              <div className="bg-white rounded-lg p-6 shadow-sm">
-                <div className="w-8 h-8 bg-green-500 rounded text-white flex items-center justify-center text-sm font-bold mb-3">✓</div>
-                <h4 className="font-semibold mb-2">No Hidden Fees</h4>
-                <p className="text-sm">Transparent pricing with no hidden fees. Compare quotes from multiple AC repair contractors.</p>
-              </div>
-            </div>
-          </section>
+          <WhyChooseUs />
         </div>
 
         {/* FAQ Section */}
