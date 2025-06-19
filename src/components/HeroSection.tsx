@@ -35,10 +35,10 @@ const HeroSection = ({ onSearch }: HeroSectionProps) => {
       {/* Dark overlay for better text readability */}
       <div className="absolute inset-0 bg-black opacity-60"></div>
       
-      <div className="relative container mx-auto px-4 sm:px-6">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+      <div className="relative container mx-auto px-4 sm:px-6 max-w-7xl">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center justify-center">
           {/* Left Column - Content */}
-          <div>
+          <div className="text-center lg:text-left">
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
               Find Top-Rated AC Repair Pros Near You
               <span className="block text-blue-200 text-2xl sm:text-3xl md:text-4xl lg:text-5xl mt-2">
@@ -51,7 +51,7 @@ const HeroSection = ({ onSearch }: HeroSectionProps) => {
             </p>
             
             {/* Quick Search */}
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-start items-stretch max-w-lg mb-6 sm:mb-8">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start items-stretch max-w-lg mb-6 sm:mb-8 mx-auto lg:mx-0">
               <div className="relative flex-1">
                 <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <Input
@@ -76,7 +76,9 @@ const HeroSection = ({ onSearch }: HeroSectionProps) => {
             </div>
 
             {/* Trust Badges */}
-            <TrustBadges variant="horizontal" showStats={true} />
+            <div className="flex justify-center lg:justify-start">
+              <TrustBadges variant="horizontal" showStats={true} />
+            </div>
 
             {/* Quick Stats */}
             <div className="mt-8 sm:mt-12 grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8">
@@ -96,8 +98,8 @@ const HeroSection = ({ onSearch }: HeroSectionProps) => {
           </div>
 
           {/* Right Column - Quote Form */}
-          <div className="lg:pl-8">
-            <QuoteRequestCTA variant="hero" className="max-w-md mx-auto lg:mx-0" />
+          <div className="flex justify-center lg:justify-end">
+            <QuoteRequestCTA variant="hero" className="max-w-md w-full" />
           </div>
         </div>
 
