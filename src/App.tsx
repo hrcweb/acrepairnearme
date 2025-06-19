@@ -26,6 +26,8 @@ import SuccessStories from "./pages/SuccessStories";
 import EnterpriseWelcome from "./pages/EnterpriseWelcome";
 import About from "./pages/About";
 import Advertising from "./pages/Advertising";
+import LocationPage from "./components/location/LocationPage";
+import { getAllCitySlugs } from "./data/cities";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -37,6 +39,9 @@ const queryClient = new QueryClient({
 });
 
 const App: React.FC = () => {
+  // Get all city slugs for routing
+  const citySlugs = getAllCitySlugs();
+
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
@@ -64,6 +69,19 @@ const App: React.FC = () => {
               <Route path="/contractor-guidelines" element={<ContractorGuidelines />} />
               <Route path="/about" element={<About />} />
               <Route path="/advertising" element={<Advertising />} />
+              
+              {/* Dynamic city-specific routes */}
+              {citySlugs.map(citySlug => (
+                <Route 
+                  key={citySlug}
+                  path={`/ac-repair-${citySlug}`} 
+                  element={<LocationPage />} 
+                />
+              ))}
+              
+              {/* Generic location route for dynamic handling */}
+              <Route path="/ac-repair-:citySlug" element={<LocationPage />} />
+              
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

@@ -1,6 +1,9 @@
 
 import React from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { MapPin } from "lucide-react";
+import { FLORIDA_CITIES } from "@/data/cities";
 
 interface SEOContentProps {
   onBrowseAll: () => void;
@@ -8,6 +11,11 @@ interface SEOContentProps {
 }
 
 const SEOContent = ({ onBrowseAll, onViewAll }: SEOContentProps) => {
+  // Get popular cities for linking
+  const popularCities = FLORIDA_CITIES
+    .sort((a, b) => (b.population || 0) - (a.population || 0))
+    .slice(0, 12);
+
   return (
     <section className="mb-8 text-center">
       <h2 className="text-3xl font-bold mb-4 text-gray-900">
@@ -43,7 +51,7 @@ const SEOContent = ({ onBrowseAll, onViewAll }: SEOContentProps) => {
         </div>
       </div>
       
-      <div className="flex flex-col sm:flex-row gap-4 justify-center">
+      <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
         <Button 
           onClick={onBrowseAll}
           className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 text-lg"
@@ -57,6 +65,41 @@ const SEOContent = ({ onBrowseAll, onViewAll }: SEOContentProps) => {
         >
           View All AC Repair Services
         </Button>
+      </div>
+
+      {/* Location-specific links for SEO */}
+      <div className="bg-gray-50 rounded-lg p-8 mt-12">
+        <h3 className="text-2xl font-bold mb-6 flex items-center justify-center">
+          <MapPin className="w-6 h-6 text-blue-600 mr-2" />
+          AC Repair Services by City
+        </h3>
+        <p className="text-gray-600 mb-6">
+          Find qualified AC repair contractors in your specific Florida city. We serve all major metropolitan areas 
+          with licensed, insured HVAC professionals available for emergency repairs and routine maintenance.
+        </p>
+        
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mb-6">
+          {popularCities.map(city => (
+            <Link
+              key={city.slug}
+              to={`/ac-repair-${city.slug}`}
+              className="text-blue-600 hover:text-blue-800 hover:underline text-sm py-2 px-3 bg-white rounded border transition-colors text-center"
+            >
+              AC Repair {city.name}
+            </Link>
+          ))}
+        </div>
+        
+        <p className="text-sm text-gray-500">
+          Don't see your city? We serve all of Florida with 24/7 emergency AC repair services. 
+          <Button 
+            variant="link" 
+            className="text-blue-600 hover:text-blue-800 p-0 ml-1"
+            onClick={onBrowseAll}
+          >
+            View all available contractors
+          </Button>
+        </p>
       </div>
     </section>
   );
