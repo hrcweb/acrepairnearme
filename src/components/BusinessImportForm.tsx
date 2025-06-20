@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -72,7 +71,7 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
     const headers = parseCSVLine(lines[0]).map(h => h.trim().toLowerCase().replace(/"/g, ''));
     console.log('Detected headers:', headers);
     
-    const requiredFields = ['name', 'city', 'state'];
+    const requiredFields = ['name'];
     const mappedHeaders = headers.map(h => mapHeaderToDbColumn(h));
     console.log('Mapped headers:', mappedHeaders);
     
@@ -112,7 +111,7 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
       for (let i = 0; i < dataRows.length; i++) {
         try {
           const values = parseCSVLine(dataRows[i]);
-          console.log(`Row ${i + 2} values:`, values);
+          console.log(`Row ${i + 2} raw values:`, values);
           
           if (values.length === 0 || values.every(v => !v || !v.trim())) {
             console.log(`Skipping empty row ${i + 2}`);
@@ -126,7 +125,7 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
             let value = values[index]?.trim().replace(/^"|"$/g, '') || '';
             let dbField = mapHeaderToDbColumn(header);
             
-            console.log(`Mapping ${header} (${dbField}) = "${value}"`);
+            console.log(`Row ${i + 2}: Mapping ${header} (${dbField}) = "${value}"`);
             
             if (!validColumns.includes(dbField)) {
               console.log(`Skipping unknown column: ${dbField}`);
@@ -179,18 +178,26 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
             }
           });
 
-          console.log(`Processed business for row ${i + 2}:`, business);
+          console.log(`Row ${i + 2}: Processed business:`, business);
 
-          // Validate required fields
-          const requiredFields = ['name', 'city', 'state'];
-          const missingFields = requiredFields.filter(field => !business[field] || business[field].trim() === '');
-          
-          if (missingFields.length > 0) {
-            errors.push(`Row ${i + 2}: Missing required fields: ${missingFields.join(', ')}`);
+          // Check for required fields
+          if (!business.name || business.name.trim() === '') {
+            errors.push(`Row ${i + 2}: Missing required field: name`);
             continue;
           }
 
-          // Set default values for required database fields
+          // Provide defaults for missing city/state instead of rejecting
+          if (!business.city || business.city.trim() === '') {
+            business.city = 'Unknown City';
+            console.log(`Row ${i + 2}: Using default city: Unknown City`);
+          }
+
+          if (!business.state || business.state.trim() === '') {
+            business.state = 'FL';
+            console.log(`Row ${i + 2}: Using default state: FL`);
+          }
+
+          // Set other default values for required database fields
           if (!business.address) {
             business.address = 'Address not provided';
           }
@@ -200,13 +207,12 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
 
           // Additional validation
           if (business.email && !isValidEmail(business.email)) {
-            errors.push(`Row ${i + 2}: Invalid email format: ${business.email}`);
-            // Don't skip the row, just clear the invalid email
+            console.log(`Row ${i + 2}: Invalid email format: ${business.email}, clearing it`);
             business.email = null;
           }
 
           if (business.rating && (business.rating < 0 || business.rating > 5)) {
-            errors.push(`Row ${i + 2}: Rating must be between 0 and 5, got ${business.rating}`);
+            console.log(`Row ${i + 2}: Invalid rating: ${business.rating}, clearing it`);
             business.rating = null;
           }
 
@@ -222,7 +228,7 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
 
       if (businesses.length > 0) {
         // Batch insert for better performance
-        const batchSize = 25; // Smaller batch size for better reliability
+        const batchSize = 20; // Smaller batch size for better reliability
         let successCount = 0;
 
         for (let i = 0; i < businesses.length; i += batchSize) {
@@ -249,7 +255,7 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
 
           // Small delay between batches to prevent overwhelming the database
           if (i + batchSize < businesses.length) {
-            await new Promise(resolve => setTimeout(resolve, 100));
+            await new Promise(resolve => setTimeout(resolve, 200));
           }
         }
 
@@ -258,7 +264,7 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
         if (successCount > 0) {
           toast({
             title: "Import completed",
-            description: `Successfully imported ${successCount} out of ${businesses.length} businesses${errors.length > 0 ? ` with ${errors.length} errors` : ''}.`,
+            description: `Successfully imported ${successCount} out of ${businesses.length} businesses${errors.length > 0 ? ` with ${errors.length} warnings` : ''}.`,
           });
         } else {
           toast({
