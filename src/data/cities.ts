@@ -1,4 +1,3 @@
-
 // City data for Florida locations with SEO-optimized information
 export interface CityData {
   name: string;
@@ -264,6 +263,13 @@ export const generateCitySlug = (cityName: string): string => {
 // Find city data by slug
 export const getCityDataBySlug = (slug: string): CityData | undefined => {
   return FLORIDA_CITIES.find(city => city.slug === slug);
+};
+
+// Find city data by name (case-insensitive)
+export const getCityDataByName = (name: string): CityData | undefined => {
+  return FLORIDA_CITIES.find(city => 
+    city.name.toLowerCase() === name.toLowerCase()
+  );
 };
 
 // Get all city slugs for routing

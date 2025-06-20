@@ -1,9 +1,11 @@
 
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { MapPin, ChevronRight } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { getCityDataByName } from "@/data/cities";
 
 interface County {
   name: string;
@@ -58,12 +60,13 @@ const FLORIDA_COUNTIES: County[] = [
 ];
 
 interface CountyTownSelectorProps {
-  onTownSelect: (town: string) => void;
+  onTownSelect?: (town: string) => void;
   selectedTown?: string;
 }
 
 const CountyTownSelector = ({ onTownSelect, selectedTown }: CountyTownSelectorProps) => {
   const [openCounties, setOpenCounties] = useState<string[]>([]);
+  const navigate = useNavigate();
 
   const toggleCounty = (countyName: string) => {
     setOpenCounties(prev => 
@@ -71,6 +74,37 @@ const CountyTownSelector = ({ onTownSelect, selectedTown }: CountyTownSelectorPr
         ? prev.filter(name => name !== countyName)
         : [...prev, countyName]
     );
+  };
+
+  const handleCityClick = (cityName: string) => {
+    console.log('City clicked:', cityName);
+    
+    // Find the city data to get the correct slug
+    const cityData = getCityDataByName(cityName);
+    console.log('Found city data:', cityData);
+    
+    if (cityData) {
+      const url = `/ac-repair-${cityData.slug}`;
+      console.log('Navigating to:', url);
+      navigate(url);
+    } else {
+      console.warn('No city data found for:', cityName);
+      // Fallback: create slug from city name
+      const fallbackSlug = cityName
+        .toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-')
+        .trim();
+      const fallbackUrl = `/ac-repair-${fallbackSlug}`;
+      console.log('Using fallback URL:', fallbackUrl);
+      navigate(fallbackUrl);
+    }
+    
+    // Call the optional callback
+    if (onTownSelect) {
+      onTownSelect(cityName);
+    }
   };
 
   return (
@@ -113,7 +147,7 @@ const CountyTownSelector = ({ onTownSelect, selectedTown }: CountyTownSelectorPr
                   className={`w-full justify-start text-sm hover:bg-blue-50 hover:text-blue-700 ${
                     selectedTown === city ? 'bg-blue-100 text-blue-800 font-medium' : 'text-gray-600'
                   }`}
-                  onClick={() => onTownSelect(city)}
+                  onClick={() => handleCityClick(city)}
                 >
                   {city}
                 </Button>

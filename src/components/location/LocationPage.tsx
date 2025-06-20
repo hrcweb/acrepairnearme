@@ -53,7 +53,7 @@ const LocationPage = () => {
     }
   }, [actualCitySlug]);
 
-  // Fetch businesses for this specific city from database
+  // Fetch businesses for this specific city from database with flexible matching
   const { data: databaseBusinesses = [], isLoading, error } = useQuery({
     queryKey: ['location-businesses', cityData?.name],
     queryFn: async () => {
@@ -63,20 +63,50 @@ const LocationPage = () => {
       }
       
       console.log('Fetching businesses for city:', cityData.name);
-      const { data, error } = await supabase
-        .from('businesses')
-        .select('*')
-        .ilike('city', cityData.name)
-        .order('featured', { ascending: false })
-        .order('rating', { ascending: false });
       
-      if (error) {
-        console.error('Error fetching location businesses:', error);
-        throw error;
+      // Try multiple matching strategies to find businesses
+      const queries = [
+        // Exact match
+        supabase
+          .from('businesses')
+          .select('*')
+          .eq('city', cityData.name),
+        
+        // Case-insensitive match
+        supabase
+          .from('businesses')
+          .select('*')
+          .ilike('city', cityData.name),
+        
+        // Partial match for compound city names
+        supabase
+          .from('businesses')
+          .select('*')
+          .ilike('city', `%${cityData.name.split(' ')[0]}%`)
+      ];
+      
+      let businesses: any[] = [];
+      
+      // Try each query until we find results
+      for (const query of queries) {
+        const { data, error } = await query
+          .order('featured', { ascending: false })
+          .order('rating', { ascending: false });
+        
+        if (error) {
+          console.error('Error in business query:', error);
+          continue;
+        }
+        
+        if (data && data.length > 0) {
+          businesses = data;
+          console.log(`Found ${businesses.length} businesses using query strategy`);
+          break;
+        }
       }
       
-      console.log('Database businesses found:', data?.length || 0);
-      return data?.map(business => ({
+      console.log('Total database businesses found:', businesses.length);
+      return businesses?.map(business => ({
         id: business.id,
         name: business.name,
         description: business.description,
@@ -487,7 +517,6 @@ const LocationPage = () => {
             </div>
           </section>
 
-          {/* Local Resources and Rebates */}
           <section className="bg-green-50 rounded-lg p-8">
             <h3 className="text-2xl font-bold mb-6 text-center">
               {cityData.name} Energy Efficiency Resources
@@ -514,11 +543,9 @@ const LocationPage = () => {
             </div>
           </section>
 
-          {/* Internal linking to other cities */}
           <LocationLinks currentCity={cityData.name} />
         </div>
 
-        {/* CTA Section */}
         <div className="mt-16">
           <QuoteRequestCTA variant="inline" className="max-w-4xl mx-auto" />
         </div>
