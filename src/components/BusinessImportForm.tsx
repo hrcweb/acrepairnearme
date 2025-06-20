@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -70,7 +69,7 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
     }
 
     const headers = parseCSVLine(lines[0]).map(h => h.trim().toLowerCase().replace(/"/g, ''));
-    const requiredFields = ['name', 'address', 'city', 'state', 'zip_code'];
+    const requiredFields = ['name', 'city', 'state'];
     const mappedHeaders = headers.map(h => mapHeaderToDbColumn(h));
     
     const missingRequired = requiredFields.filter(field => 
@@ -122,11 +121,6 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
             let value = values[index]?.trim().replace(/^"|"$/g, '') || '';
             let dbField = mapHeaderToDbColumn(header);
             
-            // Handle special field mappings
-            if (dbField === 'street') {
-              dbField = 'address';
-            }
-            
             if (!validColumns.includes(dbField)) {
               return; // Skip unknown columns
             }
@@ -134,7 +128,12 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
             // Process the value based on the database field type
             switch (dbField) {
               case 'services':
-                business[dbField] = value ? value.split(',').map(s => s.trim()).filter(s => s) : null;
+                // Handle category field as services
+                if (header === 'category' || header === 'type') {
+                  business['services'] = value ? [value] : null;
+                } else {
+                  business[dbField] = value ? value.split(',').map(s => s.trim()).filter(s => s) : null;
+                }
                 break;
               case 'rating':
                 business[dbField] = value ? Math.min(5, Math.max(0, parseFloat(value) || 0)) : null;
@@ -164,12 +163,26 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
           });
 
           // Validate required fields
-          const requiredFields = ['name', 'address', 'city', 'state', 'zip_code'];
+          const requiredFields = ['name', 'city', 'state'];
           const missingFields = requiredFields.filter(field => !business[field] || business[field].trim() === '');
           
           if (missingFields.length > 0) {
             errors.push(`Row ${i + 2}: Missing required fields: ${missingFields.join(', ')}`);
             continue;
+          }
+
+          // Set default values if not provided
+          if (!business.address && business.street) {
+            business.address = business.street;
+          }
+          if (!business.address) {
+            business.address = 'Address not provided';
+          }
+          if (!business.zip_code && business.postal_code) {
+            business.zip_code = business.postal_code;
+          }
+          if (!business.zip_code) {
+            business.zip_code = '00000';
           }
 
           // Additional validation
@@ -256,11 +269,27 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
 
   const mapHeaderToDbColumn = (header: string): string => {
     const headerMap: { [key: string]: string } = {
+      // Your specific headers
+      'name': 'name',
+      'category': 'services',
+      'type': 'services', 
+      'phone': 'phone',
+      'street': 'address',
+      'city': 'city',
+      'postal_code': 'zip_code',
+      'state': 'state',
+      'rating': 'rating',
+      'reviews': 'review_count',
+      'photo': 'photo',
+      'about': 'description',
+      'description': 'description',
+      'email_1': 'email',
+      
+      // Common alternative headers
       'business_name': 'name',
       'company_name': 'name',
       'business name': 'name',
       'company name': 'name',
-      'postal_code': 'zip_code',
       'zipcode': 'zip_code',
       'zip': 'zip_code',
       'zip code': 'zip_code',
@@ -268,13 +297,11 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
       'phone_number': 'phone',
       'telephone': 'phone',
       'phone number': 'phone',
-      'email_1': 'email',
       'email_address': 'email',
       'email address': 'email',
       'website_url': 'website',
       'url': 'website',
       'website url': 'website',
-      'reviews': 'review_count',
       'total_reviews': 'review_count',
       'review count': 'review_count',
       'total reviews': 'review_count',
@@ -285,7 +312,6 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
       'insured': 'insurance_verified',
       'insurance': 'insurance_verified',
       'verified': 'insurance_verified',
-      'street': 'address',
       'address_line_1': 'address',
       'address1': 'address'
     };
@@ -571,15 +597,15 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
         <div className="flex items-start space-x-2">
           <Info className="h-5 w-5 text-blue-600 mt-0.5" />
           <div>
-            <h4 className="font-medium text-blue-900 mb-2">CSV Import Guide:</h4>
+            <h4 className="font-medium text-blue-900 mb-2">CSV Import Guide for Your Format:</h4>
             <p className="text-sm text-blue-800 mb-2">
-              <strong>Required fields:</strong> name, address, city, state, zip_code
+              <strong>Your headers:</strong> name, category, type, phone, street, city, postal_code, state, rating, reviews, photo, about, description, email_1
             </p>
             <p className="text-sm text-blue-800 mb-2">
-              <strong>Optional fields:</strong> phone, email, website, services, rating, review_count, license_number, insurance_verified, latitude, longitude, business_hours, featured
+              <strong>Required fields:</strong> name, city, state (others will use defaults if empty)
             </p>
             <p className="text-sm text-blue-800">
-              <strong>Auto-mapped headers:</strong> business_name→name, postal_code→zip_code, phone_1→phone, email_1→email, reviews→review_count
+              <strong>Notes:</strong> category/type → services, street → address, postal_code → zip_code, reviews → review_count, email_1 → email
             </p>
           </div>
         </div>
