@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -69,11 +70,14 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
     }
 
     const headers = parseCSVLine(lines[0]).map(h => h.trim().toLowerCase().replace(/"/g, ''));
+    console.log('Detected headers:', headers);
+    
     const requiredFields = ['name', 'city', 'state'];
     const mappedHeaders = headers.map(h => mapHeaderToDbColumn(h));
+    console.log('Mapped headers:', mappedHeaders);
     
     const missingRequired = requiredFields.filter(field => 
-      !mappedHeaders.includes(field) && !mappedHeaders.includes(mapHeaderToDbColumn(field))
+      !mappedHeaders.includes(field)
     );
 
     if (missingRequired.length > 0) {
@@ -108,8 +112,9 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
       for (let i = 0; i < dataRows.length; i++) {
         try {
           const values = parseCSVLine(dataRows[i]);
+          console.log(`Row ${i + 2} values:`, values);
           
-          if (values.length === 0 || values.every(v => !v.trim())) {
+          if (values.length === 0 || values.every(v => !v || !v.trim())) {
             console.log(`Skipping empty row ${i + 2}`);
             continue;
           }
@@ -121,25 +126,37 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
             let value = values[index]?.trim().replace(/^"|"$/g, '') || '';
             let dbField = mapHeaderToDbColumn(header);
             
+            console.log(`Mapping ${header} (${dbField}) = "${value}"`);
+            
             if (!validColumns.includes(dbField)) {
+              console.log(`Skipping unknown column: ${dbField}`);
               return; // Skip unknown columns
             }
             
             // Process the value based on the database field type
             switch (dbField) {
               case 'services':
-                // Handle category field as services
+                // Handle both category and type fields as services
                 if (header === 'category' || header === 'type') {
-                  business['services'] = value ? [value] : null;
+                  if (value) {
+                    // If services already exists, append to it, otherwise create new array
+                    if (business['services']) {
+                      business['services'].push(value);
+                    } else {
+                      business['services'] = [value];
+                    }
+                  }
                 } else {
                   business[dbField] = value ? value.split(',').map(s => s.trim()).filter(s => s) : null;
                 }
                 break;
               case 'rating':
-                business[dbField] = value ? Math.min(5, Math.max(0, parseFloat(value) || 0)) : null;
+                const ratingValue = parseFloat(value);
+                business[dbField] = (!isNaN(ratingValue) && ratingValue > 0) ? Math.min(5, Math.max(0, ratingValue)) : null;
                 break;
               case 'review_count':
-                business[dbField] = value ? Math.max(0, parseInt(value) || 0) : 0;
+                const reviewCount = parseInt(value);
+                business[dbField] = (!isNaN(reviewCount) && reviewCount >= 0) ? reviewCount : 0;
                 break;
               case 'insurance_verified':
               case 'featured':
@@ -162,6 +179,8 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
             }
           });
 
+          console.log(`Processed business for row ${i + 2}:`, business);
+
           // Validate required fields
           const requiredFields = ['name', 'city', 'state'];
           const missingFields = requiredFields.filter(field => !business[field] || business[field].trim() === '');
@@ -171,15 +190,9 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
             continue;
           }
 
-          // Set default values if not provided
-          if (!business.address && business.street) {
-            business.address = business.street;
-          }
+          // Set default values for required database fields
           if (!business.address) {
             business.address = 'Address not provided';
-          }
-          if (!business.zip_code && business.postal_code) {
-            business.zip_code = business.postal_code;
           }
           if (!business.zip_code) {
             business.zip_code = '00000';
@@ -188,42 +201,55 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
           // Additional validation
           if (business.email && !isValidEmail(business.email)) {
             errors.push(`Row ${i + 2}: Invalid email format: ${business.email}`);
+            // Don't skip the row, just clear the invalid email
+            business.email = null;
           }
 
           if (business.rating && (business.rating < 0 || business.rating > 5)) {
-            errors.push(`Row ${i + 2}: Rating must be between 0 and 5`);
+            errors.push(`Row ${i + 2}: Rating must be between 0 and 5, got ${business.rating}`);
+            business.rating = null;
           }
 
           businesses.push(business);
         } catch (error) {
+          console.error(`Error processing row ${i + 2}:`, error);
           errors.push(`Row ${i + 2}: ${error instanceof Error ? error.message : 'Parse error'}`);
         }
       }
 
       console.log(`Processed ${businesses.length} valid businesses out of ${dataRows.length} rows`);
+      console.log('Sample business data:', businesses[0]);
 
       if (businesses.length > 0) {
         // Batch insert for better performance
-        const batchSize = 50;
+        const batchSize = 25; // Smaller batch size for better reliability
         let successCount = 0;
 
         for (let i = 0; i < businesses.length; i += batchSize) {
           const batch = businesses.slice(i, i + batchSize);
+          console.log(`Inserting batch ${Math.floor(i / batchSize) + 1} with ${batch.length} businesses`);
           
           try {
-            const { error } = await supabase
+            const { data, error } = await supabase
               .from('businesses')
-              .insert(batch);
+              .insert(batch)
+              .select('id');
 
             if (error) {
               console.error('Batch insert error:', error);
               errors.push(`Batch ${Math.floor(i / batchSize) + 1}: ${error.message}`);
             } else {
               successCount += batch.length;
+              console.log(`Successfully inserted batch ${Math.floor(i / batchSize) + 1}: ${data?.length || batch.length} records`);
             }
           } catch (insertError) {
             console.error('Insert error:', insertError);
             errors.push(`Batch ${Math.floor(i / batchSize) + 1}: ${insertError instanceof Error ? insertError.message : 'Unknown error'}`);
+          }
+
+          // Small delay between batches to prevent overwhelming the database
+          if (i + batchSize < businesses.length) {
+            await new Promise(resolve => setTimeout(resolve, 100));
           }
         }
 
@@ -232,7 +258,7 @@ const BusinessImportForm = ({ singleMode = false }: BusinessImportFormProps) => 
         if (successCount > 0) {
           toast({
             title: "Import completed",
-            description: `Successfully imported ${successCount} businesses${errors.length > 0 ? ` with ${errors.length} errors` : ''}.`,
+            description: `Successfully imported ${successCount} out of ${businesses.length} businesses${errors.length > 0 ? ` with ${errors.length} errors` : ''}.`,
           });
         } else {
           toast({
