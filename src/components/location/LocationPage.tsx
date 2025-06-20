@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -19,18 +20,38 @@ import { Business } from "@/pages/Index";
 const LocationPage = () => {
   const { citySlug } = useParams<{ citySlug: string }>();
   const [cityData, setCityData] = useState<CityData | null>(null);
+  
+  // Extract city slug from URL path if not in params
+  const extractCitySlugFromPath = () => {
+    const path = window.location.pathname;
+    console.log('Current path:', path);
+    
+    // Match patterns like /ac-repair-miami, /ac-repair-stuart, etc.
+    const match = path.match(/\/ac-repair-([a-z-]+)/);
+    if (match) {
+      console.log('Extracted city slug from path:', match[1]);
+      return match[1];
+    }
+    
+    console.log('No city slug found in path');
+    return null;
+  };
 
-  console.log('LocationPage rendered with citySlug:', citySlug);
+  const actualCitySlug = citySlug || extractCitySlugFromPath();
+  console.log('LocationPage rendered with citySlug from params:', citySlug);
+  console.log('Actual city slug being used:', actualCitySlug);
 
   // Get city data
   useEffect(() => {
-    if (citySlug) {
-      console.log('Looking up city data for slug:', citySlug);
-      const data = getCityDataBySlug(citySlug);
+    if (actualCitySlug) {
+      console.log('Looking up city data for slug:', actualCitySlug);
+      const data = getCityDataBySlug(actualCitySlug);
       console.log('Found city data:', data);
       setCityData(data || null);
+    } else {
+      console.log('No city slug available');
     }
-  }, [citySlug]);
+  }, [actualCitySlug]);
 
   // Fetch businesses for this specific city from database
   const { data: databaseBusinesses = [], isLoading, error } = useQuery({
@@ -185,19 +206,38 @@ const LocationPage = () => {
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Loading...</h1>
-          <p className="text-gray-600">Fetching AC repair contractors for {citySlug}...</p>
+          <p className="text-gray-600">Fetching AC repair contractors for {actualCitySlug}...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!actualCitySlug) {
+    console.log('No city slug found in URL');
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Invalid URL</h1>
+          <p className="text-gray-600">Please navigate to a specific city page like /ac-repair-miami</p>
+          <Button 
+            onClick={() => window.location.href = '/'} 
+            className="mt-4"
+          >
+            Return Home
+          </Button>
         </div>
       </div>
     );
   }
 
   if (!cityData) {
-    console.log('No city data found for slug:', citySlug);
+    console.log('No city data found for slug:', actualCitySlug);
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-4">Location Not Found</h1>
-          <p className="text-gray-600">The requested location "{citySlug}" could not be found.</p>
+          <p className="text-gray-600">The requested location "{actualCitySlug}" could not be found.</p>
+          <p className="text-sm text-gray-500 mt-2">Available cities include: Miami, Orlando, Tampa, Jacksonville, Fort Lauderdale, and more.</p>
           <Button 
             onClick={() => window.location.href = '/'} 
             className="mt-4"
