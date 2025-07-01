@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -31,7 +30,7 @@ const Admin = () => {
   const checkAdminRole = async () => {
     try {
       const { data, error } = await supabase
-        .rpc('has_role', { _user_id: user?.id, _role: 'admin' });
+        .rpc('has_role', { check_user_id: user?.id, role_name: 'admin' });
       
       if (error) {
         console.error('Error checking admin role:', error);
