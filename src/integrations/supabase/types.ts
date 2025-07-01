@@ -132,6 +132,78 @@ export type Database = {
         }
         Relationships: []
       }
+      campaigns: {
+        Row: {
+          created_at: string | null
+          end_date: string | null
+          id: string
+          metrics: Json | null
+          name: string
+          start_date: string
+          status: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          end_date?: string | null
+          id?: string
+          metrics?: Json | null
+          name: string
+          start_date: string
+          status?: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          end_date?: string | null
+          id?: string
+          metrics?: Json | null
+          name?: string
+          start_date?: string
+          status?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      content: {
+        Row: {
+          content: string
+          created_at: string | null
+          id: string
+          metrics: Json | null
+          status: string
+          title: string
+          type: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          id?: string
+          metrics?: Json | null
+          status?: string
+          title: string
+          type: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          id?: string
+          metrics?: Json | null
+          status?: string
+          title?: string
+          type?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       conversions: {
         Row: {
           created_at: string | null
@@ -357,6 +429,39 @@ export type Database = {
         }
         Relationships: []
       }
+      posts: {
+        Row: {
+          content: string
+          created_at: string
+          hashtags: string
+          id: string
+          platform: string
+          tone: string
+          topic: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          hashtags: string
+          id?: string
+          platform: string
+          tone: string
+          topic: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          hashtags?: string
+          id?: string
+          platform?: string
+          tone?: string
+          topic?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -380,6 +485,80 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      projects: {
+        Row: {
+          competitors: string[] | null
+          created_at: string | null
+          id: string
+          keywords: string[] | null
+          name: string
+          niche: string
+          url: string | null
+          user_id: string
+        }
+        Insert: {
+          competitors?: string[] | null
+          created_at?: string | null
+          id?: string
+          keywords?: string[] | null
+          name: string
+          niche: string
+          url?: string | null
+          user_id: string
+        }
+        Update: {
+          competitors?: string[] | null
+          created_at?: string | null
+          id?: string
+          keywords?: string[] | null
+          name?: string
+          niche?: string
+          url?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      render_jobs: {
+        Row: {
+          created_at: string
+          error_message: string | null
+          id: string
+          output_url: string | null
+          progress_percentage: number | null
+          project_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          output_url?: string | null
+          progress_percentage?: number | null
+          project_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          output_url?: string | null
+          progress_percentage?: number | null
+          project_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "render_jobs_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "video_projects"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       reviews: {
         Row: {
@@ -424,6 +603,126 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      stripe_customers: {
+        Row: {
+          created_at: string | null
+          customer_id: string
+          deleted_at: string | null
+          id: number
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          customer_id: string
+          deleted_at?: string | null
+          id?: never
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          customer_id?: string
+          deleted_at?: string | null
+          id?: never
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      stripe_orders: {
+        Row: {
+          amount_subtotal: number
+          amount_total: number
+          checkout_session_id: string
+          created_at: string | null
+          currency: string
+          customer_id: string
+          deleted_at: string | null
+          id: number
+          payment_intent_id: string
+          payment_status: string
+          status: Database["public"]["Enums"]["stripe_order_status"]
+          updated_at: string | null
+        }
+        Insert: {
+          amount_subtotal: number
+          amount_total: number
+          checkout_session_id: string
+          created_at?: string | null
+          currency: string
+          customer_id: string
+          deleted_at?: string | null
+          id?: never
+          payment_intent_id: string
+          payment_status: string
+          status?: Database["public"]["Enums"]["stripe_order_status"]
+          updated_at?: string | null
+        }
+        Update: {
+          amount_subtotal?: number
+          amount_total?: number
+          checkout_session_id?: string
+          created_at?: string | null
+          currency?: string
+          customer_id?: string
+          deleted_at?: string | null
+          id?: never
+          payment_intent_id?: string
+          payment_status?: string
+          status?: Database["public"]["Enums"]["stripe_order_status"]
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      stripe_subscriptions: {
+        Row: {
+          cancel_at_period_end: boolean | null
+          created_at: string | null
+          current_period_end: number | null
+          current_period_start: number | null
+          customer_id: string
+          deleted_at: string | null
+          id: number
+          payment_method_brand: string | null
+          payment_method_last4: string | null
+          price_id: string | null
+          status: Database["public"]["Enums"]["stripe_subscription_status"]
+          subscription_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          cancel_at_period_end?: boolean | null
+          created_at?: string | null
+          current_period_end?: number | null
+          current_period_start?: number | null
+          customer_id: string
+          deleted_at?: string | null
+          id?: never
+          payment_method_brand?: string | null
+          payment_method_last4?: string | null
+          price_id?: string | null
+          status: Database["public"]["Enums"]["stripe_subscription_status"]
+          subscription_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          cancel_at_period_end?: boolean | null
+          created_at?: string | null
+          current_period_end?: number | null
+          current_period_start?: number | null
+          customer_id?: string
+          deleted_at?: string | null
+          id?: never
+          payment_method_brand?: string | null
+          payment_method_last4?: string | null
+          price_id?: string | null
+          status?: Database["public"]["Enums"]["stripe_subscription_status"]
+          subscription_id?: string | null
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       subscribers: {
         Row: {
@@ -485,6 +784,48 @@ export type Database = {
           last_used?: string | null
           tool_name?: string
           usage_count?: number | null
+        }
+        Relationships: []
+      }
+      user_assets: {
+        Row: {
+          asset_type: string
+          bucket_name: string
+          created_at: string
+          file_name: string
+          file_path: string
+          file_size: number
+          file_type: string
+          id: string
+          metadata: Json | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          asset_type: string
+          bucket_name: string
+          created_at?: string
+          file_name: string
+          file_path: string
+          file_size: number
+          file_type: string
+          id?: string
+          metadata?: Json | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          asset_type?: string
+          bucket_name?: string
+          created_at?: string
+          file_name?: string
+          file_path?: string
+          file_size?: number
+          file_type?: string
+          id?: string
+          metadata?: Json | null
+          updated_at?: string
+          user_id?: string
         }
         Relationships: []
       }
@@ -610,21 +951,156 @@ export type Database = {
         }
         Relationships: []
       }
+      video_projects: {
+        Row: {
+          concept: string
+          created_at: string
+          id: string
+          script: string | null
+          status: string
+          title: string
+          tone: string
+          updated_at: string
+          user_id: string
+          video_length: number
+        }
+        Insert: {
+          concept: string
+          created_at?: string
+          id?: string
+          script?: string | null
+          status?: string
+          title: string
+          tone: string
+          updated_at?: string
+          user_id: string
+          video_length: number
+        }
+        Update: {
+          concept?: string
+          created_at?: string
+          id?: string
+          script?: string | null
+          status?: string
+          title?: string
+          tone?: string
+          updated_at?: string
+          user_id?: string
+          video_length?: number
+        }
+        Relationships: []
+      }
+      video_scenes: {
+        Row: {
+          background_music_url: string | null
+          created_at: string
+          duration_seconds: number | null
+          id: string
+          project_id: string
+          scene_number: number
+          scene_type: string
+          script_content: string
+          title: string
+          updated_at: string
+          visual_description: string
+          voiceover_url: string | null
+        }
+        Insert: {
+          background_music_url?: string | null
+          created_at?: string
+          duration_seconds?: number | null
+          id?: string
+          project_id: string
+          scene_number: number
+          scene_type?: string
+          script_content: string
+          title: string
+          updated_at?: string
+          visual_description: string
+          voiceover_url?: string | null
+        }
+        Update: {
+          background_music_url?: string | null
+          created_at?: string
+          duration_seconds?: number | null
+          id?: string
+          project_id?: string
+          scene_number?: number
+          scene_type?: string
+          script_content?: string
+          title?: string
+          updated_at?: string
+          visual_description?: string
+          voiceover_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "video_scenes_project_id_fkey"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "video_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
-      [_ in never]: never
+      stripe_user_orders: {
+        Row: {
+          amount_subtotal: number | null
+          amount_total: number | null
+          checkout_session_id: string | null
+          currency: string | null
+          customer_id: string | null
+          order_date: string | null
+          order_id: number | null
+          order_status:
+            | Database["public"]["Enums"]["stripe_order_status"]
+            | null
+          payment_intent_id: string | null
+          payment_status: string | null
+        }
+        Relationships: []
+      }
+      stripe_user_subscriptions: {
+        Row: {
+          cancel_at_period_end: boolean | null
+          current_period_end: number | null
+          current_period_start: number | null
+          customer_id: string | null
+          payment_method_brand: string | null
+          payment_method_last4: string | null
+          price_id: string | null
+          subscription_id: string | null
+          subscription_status:
+            | Database["public"]["Enums"]["stripe_subscription_status"]
+            | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       has_role: {
         Args: {
-          _user_id: string
-          _role: Database["public"]["Enums"]["app_role"]
+          check_user_id: string
+          role_name: Database["public"]["Enums"]["app_role"]
         }
         Returns: boolean
       }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
+      stripe_order_status: "pending" | "completed" | "canceled"
+      stripe_subscription_status:
+        | "not_started"
+        | "incomplete"
+        | "incomplete_expired"
+        | "trialing"
+        | "active"
+        | "past_due"
+        | "canceled"
+        | "unpaid"
+        | "paused"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -741,6 +1217,18 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "moderator", "user"],
+      stripe_order_status: ["pending", "completed", "canceled"],
+      stripe_subscription_status: [
+        "not_started",
+        "incomplete",
+        "incomplete_expired",
+        "trialing",
+        "active",
+        "past_due",
+        "canceled",
+        "unpaid",
+        "paused",
+      ],
     },
   },
 } as const

@@ -2,18 +2,17 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { MapPin, Star, Shield, Clock, Phone, CheckCircle, Calendar, Users, Award } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import BusinessCard from "@/components/BusinessCard";
-import QuoteRequestCTA from "@/components/QuoteRequestCTA";
-import TrustBadges from "@/components/TrustBadges";
 import Footer from "@/components/Footer";
 import LocationLinks from "./LocationLinks";
+import LocationHero from "./LocationHero";
+import BusinessListings from "./BusinessListings";
+import DataComingSoon from "./DataComingSoon";
+import LocationContent from "./LocationContent";
+import QuoteRequestCTA from "@/components/QuoteRequestCTA";
 import { getCityDataBySlug, CityData } from "@/data/cities";
-import { getBusinessesByCity, SampleBusiness } from "@/data/sampleBusinesses";
+import { getBusinessesByCity } from "@/data/sampleBusinesses";
 import { updatePageSEO } from "@/utils/seoUtils";
 import { Business } from "@/pages/Index";
 
@@ -283,351 +282,23 @@ const LocationPage = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Location-specific Hero Section */}
-      <section className="relative bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 text-white py-12 sm:py-16 md:py-20">
-        <div 
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{
-            backgroundImage: "url('https://images.unsplash.com/photo-1621905251189-08b45d6a269e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2069&q=80')"
-          }}
-        ></div>
-        <div className="absolute inset-0 bg-black opacity-60"></div>
-        
-        <div className="relative container mx-auto px-4 sm:px-6 max-w-7xl">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-            <div className="text-center lg:text-left">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 leading-tight">
-                AC Repair {cityData.name} FL
-                <span className="block text-blue-200 text-2xl sm:text-3xl md:text-4xl lg:text-5xl mt-2">
-                  Licensed • Fast • Trusted
-                </span>
-              </h1>
-              <p className="text-base sm:text-lg md:text-xl lg:text-2xl mb-6 sm:mb-8 text-blue-100 leading-relaxed">
-                {cityData.description} Find verified HVAC contractors in {cityData.name}, {cityData.county} 
-                with 24/7 emergency service available. Get free quotes today!
-              </p>
-              
-              <div className="flex justify-center lg:justify-start">
-                <TrustBadges variant="horizontal" showStats={true} />
-              </div>
-              
-              {/* Location Stats */}
-              <div className="mt-8 sm:mt-12 grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8">
-                <div className="text-center bg-white/10 backdrop-blur-sm rounded-lg p-4 sm:p-6">
-                  <div className="text-2xl sm:text-3xl font-bold text-blue-200">{businesses.length}</div>
-                  <div className="text-sm sm:text-base text-blue-100">Local Contractors</div>
-                </div>
-                <div className="text-center bg-white/10 backdrop-blur-sm rounded-lg p-4 sm:p-6">
-                  <div className="text-2xl sm:text-3xl font-bold text-blue-200">
-                    {businesses.length > 0 
-                      ? (businesses.reduce((sum, b) => sum + (b.rating || 0), 0) / businesses.length).toFixed(1)
-                      : "4.8"
-                    }★
-                  </div>
-                  <div className="text-sm sm:text-base text-blue-100">Average Rating</div>
-                </div>
-                <div className="text-center bg-white/10 backdrop-blur-sm rounded-lg p-4 sm:p-6">
-                  <div className="text-2xl sm:text-3xl font-bold text-blue-200">24/7</div>
-                  <div className="text-sm sm:text-base text-blue-100">Emergency Service</div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="flex justify-center lg:justify-end">
-              <QuoteRequestCTA variant="hero" className="max-w-md w-full" />
-            </div>
-          </div>
-        </div>
-      </section>
+      <LocationHero cityData={cityData} businesses={businesses} />
 
       {/* Main Content */}
       <div className="container mx-auto px-4 py-8">
-        {/* Business Listings or Data Coming Soon */}
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold text-gray-900">
-              Top-Rated AC Repair Contractors in {cityData.name}
-            </h2>
-          </div>
-          
-          {businesses.length > 0 ? (
-            <>
-              {/* Sample Data Notice */}
-              {databaseBusinesses.length === 0 && sampleBusinesses.length > 0 && (
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-start space-x-3 mb-8">
-                  <div className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0">ℹ️</div>
-                  <div>
-                    <p className="text-blue-800 font-medium">Sample Listings</p>
-                    <p className="text-blue-700 text-sm">
-                      These are example contractors to show you the types of services available in {cityData.name}. 
-                      We're actively adding real contractor listings for your area.
-                    </p>
-                  </div>
-                </div>
-              )}
-              
-              <div className="grid gap-6">
-                {businesses.map((business) => (
-                  <BusinessCard 
-                    key={business.id} 
-                    business={{
-                      ...business,
-                      reviewCount: business.review_count,
-                      services: business.services || [],
-                      verified: business.insurance_verified
-                    }} 
-                  />
-                ))}
-              </div>
-            </>
-          ) : (
-            /* Data Coming Soon Section */
-            <div className="space-y-8">
-              <Card className="p-8 text-center bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200">
-                <Calendar className="w-16 h-16 text-blue-600 mx-auto mb-4" />
-                <h3 className="text-2xl font-bold text-blue-900 mb-4">
-                  Data Coming Soon for {cityData.name}
-                </h3>
-                <p className="text-blue-700 text-lg mb-6">
-                  We're actively building our directory of verified AC repair contractors in {cityData.name}, {cityData.county}. 
-                  In the meantime, you can request quotes from our network of trusted professionals.
-                </p>
-                <QuoteRequestCTA variant="inline" />
-              </Card>
+        {businesses.length > 0 ? (
+          <BusinessListings 
+            businesses={businesses}
+            cityName={cityData.name}
+            databaseBusinesses={databaseBusinesses}
+            sampleBusinesses={sampleBusinesses}
+          />
+        ) : (
+          <DataComingSoon cityData={cityData} />
+        )}
 
-              {/* Service Information from Index Page */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <Card className="p-6">
-                  <Shield className="w-10 h-10 text-blue-600 mb-4" />
-                  <h4 className="text-lg font-semibold mb-2">Licensed & Insured</h4>
-                  <p className="text-gray-600 text-sm">
-                    All contractors in our network are properly licensed and insured to work in {cityData.county}, Florida.
-                  </p>
-                </Card>
-                
-                <Card className="p-6">
-                  <Clock className="w-10 h-10 text-green-600 mb-4" />
-                  <h4 className="text-lg font-semibold mb-2">24/7 Emergency Service</h4>
-                  <p className="text-gray-600 text-sm">
-                    Get emergency AC repair service any time of day or night in {cityData.name} and surrounding areas.
-                  </p>
-                </Card>
-                
-                <Card className="p-6">
-                  <Users className="w-10 h-10 text-purple-600 mb-4" />
-                  <h4 className="text-lg font-semibold mb-2">Trusted by Thousands</h4>
-                  <p className="text-gray-600 text-sm">
-                    Over 50,000+ Florida residents have found reliable HVAC contractors through our platform.
-                  </p>
-                </Card>
-                
-                <Card className="p-6">
-                  <Award className="w-10 h-10 text-yellow-600 mb-4" />
-                  <h4 className="text-lg font-semibold mb-2">Top-Rated Service</h4>
-                  <p className="text-gray-600 text-sm">
-                    Our contractors maintain an average 4.8-star rating with verified customer reviews.
-                  </p>
-                </Card>
-                
-                <Card className="p-6">
-                  <Phone className="w-10 h-10 text-red-600 mb-4" />
-                  <h4 className="text-lg font-semibold mb-2">Free Quotes</h4>
-                  <p className="text-gray-600 text-sm">
-                    Get multiple free quotes from qualified AC repair professionals in {cityData.name}.
-                  </p>
-                </Card>
-                
-                <Card className="p-6">
-                  <CheckCircle className="w-10 h-10 text-indigo-600 mb-4" />
-                  <h4 className="text-lg font-semibold mb-2">Same-Day Service</h4>
-                  <p className="text-gray-600 text-sm">
-                    Most AC repairs can be completed the same day with our network of local contractors.
-                  </p>
-                </Card>
-              </div>
-
-              {/* Why Choose Our Network */}
-              <Card className="p-8 bg-gray-50">
-                <h3 className="text-2xl font-bold mb-6 text-center">
-                  Why Choose Our AC Repair Network in {cityData.name}?
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <h4 className="font-semibold text-lg mb-3">✓ Local Expertise</h4>
-                    <p className="text-gray-600 mb-4">
-                      Our contractors understand {cityData.name}'s unique climate challenges and building requirements.
-                    </p>
-                    
-                    <h4 className="font-semibold text-lg mb-3">✓ Verified Reviews</h4>
-                    <p className="text-gray-600 mb-4">
-                      All reviews are verified from real customers who have used our contractor services.
-                    </p>
-                  </div>
-                  <div>
-                    <h4 className="font-semibold text-lg mb-3">✓ Competitive Pricing</h4>
-                    <p className="text-gray-600 mb-4">
-                      Compare quotes from multiple contractors to ensure you get the best price for quality work.
-                    </p>
-                    
-                    <h4 className="font-semibold text-lg mb-3">✓ Quality Guarantee</h4>
-                    <p className="text-gray-600 mb-4">
-                      All work is backed by our service guarantee and contractor warranties.
-                    </p>
-                  </div>
-                </div>
-              </Card>
-            </div>
-          )}
-        </div>
-
-        {/* Enhanced Location-specific content sections */}
-        <div className="mt-16 space-y-12">
-          {/* Climate and AC Considerations for this city */}
-          <section className="bg-gradient-to-r from-orange-50 to-red-50 rounded-lg p-8">
-            <h3 className="text-2xl font-bold mb-6 text-center">
-              AC Repair Considerations for {cityData.name} Climate
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
-                <h4 className="font-semibold text-lg mb-3 text-orange-800">Local Weather Challenges</h4>
-                <ul className="space-y-2 text-gray-700">
-                  <li>• High humidity levels stress AC systems year-round</li>
-                  <li>• Salt air exposure in coastal areas accelerates corrosion</li>
-                  <li>• Frequent thunderstorms can cause power surge damage</li>
-                  <li>• Hurricane season requires system weatherproofing</li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="font-semibold text-lg mb-3 text-orange-800">Maintenance Recommendations</h4>
-                <ul className="space-y-2 text-gray-700">
-                  <li>• Change filters monthly during peak season</li>
-                  <li>• Annual coil cleaning to prevent efficiency loss</li>
-                  <li>• Surge protector installation recommended</li>
-                  <li>• Bi-annual professional inspections advised</li>
-                </ul>
-              </div>
-            </div>
-          </section>
-
-          {/* Why Choose Our Contractors */}
-          <section className="bg-gray-50 rounded-lg p-8">
-            <h3 className="text-2xl font-bold mb-6 text-center">
-              Why Choose Our {cityData.name} AC Repair Contractors?
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              <div className="bg-white rounded-lg p-6 shadow-sm">
-                <Shield className="w-8 h-8 text-blue-500 mb-3" />
-                <h4 className="font-semibold mb-2">Licensed & Insured in {cityData.county}</h4>
-                <p className="text-sm text-gray-600">All contractors are properly licensed and insured to work in {cityData.name} and throughout {cityData.county}.</p>
-              </div>
-              <div className="bg-white rounded-lg p-6 shadow-sm">
-                <Clock className="w-8 h-8 text-green-500 mb-3" />
-                <h4 className="font-semibold mb-2">24/7 Emergency Service</h4>
-                <p className="text-sm text-gray-600">Emergency AC repair available around the clock for {cityData.name} residents and businesses.</p>
-              </div>
-              <div className="bg-white rounded-lg p-6 shadow-sm">
-                <Star className="w-8 h-8 text-yellow-500 mb-3" />
-                <h4 className="font-semibold mb-2">Top-Rated Local Experts</h4>
-                <p className="text-sm text-gray-600">Verified customer reviews from {cityData.name} residents ensure quality service.</p>
-              </div>
-              <div className="bg-white rounded-lg p-6 shadow-sm">
-                <CheckCircle className="w-8 h-8 text-purple-500 mb-3" />
-                <h4 className="font-semibold mb-2">Same-Day Service Available</h4>
-                <p className="text-sm text-gray-600">Most repairs completed the same day with fully stocked service vehicles.</p>
-              </div>
-              <div className="bg-white rounded-lg p-6 shadow-sm">
-                <Phone className="w-8 h-8 text-red-500 mb-3" />
-                <h4 className="font-semibold mb-2">Local Response Team</h4>
-                <p className="text-sm text-gray-600">Contractors based in {cityData.name} area for faster response times.</p>
-              </div>
-              <div className="bg-white rounded-lg p-6 shadow-sm">
-                <MapPin className="w-8 h-8 text-indigo-500 mb-3" />
-                <h4 className="font-semibold mb-2">Service Area Coverage</h4>
-                <p className="text-sm text-gray-600">Complete coverage of {cityData.name} and surrounding {cityData.county} areas.</p>
-              </div>
-            </div>
-          </section>
-
-          {/* Local AC Repair FAQ */}
-          <section>
-            <h3 className="text-2xl font-bold mb-6">
-              {cityData.name} AC Repair - Frequently Asked Questions
-            </h3>
-            <div className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">How quickly can I get AC repair service in {cityData.name}?</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600">
-                    Most of our {cityData.name} contractors offer same-day service and emergency repairs. During peak summer months in Florida, response times may vary, but emergency services are typically available within 2-4 hours. Our local contractors maintain service vehicles in {cityData.name} to ensure rapid response.
-                  </p>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">What's the average cost of AC repair in {cityData.name}?</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600">
-                    AC repair costs in {cityData.name} typically range from $150-$800 depending on the issue. Common repairs like capacitor replacement cost $150-$400, while compressor issues may cost $800-$2,500. {cityData.county} rates are competitive with state averages. Get free quotes to compare prices from local contractors.
-                  </p>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Do {cityData.name} AC contractors service all brands?</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600">
-                    Yes, our network of {cityData.name} HVAC professionals service all major AC brands including Trane, Carrier, Lennox, Goodman, Rheem, York, American Standard, and more. They carry parts for most residential and commercial systems and can source specialized parts for older units.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">What permits are needed for AC work in {cityData.name}?</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600">
-                    In {cityData.name}, {cityData.county}, permits are required for new AC installations, major system replacements, and significant ductwork modifications. Minor repairs typically don't require permits. All our contractors are familiar with local permitting requirements and will handle necessary paperwork for you.
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-          </section>
-
-          <section className="bg-green-50 rounded-lg p-8">
-            <h3 className="text-2xl font-bold mb-6 text-center">
-              {cityData.name} Energy Efficiency Resources
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
-                <h4 className="font-semibold text-lg mb-3 text-green-800">Available Rebates & Incentives</h4>
-                <ul className="space-y-2 text-gray-700">
-                  <li>• Florida Power & Light (FPL) AC rebates up to $1,600</li>
-                  <li>• Federal tax credits for high-efficiency systems</li>
-                  <li>• {cityData.county} energy efficiency programs</li>
-                  <li>• Manufacturer rebates on select HVAC brands</li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="font-semibold text-lg mb-3 text-green-800">Energy Saving Tips</h4>
-                <ul className="space-y-2 text-gray-700">
-                  <li>• Set thermostat to 78°F when home</li>
-                  <li>• Use ceiling fans to feel 4°F cooler</li>
-                  <li>• Seal air leaks around windows and doors</li>
-                  <li>• Install programmable or smart thermostats</li>
-                </ul>
-              </div>
-            </div>
-          </section>
-
-          <LocationLinks currentCity={cityData.name} />
-        </div>
+        <LocationContent cityData={cityData} />
+        <LocationLinks currentCity={cityData.name} />
 
         <div className="mt-16">
           <QuoteRequestCTA variant="inline" className="max-w-4xl mx-auto" />
