@@ -1,5 +1,5 @@
 
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -11,54 +11,32 @@ import BusinessListings from "./BusinessListings";
 import DataComingSoon from "./DataComingSoon";
 import LocationContent from "./LocationContent";
 import QuoteRequestCTA from "@/components/QuoteRequestCTA";
-import { getCityDataBySlug, CityData } from "@/data/cities";
+import { getCityDataBySlug } from "@/data/cities";
 import { getBusinessesByCity } from "@/data/sampleBusinesses";
 import { updatePageSEO } from "@/utils/seoUtils";
-import { Business } from "@/pages/Index";
 
 const LocationPage = () => {
   const { citySlug } = useParams<{ citySlug: string }>();
   const location = useLocation();
   
-  // Memoize the city slug extraction with proper dependencies
-  const actualCitySlug = useMemo(() => {
-    if (citySlug) {
-      console.log('Using citySlug from params:', citySlug);
-      return citySlug;
-    }
-    
-    // Extract city slug from URL path if not in params
+  // Extract city slug - simplified without memoization
+  let actualCitySlug = citySlug;
+  if (!actualCitySlug) {
     const path = location.pathname;
-    console.log('Current path:', path);
-    
-    // Match patterns like /ac-repair-miami, /ac-repair-stuart, etc.
     const match = path.match(/\/ac-repair-([a-z-]+)/);
     if (match) {
-      console.log('Extracted city slug from path:', match[1]);
-      return match[1];
+      actualCitySlug = match[1];
     }
-    
-    console.log('No city slug found in path');
-    return null;
-  }, [citySlug, location.pathname]);
+  }
 
   console.log('LocationPage rendered with actualCitySlug:', actualCitySlug);
 
-  // Get city data directly from memoized city slug
-  const cityData = useMemo(() => {
-    if (actualCitySlug) {
-      console.log('Looking up city data for slug:', actualCitySlug);
-      const data = getCityDataBySlug(actualCitySlug);
-      console.log('Found city data:', data);
-      return data || null;
-    }
-    console.log('No city slug available');
-    return null;
-  }, [actualCitySlug]);
+  // Get city data directly - simplified
+  const cityData = actualCitySlug ? getCityDataBySlug(actualCitySlug) : null;
 
   // Fetch businesses for this specific city from database with flexible matching
   const { data: databaseBusinesses = [], isLoading, error } = useQuery({
-    queryKey: ['location-businesses', cityData?.name],
+    queryKey: ['location-businesses', cityData?.name || ''],
     queryFn: async () => {
       if (!cityData?.name) {
         console.log('No city data available for business query');
@@ -138,39 +116,35 @@ const LocationPage = () => {
     gcTime: 10 * 60 * 1000, // 10 minutes
   });
 
-  // Memoize sample businesses to prevent unnecessary recalculation
-  const sampleBusinesses = useMemo(() => {
-    return cityData ? getBusinessesByCity(cityData.name) : [];
-  }, [cityData?.name]);
+  // Get sample businesses - simplified
+  const sampleBusinesses = cityData ? getBusinessesByCity(cityData.name) : [];
 
   console.log('Sample businesses found:', sampleBusinesses.length);
   
-  // Convert sample businesses to the format expected by BusinessCard - memoize this too
-  const convertedSampleBusinesses = useMemo(() => {
-    return sampleBusinesses.map((business, index) => ({
-      id: 1000 + index, // Use high numbers to avoid conflicts with real business IDs
-      name: business.name,
-      description: business.description,
-      phone: business.phone,
-      email: business.email,
-      website: business.website,
-      address: business.address,
-      city: business.city,
-      state: business.state,
-      zip_code: business.zip_code,
-      services: business.services,
-      rating: business.rating,
-      review_count: business.review_count,
-      featured: business.featured,
-      insurance_verified: business.insurance_verified,
-      license_number: business.license_number,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      latitude: null,
-      longitude: null,
-      business_hours: business.business_hours
-    }));
-  }, [sampleBusinesses]);
+  // Convert sample businesses to the format expected by BusinessCard
+  const convertedSampleBusinesses = sampleBusinesses.map((business, index) => ({
+    id: 1000 + index, // Use high numbers to avoid conflicts with real business IDs
+    name: business.name,
+    description: business.description,
+    phone: business.phone,
+    email: business.email,
+    website: business.website,
+    address: business.address,
+    city: business.city,
+    state: business.state,
+    zip_code: business.zip_code,
+    services: business.services,
+    rating: business.rating,
+    review_count: business.review_count,
+    featured: business.featured,
+    insurance_verified: business.insurance_verified,
+    license_number: business.license_number,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    latitude: null,
+    longitude: null,
+    business_hours: business.business_hours
+  }));
 
   // Use database businesses if available, otherwise use sample businesses
   const businesses = databaseBusinesses.length > 0 ? databaseBusinesses : convertedSampleBusinesses;
@@ -239,7 +213,7 @@ const LocationPage = () => {
 
       updatePageSEO(title, description, keywords, title, description, structuredData);
     }
-  }, [cityData]);
+  }, [cityData?.name]); // Only depend on city name, not the entire cityData object
 
   if (isLoading) {
     return (
