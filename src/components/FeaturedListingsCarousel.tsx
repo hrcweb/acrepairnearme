@@ -27,7 +27,7 @@ interface Business {
   featured: boolean;
 }
 
-// Sample featured businesses
+// Sample featured businesses - ONLY HVAC/AC contractors
 const sampleBusinesses: Business[] = [
   {
     id: 1,
@@ -106,32 +106,6 @@ const sampleBusinesses: Business[] = [
     rating: 4.8,
     review_count: 134,
     featured: true
-  },
-  {
-    id: 7,
-    name: "Elite Climate Solutions",
-    description: "Premium HVAC services with satisfaction guarantee",
-    phone: "(727) 555-0246",
-    address: "8642 Gulf Dr",
-    city: "St. Petersburg",
-    state: "FL",
-    services: ["Premium Service", "Installation", "Warranty"],
-    rating: 4.9,
-    review_count: 167,
-    featured: true
-  },
-  {
-    id: 8,
-    name: "Reliable Air Pro",
-    description: "Fast, affordable AC repair and maintenance services",
-    phone: "(352) 555-0135",
-    address: "7531 University Ave",
-    city: "Gainesville",
-    state: "FL",
-    services: ["Quick Repair", "Affordable Service", "Maintenance"],
-    rating: 4.7,
-    review_count: 92,
-    featured: true
   }
 ];
 
@@ -151,12 +125,35 @@ const FeaturedListingsCarousel = () => {
         return sampleBusinesses;
       }
       
-      // If no businesses in database, use sample data
-      return data && data.length > 0 ? data as Business[] : sampleBusinesses;
+      // Filter out any non-HVAC businesses from database results
+      const hvacBusinesses = data?.filter(business => {
+        const businessName = business.name.toLowerCase();
+        const businessDescription = business.description?.toLowerCase() || '';
+        const businessServices = business.services || [];
+        
+        // Check if it's HVAC/AC related
+        const hvacKeywords = ['hvac', 'ac', 'air conditioning', 'heating', 'cooling', 'climate', 'refrigeration'];
+        const isHvacBusiness = hvacKeywords.some(keyword => 
+          businessName.includes(keyword) || 
+          businessDescription.includes(keyword) ||
+          businessServices.some((service: string) => service.toLowerCase().includes(keyword))
+        );
+        
+        // Exclude jewelry and other non-HVAC businesses
+        const nonHvacKeywords = ['jewelry', 'appraisal', 'diamond', 'gold', 'silver', 'watch', 'ring'];
+        const isNonHvacBusiness = nonHvacKeywords.some(keyword => 
+          businessName.includes(keyword) || 
+          businessDescription.includes(keyword)
+        );
+        
+        return isHvacBusiness && !isNonHvacBusiness;
+      }) || [];
+      
+      // If no HVAC businesses in database, use sample data
+      return hvacBusinesses.length > 0 ? hvacBusinesses as Business[] : sampleBusinesses;
     },
   });
 
-  // Verified AC/HVAC related images from Unsplash
   const acImages = [
     "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400&h=250&fit=crop", // AC unit installation
     "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=250&fit=crop", // HVAC equipment
