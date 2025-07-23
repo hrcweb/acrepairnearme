@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -19,7 +19,6 @@ import { Business } from "@/pages/Index";
 const LocationPage = () => {
   const { citySlug } = useParams<{ citySlug: string }>();
   const location = useLocation();
-  const [cityData, setCityData] = useState<CityData | null>(null);
   
   // Memoize the city slug extraction with proper dependencies
   const actualCitySlug = useMemo(() => {
@@ -45,8 +44,8 @@ const LocationPage = () => {
 
   console.log('LocationPage rendered with actualCitySlug:', actualCitySlug);
 
-  // Get city data - memoize to prevent unnecessary recalculation
-  const cityDataMemo = useMemo(() => {
+  // Get city data directly from memoized city slug
+  const cityData = useMemo(() => {
     if (actualCitySlug) {
       console.log('Looking up city data for slug:', actualCitySlug);
       const data = getCityDataBySlug(actualCitySlug);
@@ -57,14 +56,10 @@ const LocationPage = () => {
     return null;
   }, [actualCitySlug]);
 
-  // Update cityData state only when cityDataMemo changes
-  useEffect(() => {
-    setCityData(cityDataMemo);
-  }, [cityDataMemo]);
-
-  // Memoize the query function to prevent re-renders
-  const queryFn = useMemo(() => {
-    return async () => {
+  // Fetch businesses for this specific city from database with flexible matching
+  const { data: databaseBusinesses = [], isLoading, error } = useQuery({
+    queryKey: ['location-businesses', cityData?.name],
+    queryFn: async () => {
       if (!cityData?.name) {
         console.log('No city data available for business query');
         return [];
@@ -137,13 +132,7 @@ const LocationPage = () => {
         longitude: business.longitude,
         business_hours: business.business_hours
       })) || [];
-    };
-  }, [cityData?.name]);
-
-  // Fetch businesses for this specific city from database with flexible matching
-  const { data: databaseBusinesses = [], isLoading, error } = useQuery({
-    queryKey: ['location-businesses', cityData?.name],
-    queryFn,
+    },
     enabled: !!cityData?.name,
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
