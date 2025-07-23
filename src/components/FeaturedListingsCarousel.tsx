@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Carousel,
@@ -15,12 +15,12 @@ import FeaturedBusinessCard from "@/components/carousel/FeaturedBusinessCard";
 const FeaturedListingsCarousel = () => {
   const { data: featuredBusinesses, isLoading } = useFeaturedBusinesses();
 
-  const scrollToLocationSelector = () => {
+  const scrollToLocationSelector = useCallback(() => {
     const element = document.getElementById('location-selector');
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
-  };
+  }, []);
 
   if (isLoading) {
     return (
