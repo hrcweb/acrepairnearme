@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, useMemo } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -18,9 +18,10 @@ import { Business } from "@/pages/Index";
 
 const LocationPage = () => {
   const { citySlug } = useParams<{ citySlug: string }>();
+  const location = useLocation();
   const [cityData, setCityData] = useState<CityData | null>(null);
   
-  // Memoize the city slug extraction to prevent infinite re-renders
+  // Memoize the city slug extraction with proper dependencies
   const actualCitySlug = useMemo(() => {
     if (citySlug) {
       console.log('Using citySlug from params:', citySlug);
@@ -28,7 +29,7 @@ const LocationPage = () => {
     }
     
     // Extract city slug from URL path if not in params
-    const path = window.location.pathname;
+    const path = location.pathname;
     console.log('Current path:', path);
     
     // Match patterns like /ac-repair-miami, /ac-repair-stuart, etc.
@@ -40,7 +41,7 @@ const LocationPage = () => {
     
     console.log('No city slug found in path');
     return null;
-  }, [citySlug]);
+  }, [citySlug, location.pathname]);
 
   console.log('LocationPage rendered with actualCitySlug:', actualCitySlug);
 
@@ -61,10 +62,9 @@ const LocationPage = () => {
     setCityData(cityDataMemo);
   }, [cityDataMemo]);
 
-  // Fetch businesses for this specific city from database with flexible matching
-  const { data: databaseBusinesses = [], isLoading, error } = useQuery({
-    queryKey: ['location-businesses', cityData?.name],
-    queryFn: async () => {
+  // Memoize the query function to prevent re-renders
+  const queryFn = useMemo(() => {
+    return async () => {
       if (!cityData?.name) {
         console.log('No city data available for business query');
         return [];
@@ -137,14 +137,22 @@ const LocationPage = () => {
         longitude: business.longitude,
         business_hours: business.business_hours
       })) || [];
-    },
-    enabled: !!cityData?.name
+    };
+  }, [cityData?.name]);
+
+  // Fetch businesses for this specific city from database with flexible matching
+  const { data: databaseBusinesses = [], isLoading, error } = useQuery({
+    queryKey: ['location-businesses', cityData?.name],
+    queryFn,
+    enabled: !!cityData?.name,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 
   // Memoize sample businesses to prevent unnecessary recalculation
   const sampleBusinesses = useMemo(() => {
     return cityData ? getBusinessesByCity(cityData.name) : [];
-  }, [cityData]);
+  }, [cityData?.name]);
 
   console.log('Sample businesses found:', sampleBusinesses.length);
   
