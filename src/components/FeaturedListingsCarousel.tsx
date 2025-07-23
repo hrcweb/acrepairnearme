@@ -1,9 +1,11 @@
+
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Star, MapPin, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
+import { useCallback, useMemo } from "react";
 import {
   Carousel,
   CarouselContent,
@@ -154,7 +156,8 @@ const FeaturedListingsCarousel = () => {
     },
   });
 
-  const acImages = [
+  // Memoize the AC images array to prevent recreation on every render
+  const acImages = useMemo(() => [
     "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400&h=250&fit=crop", // AC unit installation
     "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=250&fit=crop", // HVAC equipment
     "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=400&h=250&fit=crop", // Indoor AC unit
@@ -167,19 +170,21 @@ const FeaturedListingsCarousel = () => {
     "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=400&h=250&fit=crop", // Air conditioning repair
     "https://images.unsplash.com/photo-1590736969955-71cc94901144?w=400&h=250&fit=crop", // HVAC maintenance
     "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=250&fit=crop"  // Professional HVAC work
-  ];
+  ], []);
 
-  const scrollToLocationSelector = () => {
+  // Memoize the scroll function to prevent recreation on every render
+  const scrollToLocationSelector = useCallback(() => {
     const element = document.getElementById('location-selector');
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
     }
-  };
+  }, []);
 
-  const getRandomAcImage = (businessId: number) => {
+  // Memoize the getRandomAcImage function to prevent recreation on every render
+  const getRandomAcImage = useCallback((businessId: number) => {
     // Use business ID to ensure consistent image assignment
     return acImages[businessId % acImages.length];
-  };
+  }, [acImages]);
 
   if (isLoading) {
     return (
