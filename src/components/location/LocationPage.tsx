@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -20,8 +20,14 @@ const LocationPage = () => {
   const { citySlug } = useParams<{ citySlug: string }>();
   const [cityData, setCityData] = useState<CityData | null>(null);
   
-  // Extract city slug from URL path if not in params
-  const extractCitySlugFromPath = () => {
+  // Memoize the city slug extraction to prevent infinite re-renders
+  const actualCitySlug = useMemo(() => {
+    if (citySlug) {
+      console.log('Using citySlug from params:', citySlug);
+      return citySlug;
+    }
+    
+    // Extract city slug from URL path if not in params
     const path = window.location.pathname;
     console.log('Current path:', path);
     
@@ -34,23 +40,26 @@ const LocationPage = () => {
     
     console.log('No city slug found in path');
     return null;
-  };
+  }, [citySlug]);
 
-  const actualCitySlug = citySlug || extractCitySlugFromPath();
-  console.log('LocationPage rendered with citySlug from params:', citySlug);
-  console.log('Actual city slug being used:', actualCitySlug);
+  console.log('LocationPage rendered with actualCitySlug:', actualCitySlug);
 
-  // Get city data
-  useEffect(() => {
+  // Get city data - memoize to prevent unnecessary recalculation
+  const cityDataMemo = useMemo(() => {
     if (actualCitySlug) {
       console.log('Looking up city data for slug:', actualCitySlug);
       const data = getCityDataBySlug(actualCitySlug);
       console.log('Found city data:', data);
-      setCityData(data || null);
-    } else {
-      console.log('No city slug available');
+      return data || null;
     }
+    console.log('No city slug available');
+    return null;
   }, [actualCitySlug]);
+
+  // Update cityData state only when cityDataMemo changes
+  useEffect(() => {
+    setCityData(cityDataMemo);
+  }, [cityDataMemo]);
 
   // Fetch businesses for this specific city from database with flexible matching
   const { data: databaseBusinesses = [], isLoading, error } = useQuery({
@@ -132,34 +141,39 @@ const LocationPage = () => {
     enabled: !!cityData?.name
   });
 
-  // Get sample businesses if no database businesses found
-  const sampleBusinesses = cityData ? getBusinessesByCity(cityData.name) : [];
+  // Memoize sample businesses to prevent unnecessary recalculation
+  const sampleBusinesses = useMemo(() => {
+    return cityData ? getBusinessesByCity(cityData.name) : [];
+  }, [cityData]);
+
   console.log('Sample businesses found:', sampleBusinesses.length);
   
-  // Convert sample businesses to the format expected by BusinessCard
-  const convertedSampleBusinesses = sampleBusinesses.map((business, index) => ({
-    id: 1000 + index, // Use high numbers to avoid conflicts with real business IDs
-    name: business.name,
-    description: business.description,
-    phone: business.phone,
-    email: business.email,
-    website: business.website,
-    address: business.address,
-    city: business.city,
-    state: business.state,
-    zip_code: business.zip_code,
-    services: business.services,
-    rating: business.rating,
-    review_count: business.review_count,
-    featured: business.featured,
-    insurance_verified: business.insurance_verified,
-    license_number: business.license_number,
-    created_at: new Date().toISOString(),
-    updated_at: new Date().toISOString(),
-    latitude: null,
-    longitude: null,
-    business_hours: business.business_hours
-  }));
+  // Convert sample businesses to the format expected by BusinessCard - memoize this too
+  const convertedSampleBusinesses = useMemo(() => {
+    return sampleBusinesses.map((business, index) => ({
+      id: 1000 + index, // Use high numbers to avoid conflicts with real business IDs
+      name: business.name,
+      description: business.description,
+      phone: business.phone,
+      email: business.email,
+      website: business.website,
+      address: business.address,
+      city: business.city,
+      state: business.state,
+      zip_code: business.zip_code,
+      services: business.services,
+      rating: business.rating,
+      review_count: business.review_count,
+      featured: business.featured,
+      insurance_verified: business.insurance_verified,
+      license_number: business.license_number,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      latitude: null,
+      longitude: null,
+      business_hours: business.business_hours
+    }));
+  }, [sampleBusinesses]);
 
   // Use database businesses if available, otherwise use sample businesses
   const businesses = databaseBusinesses.length > 0 ? databaseBusinesses : convertedSampleBusinesses;
