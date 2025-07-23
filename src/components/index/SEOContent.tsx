@@ -16,6 +16,42 @@ const SEOContent = ({ onBrowseAll, onViewAll }: SEOContentProps) => {
     .sort((a, b) => (b.population || 0) - (a.population || 0))
     .slice(0, 12);
 
+  const handleBrowseAll = () => {
+    // Scroll to the location selector section
+    const locationSelector = document.getElementById('location-selector');
+    if (locationSelector) {
+      locationSelector.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      // Fallback: scroll to the county selector if location selector isn't found
+      const countySelector = document.querySelector('[data-testid="county-selector"]');
+      if (countySelector) {
+        countySelector.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+    // Call the original callback if provided
+    if (onBrowseAll) {
+      onBrowseAll();
+    }
+  };
+
+  const handleViewAll = () => {
+    // Scroll to the featured listings section
+    const featuredSection = document.querySelector('[data-testid="featured-listings"]');
+    if (featuredSection) {
+      featuredSection.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      // Fallback: scroll to the county selector
+      const countySelector = document.querySelector('[data-testid="county-selector"]');
+      if (countySelector) {
+        countySelector.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+    // Call the original callback if provided
+    if (onViewAll) {
+      onViewAll();
+    }
+  };
+
   return (
     <section className="mb-8 text-center">
       <h2 className="text-3xl font-bold mb-4 text-gray-900">
@@ -53,13 +89,13 @@ const SEOContent = ({ onBrowseAll, onViewAll }: SEOContentProps) => {
       
       <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
         <Button 
-          onClick={onBrowseAll}
+          onClick={handleBrowseAll}
           className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 text-lg"
         >
           Browse All Contractors
         </Button>
         <Button 
-          onClick={onViewAll}
+          onClick={handleViewAll}
           variant="outline"
           className="px-6 py-3 text-lg"
         >
@@ -95,7 +131,7 @@ const SEOContent = ({ onBrowseAll, onViewAll }: SEOContentProps) => {
           <Button 
             variant="link" 
             className="text-blue-600 hover:text-blue-800 p-0 ml-1"
-            onClick={onBrowseAll}
+            onClick={handleBrowseAll}
           >
             View all available contractors
           </Button>
