@@ -16,6 +16,7 @@ interface Business {
   featured: boolean;
 }
 
+// Move sample data outside the hook to prevent recreation on every render
 const SAMPLE_BUSINESSES: Business[] = [
   {
     id: 1,
@@ -101,6 +102,8 @@ export const useFeaturedBusinesses = () => {
   return useQuery({
     queryKey: ['featured-businesses'],
     queryFn: async () => {
+      console.log('Fetching featured businesses...');
+      
       try {
         const { data, error } = await supabase
           .from('businesses')
@@ -110,12 +113,17 @@ export const useFeaturedBusinesses = () => {
           .limit(8);
         
         if (error) {
-          console.log('Using sample data due to database error:', error);
+          console.log('Database error, using sample data:', error);
+          return SAMPLE_BUSINESSES;
+        }
+        
+        if (!data || data.length === 0) {
+          console.log('No database results, using sample data');
           return SAMPLE_BUSINESSES;
         }
         
         // Filter out any non-HVAC businesses from database results
-        const hvacBusinesses = data?.filter(business => {
+        const hvacBusinesses = data.filter(business => {
           const businessName = business.name.toLowerCase();
           const businessDescription = business.description?.toLowerCase() || '';
           const businessServices = business.services || [];
@@ -136,7 +144,9 @@ export const useFeaturedBusinesses = () => {
           );
           
           return isHvacBusiness && !isNonHvacBusiness;
-        }) || [];
+        });
+        
+        console.log('Found HVAC businesses:', hvacBusinesses.length);
         
         // If no HVAC businesses in database, use sample data
         return hvacBusinesses.length > 0 ? hvacBusinesses as Business[] : SAMPLE_BUSINESSES;
@@ -147,5 +157,8 @@ export const useFeaturedBusinesses = () => {
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
   });
 };
