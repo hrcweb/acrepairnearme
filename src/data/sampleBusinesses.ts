@@ -829,6 +829,526 @@ export const FLORIDA_SAMPLE_BUSINESSES: SampleBusiness[] = [
       saturday: "8:00 AM - 5:00 PM",
       sunday: "Emergency Only"
     }
+  },
+  
+  // Port Charlotte HVAC businesses
+  {
+    name: "Port Charlotte AC Solutions",
+    description: "Professional air conditioning services in Port Charlotte and Charlotte County. Expert HVAC technicians providing reliable AC repair and installation.",
+    phone: "(941) 555-1801",
+    email: "info@portcharlotteac.com",
+    address: "1234 Kings Hwy",
+    city: "Port Charlotte",
+    state: "FL",
+    zip_code: "33980",
+    services: ["AC Repair", "AC Installation", "HVAC Maintenance", "Emergency AC Service"],
+    rating: 4.7,
+    review_count: 118,
+    featured: true,
+    insurance_verified: true,
+    license_number: "CAC1833701",
+    business_hours: {
+      monday: "7:00 AM - 7:00 PM",
+      tuesday: "7:00 AM - 7:00 PM",
+      wednesday: "7:00 AM - 7:00 PM",
+      thursday: "7:00 AM - 7:00 PM",
+      friday: "7:00 AM - 7:00 PM",
+      saturday: "8:00 AM - 5:00 PM",
+      sunday: "Emergency Only"
+    }
+  },
+  {
+    name: "Charlotte County HVAC Pros",
+    description: "Trusted HVAC contractor serving Port Charlotte and surrounding areas. Licensed air conditioning specialists with 15+ years experience.",
+    phone: "(941) 555-1802",
+    email: "service@charlottecountyhvac.com",
+    address: "5678 Tamiami Trl",
+    city: "Port Charlotte",
+    state: "FL",
+    zip_code: "33952",
+    services: ["Commercial HVAC", "Heat Pump Service", "Air Duct Cleaning", "Indoor Air Quality"],
+    rating: 4.6,
+    review_count: 95,
+    featured: false,
+    insurance_verified: true,
+    license_number: "CAC1833702",
+    business_hours: {
+      monday: "8:00 AM - 6:00 PM",
+      tuesday: "8:00 AM - 6:00 PM",
+      wednesday: "8:00 AM - 6:00 PM",
+      thursday: "8:00 AM - 6:00 PM",
+      friday: "8:00 AM - 6:00 PM",
+      saturday: "9:00 AM - 3:00 PM",
+      sunday: "Closed"
+    }
+  },
+  
+  // Vero Beach HVAC businesses
+  {
+    name: "Vero Beach AC Masters",
+    description: "Expert air conditioning services in Vero Beach and Indian River County. Professional HVAC technicians with focus on energy efficiency.",
+    phone: "(772) 555-1901",
+    email: "contact@verobeachacmasters.com",
+    address: "2345 Indian River Blvd",
+    city: "Vero Beach",
+    state: "FL",
+    zip_code: "32960",
+    services: ["AC Repair", "AC Installation", "Energy Efficiency", "HVAC Maintenance"],
+    rating: 4.8,
+    review_count: 142,
+    featured: true,
+    insurance_verified: true,
+    license_number: "CAC1834801",
+    business_hours: {
+      monday: "7:00 AM - 8:00 PM",
+      tuesday: "7:00 AM - 8:00 PM",
+      wednesday: "7:00 AM - 8:00 PM",
+      thursday: "7:00 AM - 8:00 PM",
+      friday: "7:00 AM - 8:00 PM",
+      saturday: "8:00 AM - 6:00 PM",
+      sunday: "Emergency Only"
+    }
+  },
+  {
+    name: "Indian River HVAC Services",
+    description: "Reliable HVAC contractor in Vero Beach area. Specializing in residential and commercial air conditioning systems with 24/7 emergency service.",
+    phone: "(772) 555-1902",
+    email: "info@indianriverhvac.com",
+    address: "6789 20th St",
+    city: "Vero Beach",
+    state: "FL",
+    zip_code: "32966",
+    services: ["Emergency AC Service", "Commercial HVAC", "Heat Pump Service", "Air Duct Cleaning"],
+    rating: 4.5,
+    review_count: 87,
+    featured: false,
+    insurance_verified: true,
+    license_number: "CAC1834802",
+    business_hours: {
+      monday: "8:00 AM - 6:00 PM",
+      tuesday: "8:00 AM - 6:00 PM",
+      wednesday: "8:00 AM - 6:00 PM",
+      thursday: "8:00 AM - 6:00 PM",
+      friday: "8:00 AM - 6:00 PM",
+      saturday: "9:00 AM - 4:00 PM",
+      sunday: "Emergency Only"
+    }
+  },
+  
+  // Kissimmee HVAC businesses
+  {
+    name: "Kissimmee AC Repair Specialists",
+    description: "Professional air conditioning services in Kissimmee and Osceola County. Expert AC repair and installation with competitive pricing.",
+    phone: "(407) 555-2001",
+    email: "service@kissimmeeacrepair.com",
+    address: "3456 W Vine St",
+    city: "Kissimmee",
+    state: "FL",
+    zip_code: "34741",
+    services: ["AC Repair", "AC Installation", "HVAC Maintenance", "Emergency AC Service"],
+    rating: 4.7,
+    review_count: 164,
+    featured: true,
+    insurance_verified: true,
+    license_number: "CAC1835901",
+    business_hours: {
+      monday: "7:00 AM - 7:00 PM",
+      tuesday: "7:00 AM - 7:00 PM",
+      wednesday: "7:00 AM - 7:00 PM",
+      thursday: "7:00 AM - 7:00 PM",
+      friday: "7:00 AM - 7:00 PM",
+      saturday: "8:00 AM - 5:00 PM",
+      sunday: "Emergency Only"
+    }
+  },
+  {
+    name: "Osceola County HVAC",
+    description: "Trusted HVAC contractor serving Kissimmee and surrounding areas. Licensed air conditioning professionals with quality service guarantee.",
+    phone: "(407) 555-2002",
+    email: "info@osceolacountyhvac.com",
+    address: "7890 E Irlo Bronson Memorial Hwy",
+    city: "Kissimmee",
+    state: "FL",
+    zip_code: "34744",
+    services: ["Commercial HVAC", "Heat Pump Service", "Indoor Air Quality", "Air Duct Cleaning"],
+    rating: 4.6,
+    review_count: 123,
+    featured: false,
+    insurance_verified: true,
+    license_number: "CAC1835902",
+    business_hours: {
+      monday: "8:00 AM - 6:00 PM",
+      tuesday: "8:00 AM - 6:00 PM",
+      wednesday: "8:00 AM - 6:00 PM",
+      thursday: "8:00 AM - 6:00 PM",
+      friday: "8:00 AM - 6:00 PM",
+      saturday: "9:00 AM - 3:00 PM",
+      sunday: "Closed"
+    }
+  },
+  
+  // Daytona Beach HVAC businesses
+  {
+    name: "Daytona Beach AC Experts",
+    description: "Expert air conditioning services in Daytona Beach and Volusia County. Professional HVAC technicians with 20+ years experience.",
+    phone: "(386) 555-2101",
+    email: "contact@daytonabeachacexperts.com",
+    address: "1234 International Speedway Blvd",
+    city: "Daytona Beach",
+    state: "FL",
+    zip_code: "32114",
+    services: ["AC Repair", "AC Installation", "Emergency AC Service", "HVAC Maintenance"],
+    rating: 4.9,
+    review_count: 201,
+    featured: true,
+    insurance_verified: true,
+    license_number: "CAC1836001",
+    business_hours: {
+      monday: "6:00 AM - 9:00 PM",
+      tuesday: "6:00 AM - 9:00 PM",
+      wednesday: "6:00 AM - 9:00 PM",
+      thursday: "6:00 AM - 9:00 PM",
+      friday: "6:00 AM - 9:00 PM",
+      saturday: "7:00 AM - 7:00 PM",
+      sunday: "24/7 Emergency"
+    }
+  },
+  {
+    name: "Volusia County HVAC Solutions",
+    description: "Comprehensive HVAC services in Daytona Beach area. Licensed and insured contractors providing quality air conditioning solutions.",
+    phone: "(386) 555-2102",
+    email: "service@volusiacountyhvac.com",
+    address: "5678 Nova Rd",
+    city: "Daytona Beach",
+    state: "FL",
+    zip_code: "32117",
+    services: ["Commercial HVAC", "Energy Efficiency", "Heat Pump Service", "Air Duct Cleaning"],
+    rating: 4.5,
+    review_count: 108,
+    featured: false,
+    insurance_verified: true,
+    license_number: "CAC1836002",
+    business_hours: {
+      monday: "7:00 AM - 7:00 PM",
+      tuesday: "7:00 AM - 7:00 PM",
+      wednesday: "7:00 AM - 7:00 PM",
+      thursday: "7:00 AM - 7:00 PM",
+      friday: "7:00 AM - 7:00 PM",
+      saturday: "8:00 AM - 5:00 PM",
+      sunday: "Emergency Only"
+    }
+  },
+  
+  // Fort Myers HVAC businesses
+  {
+    name: "Fort Myers AC Solutions",
+    description: "Professional air conditioning services in Fort Myers and Lee County. Expert HVAC technicians specializing in residential and commercial systems.",
+    phone: "(239) 555-2201",
+    email: "info@fortmyersac.com",
+    address: "2345 Colonial Blvd",
+    city: "Fort Myers",
+    state: "FL",
+    zip_code: "33907",
+    services: ["AC Repair", "AC Installation", "Commercial HVAC", "HVAC Maintenance"],
+    rating: 4.8,
+    review_count: 189,
+    featured: true,
+    insurance_verified: true,
+    license_number: "CAC1837101",
+    business_hours: {
+      monday: "7:00 AM - 8:00 PM",
+      tuesday: "7:00 AM - 8:00 PM",
+      wednesday: "7:00 AM - 8:00 PM",
+      thursday: "7:00 AM - 8:00 PM",
+      friday: "7:00 AM - 8:00 PM",
+      saturday: "8:00 AM - 6:00 PM",
+      sunday: "Emergency Only"
+    }
+  },
+  {
+    name: "Lee County HVAC Professionals",
+    description: "Trusted HVAC contractor serving Fort Myers area. Licensed air conditioning specialists with focus on customer satisfaction.",
+    phone: "(239) 555-2202",
+    email: "contact@leecountyhvac.com",
+    address: "6789 Daniels Pkwy",
+    city: "Fort Myers",
+    state: "FL",
+    zip_code: "33912",
+    services: ["Emergency AC Service", "Heat Pump Service", "Indoor Air Quality", "Air Duct Cleaning"],
+    rating: 4.6,
+    review_count: 134,
+    featured: false,
+    insurance_verified: true,
+    license_number: "CAC1837102",
+    business_hours: {
+      monday: "8:00 AM - 6:00 PM",
+      tuesday: "8:00 AM - 6:00 PM",
+      wednesday: "8:00 AM - 6:00 PM",
+      thursday: "8:00 AM - 6:00 PM",
+      friday: "8:00 AM - 6:00 PM",
+      saturday: "9:00 AM - 4:00 PM",
+      sunday: "Emergency Only"
+    }
+  },
+  
+  // Hollywood HVAC businesses
+  {
+    name: "Hollywood AC Masters",
+    description: "Expert air conditioning services in Hollywood and Broward County. Professional HVAC technicians with 25+ years combined experience.",
+    phone: "(954) 555-2301",
+    email: "service@hollywoodacmasters.com",
+    address: "3456 Hollywood Blvd",
+    city: "Hollywood",
+    state: "FL",
+    zip_code: "33021",
+    services: ["AC Repair", "AC Installation", "HVAC Maintenance", "Emergency AC Service"],
+    rating: 4.7,
+    review_count: 156,
+    featured: true,
+    insurance_verified: true,
+    license_number: "CAC1838201",
+    business_hours: {
+      monday: "7:00 AM - 7:00 PM",
+      tuesday: "7:00 AM - 7:00 PM",
+      wednesday: "7:00 AM - 7:00 PM",
+      thursday: "7:00 AM - 7:00 PM",
+      friday: "7:00 AM - 7:00 PM",
+      saturday: "8:00 AM - 5:00 PM",
+      sunday: "Emergency Only"
+    }
+  },
+  {
+    name: "Broward Elite HVAC",
+    description: "Premium HVAC services in Hollywood area. Licensed and insured contractors providing quality air conditioning solutions with warranty.",
+    phone: "(954) 555-2302",
+    email: "info@browardelitehvac.com",
+    address: "7890 Pembroke Rd",
+    city: "Hollywood",
+    state: "FL",
+    zip_code: "33023",
+    services: ["Commercial HVAC", "Energy Efficiency", "Heat Pump Service", "Air Duct Cleaning"],
+    rating: 4.8,
+    review_count: 172,
+    featured: false,
+    insurance_verified: true,
+    license_number: "CAC1838202",
+    business_hours: {
+      monday: "7:00 AM - 7:00 PM",
+      tuesday: "7:00 AM - 7:00 PM",
+      wednesday: "7:00 AM - 7:00 PM",
+      thursday: "7:00 AM - 7:00 PM",
+      friday: "7:00 AM - 7:00 PM",
+      saturday: "8:00 AM - 5:00 PM",
+      sunday: "Emergency Only"
+    }
+  },
+  
+  // Additional Miami businesses
+  {
+    name: "Coral Gables AC Specialists",
+    description: "Luxury air conditioning services in Coral Gables and Miami-Dade. Premium HVAC solutions for high-end residential and commercial properties.",
+    phone: "(305) 555-2401",
+    email: "contact@coralgablesac.com",
+    address: "4567 Miracle Mile",
+    city: "Miami",
+    state: "FL",
+    zip_code: "33134",
+    services: ["AC Repair", "AC Installation", "Commercial HVAC", "Indoor Air Quality"],
+    rating: 4.9,
+    review_count: 198,
+    featured: true,
+    insurance_verified: true,
+    license_number: "CAC1839301",
+    business_hours: {
+      monday: "7:00 AM - 8:00 PM",
+      tuesday: "7:00 AM - 8:00 PM",
+      wednesday: "7:00 AM - 8:00 PM",
+      thursday: "7:00 AM - 8:00 PM",
+      friday: "7:00 AM - 8:00 PM",
+      saturday: "8:00 AM - 6:00 PM",
+      sunday: "Emergency Only"
+    }
+  },
+  {
+    name: "Aventura HVAC Solutions",
+    description: "Professional HVAC services in Aventura and North Miami-Dade. Expert air conditioning technicians with focus on energy efficiency.",
+    phone: "(305) 555-2402",
+    email: "service@aventurahvac.com",
+    address: "8901 Biscayne Blvd",
+    city: "Miami",
+    state: "FL",
+    zip_code: "33154",
+    services: ["Energy Efficiency", "Heat Pump Service", "Emergency AC Service", "HVAC Maintenance"],
+    rating: 4.6,
+    review_count: 145,
+    featured: false,
+    insurance_verified: true,
+    license_number: "CAC1839302",
+    business_hours: {
+      monday: "8:00 AM - 6:00 PM",
+      tuesday: "8:00 AM - 6:00 PM",
+      wednesday: "8:00 AM - 6:00 PM",
+      thursday: "8:00 AM - 6:00 PM",
+      friday: "8:00 AM - 6:00 PM",
+      saturday: "9:00 AM - 3:00 PM",
+      sunday: "Emergency Only"
+    }
+  },
+  
+  // Additional Orlando businesses
+  {
+    name: "Winter Park AC Professionals",
+    description: "Expert air conditioning services in Winter Park and Orange County. Professional HVAC technicians serving residential and commercial clients.",
+    phone: "(407) 555-2501",
+    email: "info@winterparkac.com",
+    address: "1234 Park Ave N",
+    city: "Orlando",
+    state: "FL",
+    zip_code: "32789",
+    services: ["AC Repair", "AC Installation", "Commercial HVAC", "HVAC Maintenance"],
+    rating: 4.8,
+    review_count: 167,
+    featured: true,
+    insurance_verified: true,
+    license_number: "CAC1840401",
+    business_hours: {
+      monday: "7:00 AM - 7:00 PM",
+      tuesday: "7:00 AM - 7:00 PM",
+      wednesday: "7:00 AM - 7:00 PM",
+      thursday: "7:00 AM - 7:00 PM",
+      friday: "7:00 AM - 7:00 PM",
+      saturday: "8:00 AM - 5:00 PM",
+      sunday: "Emergency Only"
+    }
+  },
+  {
+    name: "UCF Area HVAC Services",
+    description: "Reliable HVAC contractor serving UCF area and East Orlando. Licensed air conditioning specialists with student-friendly pricing.",
+    phone: "(407) 555-2502",
+    email: "service@ucfareahvac.com",
+    address: "5678 University Blvd",
+    city: "Orlando",
+    state: "FL",
+    zip_code: "32817",
+    services: ["Emergency AC Service", "Heat Pump Service", "Air Duct Cleaning", "Indoor Air Quality"],
+    rating: 4.5,
+    review_count: 112,
+    featured: false,
+    insurance_verified: true,
+    license_number: "CAC1840402",
+    business_hours: {
+      monday: "8:00 AM - 6:00 PM",
+      tuesday: "8:00 AM - 6:00 PM",
+      wednesday: "8:00 AM - 6:00 PM",
+      thursday: "8:00 AM - 6:00 PM",
+      friday: "8:00 AM - 6:00 PM",
+      saturday: "9:00 AM - 4:00 PM",
+      sunday: "Emergency Only"
+    }
+  },
+  
+  // Additional Tampa businesses
+  {
+    name: "Westshore AC Solutions",
+    description: "Professional air conditioning services in Westshore and South Tampa. Expert HVAC technicians with focus on luxury residential properties.",
+    phone: "(813) 555-2601",
+    email: "contact@westshoreac.com",
+    address: "2345 Westshore Blvd",
+    city: "Tampa",
+    state: "FL",
+    zip_code: "33607",
+    services: ["AC Repair", "AC Installation", "HVAC Maintenance", "Indoor Air Quality"],
+    rating: 4.9,
+    review_count: 223,
+    featured: true,
+    insurance_verified: true,
+    license_number: "CAC1841501",
+    business_hours: {
+      monday: "7:00 AM - 8:00 PM",
+      tuesday: "7:00 AM - 8:00 PM",
+      wednesday: "7:00 AM - 8:00 PM",
+      thursday: "7:00 AM - 8:00 PM",
+      friday: "7:00 AM - 8:00 PM",
+      saturday: "8:00 AM - 6:00 PM",
+      sunday: "Emergency Only"
+    }
+  },
+  {
+    name: "Carrollwood HVAC Experts",
+    description: "Trusted HVAC contractor serving Carrollwood and Northwest Tampa. Licensed air conditioning professionals with 30+ years experience.",
+    phone: "(813) 555-2602",
+    email: "info@carrollwoodhvac.com",
+    address: "6789 Carrollwood Center Dr",
+    city: "Tampa",
+    state: "FL",
+    zip_code: "33618",
+    services: ["Commercial HVAC", "Energy Efficiency", "Heat Pump Service", "Emergency AC Service"],
+    rating: 4.7,
+    review_count: 178,
+    featured: false,
+    insurance_verified: true,
+    license_number: "CAC1841502",
+    business_hours: {
+      monday: "8:00 AM - 6:00 PM",
+      tuesday: "8:00 AM - 6:00 PM",
+      wednesday: "8:00 AM - 6:00 PM",
+      thursday: "8:00 AM - 6:00 PM",
+      friday: "8:00 AM - 6:00 PM",
+      saturday: "9:00 AM - 3:00 PM",
+      sunday: "Emergency Only"
+    }
+  },
+  
+  // Additional Jacksonville businesses
+  {
+    name: "Beaches AC Repair",
+    description: "Specialized air conditioning services for Jacksonville Beaches area. Expert HVAC technicians serving Neptune Beach, Atlantic Beach, and Ponte Vedra.",
+    phone: "(904) 555-2701",
+    email: "service@beachesacrepair.com",
+    address: "3456 3rd St N",
+    city: "Jacksonville",
+    state: "FL",
+    zip_code: "32250",
+    services: ["AC Repair", "AC Installation", "Emergency AC Service", "HVAC Maintenance"],
+    rating: 4.8,
+    review_count: 154,
+    featured: true,
+    insurance_verified: true,
+    license_number: "CAC1842601",
+    business_hours: {
+      monday: "7:00 AM - 7:00 PM",
+      tuesday: "7:00 AM - 7:00 PM",
+      wednesday: "7:00 AM - 7:00 PM",
+      thursday: "7:00 AM - 7:00 PM",
+      friday: "7:00 AM - 7:00 PM",
+      saturday: "8:00 AM - 5:00 PM",
+      sunday: "Emergency Only"
+    }
+  },
+  {
+    name: "Southside HVAC Solutions",
+    description: "Professional HVAC services in Jacksonville Southside. Licensed air conditioning contractors with focus on residential and commercial systems.",
+    phone: "(904) 555-2702",
+    email: "contact@southsidehvac.com",
+    address: "7890 Southside Blvd",
+    city: "Jacksonville",
+    state: "FL",
+    zip_code: "32256",
+    services: ["Commercial HVAC", "Heat Pump Service", "Air Duct Cleaning", "Indoor Air Quality"],
+    rating: 4.6,
+    review_count: 129,
+    featured: false,
+    insurance_verified: true,
+    license_number: "CAC1842602",
+    business_hours: {
+      monday: "8:00 AM - 6:00 PM",
+      tuesday: "8:00 AM - 6:00 PM",
+      wednesday: "8:00 AM - 6:00 PM",
+      thursday: "8:00 AM - 6:00 PM",
+      friday: "8:00 AM - 6:00 PM",
+      saturday: "9:00 AM - 4:00 PM",
+      sunday: "Emergency Only"
+    }
   }
 ];
 
