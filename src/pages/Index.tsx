@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { MapPin, Star, Shield, Clock } from "lucide-react";
@@ -91,7 +92,7 @@ const Index = () => {
   const { data: businessData, isLoading, error } = useQuery({
     queryKey: ['businesses'],
     queryFn: async () => {
-      console.log('Fetching businesses from database...');
+      console.log('Index: Fetching businesses from database...');
       const { data, error } = await supabase
         .from('businesses')
         .select('*')
@@ -102,14 +103,14 @@ const Index = () => {
         throw error;
       }
       
-      console.log('Fetched businesses:', data);
+      console.log('Index: Fetched businesses:', data?.length || 0);
       return data;
     },
   });
 
   useEffect(() => {
     if (businessData) {
-      console.log('Setting businesses data:', businessData);
+      console.log('Index: Processing business data:', businessData.length);
       const transformedBusinesses = businessData.map(business => ({
         id: business.id,
         name: business.name,
@@ -140,15 +141,47 @@ const Index = () => {
 
   // Apply filters whenever any filter changes
   useEffect(() => {
-    filterBusinesses(searchLocation, serviceFilter, sortBy);
+    console.log('Index: Applying filters', { 
+      searchLocation, 
+      serviceFilter, 
+      sortBy, 
+      showAllContractors,
+      businessesCount: businesses.length 
+    });
+    
+    let filtered = [...businesses];
+
+    if (!showAllContractors && searchLocation.trim()) {
+      filtered = filtered.filter(business => 
+        business.city.toLowerCase().includes(searchLocation.toLowerCase()) ||
+        business.zip_code.includes(searchLocation.trim()) ||
+        business.address.toLowerCase().includes(searchLocation.toLowerCase()) ||
+        business.state.toLowerCase().includes(searchLocation.toLowerCase())
+      );
+    }
+
+    if (serviceFilter && serviceFilter !== "") {
+      filtered = filtered.filter(business =>
+        business.services?.some(s => 
+          s.toLowerCase().includes(serviceFilter.toLowerCase())
+        )
+      );
+    }
+
+    filtered.sort((a, b) => a.name.localeCompare(b.name));
+    
+    console.log('Index: Filtered businesses result:', filtered.length);
+    setFilteredBusinesses(filtered);
   }, [businesses, searchLocation, serviceFilter, sortBy, showAllContractors]);
 
   const handleLocationFilter = (location: string) => {
+    console.log('Index: Location filter changed to:', location);
     setSearchLocation(location);
     setShowAllContractors(false);
   };
 
   const handleBrowseAllContractors = () => {
+    console.log('Index: Browse all contractors clicked');
     setShowAllContractors(true);
     setSearchLocation("");
     setServiceFilter("");
@@ -156,34 +189,10 @@ const Index = () => {
   };
 
   const handleViewAllServices = () => {
+    console.log('Index: View all services clicked');
     setSearchLocation("");
     setServiceFilter("");
     setShowAllContractors(true);
-  };
-
-  const filterBusinesses = (location: string, service: string, sort: string) => {
-    console.log('Filtering businesses:', { location, service, sort, showAllContractors });
-    let filtered = [...businesses];
-
-    if (!showAllContractors && location.trim()) {
-      filtered = filtered.filter(business => 
-        business.city.toLowerCase().includes(location.toLowerCase()) ||
-        business.zip_code.includes(location.trim()) ||
-        business.address.toLowerCase().includes(location.toLowerCase()) ||
-        business.state.toLowerCase().includes(location.toLowerCase())
-      );
-    }
-
-    if (service && service !== "") {
-      filtered = filtered.filter(business =>
-        business.services?.some(s => 
-          s.toLowerCase().includes(service.toLowerCase())
-        )
-      );
-    }
-
-    filtered.sort((a, b) => a.name.localeCompare(b.name));
-    setFilteredBusinesses(filtered);
   };
 
   if (error) {

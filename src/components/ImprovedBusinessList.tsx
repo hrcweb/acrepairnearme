@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -39,44 +39,56 @@ const ImprovedBusinessList: React.FC<ImprovedBusinessListProps> = ({
   isLoading = false, 
   searchLocation = ""
 }) => {
-  const [filteredBusinesses, setFilteredBusinesses] = useState<Business[]>(businesses);
+  const [filteredBusinesses, setFilteredBusinesses] = useState<Business[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [serviceFilter, setServiceFilter] = useState("");
   const [ratingFilter, setRatingFilter] = useState("");
   const [emergencyFilter, setEmergencyFilter] = useState(false);
   const [verifiedFilter, setVerifiedFilter] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
-  const [usingSampleData, setUsingSampleData] = useState(false);
 
   // Verified AC/HVAC related images from Unsplash
   const acImages = [
-    "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400&h=250&fit=crop", // AC unit installation
-    "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=250&fit=crop", // HVAC equipment
-    "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=400&h=250&fit=crop", // Indoor AC unit
-    "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=250&fit=crop", // AC maintenance
-    "https://images.unsplash.com/photo-1555963633-1bb0c20b54f5?w=400&h=250&fit=crop", // HVAC system
-    "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&h=250&fit=crop", // AC condenser unit
-    "https://images.unsplash.com/photo-1551522435-a13afa10f103?w=400&h=250&fit=crop", // Modern AC unit
-    "https://images.unsplash.com/photo-1592928302636-c83cf0fa1a2a?w=400&h=250&fit=crop", // Professional technician
-    "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=250&fit=crop", // HVAC technician at work
-    "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=400&h=250&fit=crop", // Air conditioning repair
-    "https://images.unsplash.com/photo-1590736969955-71cc94901144?w=400&h=250&fit=crop", // HVAC maintenance
-    "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=250&fit=crop"  // Professional HVAC work
+    "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400&h=250&fit=crop",
+    "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=250&fit=crop",
+    "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=400&h=250&fit=crop",
+    "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=250&fit=crop",
+    "https://images.unsplash.com/photo-1555963633-1bb0c20b54f5?w=400&h=250&fit=crop",
+    "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=400&h=250&fit=crop",
+    "https://images.unsplash.com/photo-1551522435-a13afa10f103?w=400&h=250&fit=crop",
+    "https://images.unsplash.com/photo-1592928302636-c83cf0fa1a2a?w=400&h=250&fit=crop",
+    "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=250&fit=crop",
+    "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=400&h=250&fit=crop",
+    "https://images.unsplash.com/photo-1590736969955-71cc94901144?w=400&h=250&fit=crop",
+    "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=250&fit=crop"
   ];
 
   const allServices = ["AC Repair", "Installation", "Emergency Service", "Maintenance", "Commercial HVAC", "Duct Cleaning", "Heat Pump"];
 
   const getRandomAcImage = (businessId: number) => {
-    // Use business ID to ensure consistent image assignment
     return acImages[businessId % acImages.length];
   };
 
-  // Get sample data only as a fallback when no real data exists
-  const getSampleBusinessesForLocation = () => {
+  // Determine which businesses to show using useMemo to prevent recalculation
+  const { allBusinesses, usingSampleData } = useMemo(() => {
+    console.log('ImprovedBusinessList: Determining business data source');
+    console.log('Props businesses length:', businesses.length);
+    console.log('Search location:', searchLocation);
+    
+    // Always prioritize real data from the database
+    if (businesses.length > 0) {
+      console.log('Using real database businesses');
+      return {
+        allBusinesses: businesses,
+        usingSampleData: false
+      };
+    }
+    
+    // Only use sample data if no real data exists and we have a search location
     if (searchLocation) {
       const sampleForLocation = getBusinessesByCity(searchLocation);
-      return sampleForLocation.map((business, index) => ({
-        id: 2000 + index, // Use different ID range for sample data
+      const convertedSample = sampleForLocation.map((business, index) => ({
+        id: 2000 + index,
         name: business.name,
         description: business.description,
         address: business.address,
@@ -94,31 +106,30 @@ const ImprovedBusinessList: React.FC<ImprovedBusinessListProps> = ({
         license_number: business.license_number,
         created_at: new Date().toISOString()
       }));
-    }
-    return [];
-  };
-
-  // Determine which businesses to show - prioritize real data
-  const allBusinesses = (() => {
-    // Always prioritize real data from the database
-    if (businesses.length > 0) {
-      setUsingSampleData(false);
-      return businesses;
-    }
-    
-    // Only use sample data if no real data exists
-    const sampleBusinesses = getSampleBusinessesForLocation();
-    if (sampleBusinesses.length > 0) {
-      setUsingSampleData(true);
-      return sampleBusinesses;
+      
+      console.log('Using sample businesses for location:', searchLocation, 'Count:', convertedSample.length);
+      return {
+        allBusinesses: convertedSample,
+        usingSampleData: true
+      };
     }
     
     // Return empty array if no data available
-    setUsingSampleData(false);
-    return [];
-  })();
+    console.log('No businesses available');
+    return {
+      allBusinesses: [],
+      usingSampleData: false
+    };
+  }, [businesses, searchLocation]);
 
+  // Apply filters whenever any filter changes
   useEffect(() => {
+    console.log('ImprovedBusinessList: Applying filters');
+    console.log('All businesses count:', allBusinesses.length);
+    console.log('Search query:', searchQuery);
+    console.log('Service filter:', serviceFilter);
+    console.log('Rating filter:', ratingFilter);
+    
     let filtered = [...allBusinesses];
 
     // Apply search filter
@@ -161,6 +172,7 @@ const ImprovedBusinessList: React.FC<ImprovedBusinessListProps> = ({
       return (b.rating || 0) - (a.rating || 0);
     });
 
+    console.log('Filtered businesses count:', filtered.length);
     setFilteredBusinesses(filtered);
   }, [allBusinesses, searchQuery, serviceFilter, ratingFilter, verifiedFilter, emergencyFilter]);
 
