@@ -1,4 +1,3 @@
-
 // Sample businesses for Florida cities - HVAC/AC contractors only
 export interface SampleBusiness {
   name: string;
@@ -352,6 +351,475 @@ export const FLORIDA_SAMPLE_BUSINESSES: SampleBusiness[] = [
     featured: true,
     insurance_verified: true,
     license_number: "CAC1823701",
+    business_hours: {
+      monday: "7:00 AM - 7:00 PM",
+      tuesday: "7:00 AM - 7:00 PM",
+      wednesday: "7:00 AM - 7:00 PM",
+      thursday: "7:00 AM - 7:00 PM",
+      friday: "7:00 AM - 7:00 PM",
+      saturday: "8:00 AM - 5:00 PM",
+      sunday: "Emergency Only"
+    }
+  },
+
+  // Clearwater HVAC businesses
+  {
+    name: "Clearwater Climate Control",
+    description: "Professional HVAC services in Clearwater and Pinellas County. Specializing in residential AC repair, installation, and maintenance with 24/7 emergency service.",
+    phone: "(727) 555-0901",
+    email: "info@clearwaterclimate.com",
+    website: "https://clearwaterclimate.com",
+    address: "4567 Gulf to Bay Blvd",
+    city: "Clearwater",
+    state: "FL",
+    zip_code: "33759",
+    services: ["AC Repair", "AC Installation", "Emergency AC Service", "HVAC Maintenance"],
+    rating: 4.8,
+    review_count: 167,
+    featured: true,
+    insurance_verified: true,
+    license_number: "CAC1824801",
+    business_hours: {
+      monday: "7:00 AM - 7:00 PM",
+      tuesday: "7:00 AM - 7:00 PM",
+      wednesday: "7:00 AM - 7:00 PM",
+      thursday: "7:00 AM - 7:00 PM",
+      friday: "7:00 AM - 7:00 PM",
+      saturday: "8:00 AM - 5:00 PM",
+      sunday: "Emergency Only"
+    }
+  },
+  {
+    name: "Pinellas Air Conditioning",
+    description: "Trusted AC repair and HVAC services in Clearwater area. Licensed and insured contractors providing reliable air conditioning solutions.",
+    phone: "(727) 555-0902",
+    email: "service@pinellasac.com",
+    address: "8901 Ulmerton Rd",
+    city: "Clearwater",
+    state: "FL",
+    zip_code: "33762",
+    services: ["Heat Pump Service", "Air Duct Cleaning", "Commercial HVAC", "Indoor Air Quality"],
+    rating: 4.6,
+    review_count: 124,
+    featured: false,
+    insurance_verified: true,
+    license_number: "CAC1824802",
+    business_hours: {
+      monday: "8:00 AM - 6:00 PM",
+      tuesday: "8:00 AM - 6:00 PM",
+      wednesday: "8:00 AM - 6:00 PM",
+      thursday: "8:00 AM - 6:00 PM",
+      friday: "8:00 AM - 6:00 PM",
+      saturday: "9:00 AM - 3:00 PM",
+      sunday: "Closed"
+    }
+  },
+  
+  // St. Petersburg HVAC businesses
+  {
+    name: "St. Pete AC Specialists",
+    description: "Expert air conditioning services in St. Petersburg. Professional HVAC technicians providing quality AC repair and installation since 2010.",
+    phone: "(727) 555-1001",
+    email: "contact@stpeteac.com",
+    address: "1234 4th St N",
+    city: "St. Petersburg",
+    state: "FL",
+    zip_code: "33701",
+    services: ["AC Repair", "AC Installation", "HVAC Maintenance", "Emergency AC Service"],
+    rating: 4.9,
+    review_count: 198,
+    featured: true,
+    insurance_verified: true,
+    license_number: "CAC1825901",
+    business_hours: {
+      monday: "6:00 AM - 9:00 PM",
+      tuesday: "6:00 AM - 9:00 PM",
+      wednesday: "6:00 AM - 9:00 PM",
+      thursday: "6:00 AM - 9:00 PM",
+      friday: "6:00 AM - 9:00 PM",
+      saturday: "7:00 AM - 7:00 PM",
+      sunday: "24/7 Emergency"
+    }
+  },
+  {
+    name: "Sunshine Bay HVAC",
+    description: "Comprehensive HVAC services in St. Petersburg and surrounding areas. Specializing in energy-efficient AC systems and commercial installations.",
+    phone: "(727) 555-1002",
+    email: "info@sunshinebayac.com",
+    address: "5678 Central Ave",
+    city: "St. Petersburg",
+    state: "FL",
+    zip_code: "33710",
+    services: ["Commercial HVAC", "Energy Efficiency", "Air Duct Cleaning", "Heat Pump Service"],
+    rating: 4.7,
+    review_count: 145,
+    featured: false,
+    insurance_verified: true,
+    license_number: "CAC1825902",
+    business_hours: {
+      monday: "7:00 AM - 7:00 PM",
+      tuesday: "7:00 AM - 7:00 PM",
+      wednesday: "7:00 AM - 7:00 PM",
+      thursday: "7:00 AM - 7:00 PM",
+      friday: "7:00 AM - 7:00 PM",
+      saturday: "8:00 AM - 5:00 PM",
+      sunday: "Emergency Only"
+    }
+  },
+  
+  // Sarasota HVAC businesses
+  {
+    name: "Sarasota Premier AC",
+    description: "Premium air conditioning services in Sarasota County. Expert AC repair and installation with focus on customer satisfaction and quality workmanship.",
+    phone: "(941) 555-1101",
+    email: "service@sarasotapremierac.com",
+    address: "2345 Bee Ridge Rd",
+    city: "Sarasota",
+    state: "FL",
+    zip_code: "34233",
+    services: ["AC Repair", "AC Installation", "HVAC Maintenance", "Indoor Air Quality"],
+    rating: 4.8,
+    review_count: 189,
+    featured: true,
+    insurance_verified: true,
+    license_number: "CAC1826001",
+    business_hours: {
+      monday: "7:00 AM - 8:00 PM",
+      tuesday: "7:00 AM - 8:00 PM",
+      wednesday: "7:00 AM - 8:00 PM",
+      thursday: "7:00 AM - 8:00 PM",
+      friday: "7:00 AM - 8:00 PM",
+      saturday: "8:00 AM - 6:00 PM",
+      sunday: "Emergency Only"
+    }
+  },
+  {
+    name: "Gulf Coast HVAC Solutions",
+    description: "Reliable HVAC contractor serving Sarasota and Manatee counties. Professional air conditioning services with 20+ years experience.",
+    phone: "(941) 555-1102",
+    email: "info@gulfcoasthvac.com",
+    address: "6789 Clark Rd",
+    city: "Sarasota",
+    state: "FL",
+    zip_code: "34238",
+    services: ["Emergency AC Service", "Heat Pump Service", "Commercial HVAC", "Air Duct Cleaning"],
+    rating: 4.5,
+    review_count: 112,
+    featured: false,
+    insurance_verified: true,
+    license_number: "CAC1826002",
+    business_hours: {
+      monday: "8:00 AM - 6:00 PM",
+      tuesday: "8:00 AM - 6:00 PM",
+      wednesday: "8:00 AM - 6:00 PM",
+      thursday: "8:00 AM - 6:00 PM",
+      friday: "8:00 AM - 6:00 PM",
+      saturday: "9:00 AM - 3:00 PM",
+      sunday: "Closed"
+    }
+  },
+  
+  // Bradenton HVAC businesses
+  {
+    name: "Bradenton Air Conditioning Pros",
+    description: "Professional AC repair and HVAC services in Bradenton and Manatee County. Licensed contractors specializing in residential and commercial systems.",
+    phone: "(941) 555-1201",
+    email: "contact@bradentonacpros.com",
+    address: "3456 Manatee Ave W",
+    city: "Bradenton",
+    state: "FL",
+    zip_code: "34205",
+    services: ["AC Repair", "AC Installation", "Commercial HVAC", "HVAC Maintenance"],
+    rating: 4.7,
+    review_count: 134,
+    featured: true,
+    insurance_verified: true,
+    license_number: "CAC1827101",
+    business_hours: {
+      monday: "7:00 AM - 7:00 PM",
+      tuesday: "7:00 AM - 7:00 PM",
+      wednesday: "7:00 AM - 7:00 PM",
+      thursday: "7:00 AM - 7:00 PM",
+      friday: "7:00 AM - 7:00 PM",
+      saturday: "8:00 AM - 5:00 PM",
+      sunday: "Emergency Only"
+    }
+  },
+  {
+    name: "Manatee County HVAC",
+    description: "Trusted HVAC services throughout Manatee County. Expert air conditioning repair and installation with emergency service available.",
+    phone: "(941) 555-1202",
+    email: "service@manateecountyhvac.com",
+    address: "7890 Cortez Rd W",
+    city: "Bradenton",
+    state: "FL",
+    zip_code: "34210",
+    services: ["Emergency AC Service", "Heat Pump Service", "Indoor Air Quality", "Air Duct Cleaning"],
+    rating: 4.6,
+    review_count: 98,
+    featured: false,
+    insurance_verified: true,
+    license_number: "CAC1827102",
+    business_hours: {
+      monday: "8:00 AM - 6:00 PM",
+      tuesday: "8:00 AM - 6:00 PM",
+      wednesday: "8:00 AM - 6:00 PM",
+      thursday: "8:00 AM - 6:00 PM",
+      friday: "8:00 AM - 6:00 PM",
+      saturday: "9:00 AM - 4:00 PM",
+      sunday: "Emergency Only"
+    }
+  },
+  
+  // Lakeland HVAC businesses
+  {
+    name: "Lakeland AC Repair Experts",
+    description: "Professional air conditioning services in Lakeland and Polk County. Family-owned HVAC business with over 25 years of experience.",
+    phone: "(863) 555-1301",
+    email: "info@lakelandacexperts.com",
+    address: "4567 Memorial Blvd",
+    city: "Lakeland",
+    state: "FL",
+    zip_code: "33801",
+    services: ["AC Repair", "AC Installation", "HVAC Maintenance", "Emergency AC Service"],
+    rating: 4.9,
+    review_count: 212,
+    featured: true,
+    insurance_verified: true,
+    license_number: "CAC1828201",
+    business_hours: {
+      monday: "6:00 AM - 9:00 PM",
+      tuesday: "6:00 AM - 9:00 PM",
+      wednesday: "6:00 AM - 9:00 PM",
+      thursday: "6:00 AM - 9:00 PM",
+      friday: "6:00 AM - 9:00 PM",
+      saturday: "7:00 AM - 7:00 PM",
+      sunday: "24/7 Emergency"
+    }
+  },
+  {
+    name: "Polk County HVAC Services",
+    description: "Comprehensive HVAC solutions in Lakeland area. Licensed and insured contractors providing quality air conditioning services.",
+    phone: "(863) 555-1302",
+    email: "contact@polkcountyhvac.com",
+    address: "8901 Kathleen Rd",
+    city: "Lakeland",
+    state: "FL",
+    zip_code: "33815",
+    services: ["Commercial HVAC", "Heat Pump Service", "Air Duct Cleaning", "Indoor Air Quality"],
+    rating: 4.5,
+    review_count: 87,
+    featured: false,
+    insurance_verified: true,
+    license_number: "CAC1828202",
+    business_hours: {
+      monday: "7:00 AM - 7:00 PM",
+      tuesday: "7:00 AM - 7:00 PM",
+      wednesday: "7:00 AM - 7:00 PM",
+      thursday: "7:00 AM - 7:00 PM",
+      friday: "7:00 AM - 7:00 PM",
+      saturday: "8:00 AM - 5:00 PM",
+      sunday: "Emergency Only"
+    }
+  },
+  
+  // Gainesville HVAC businesses
+  {
+    name: "Gainesville AC Solutions",
+    description: "Expert air conditioning services in Gainesville and Alachua County. Professional HVAC technicians serving residential and commercial clients.",
+    phone: "(352) 555-1401",
+    email: "service@gainesvilleacsolutions.com",
+    address: "1234 NW 13th St",
+    city: "Gainesville",
+    state: "FL",
+    zip_code: "32601",
+    services: ["AC Repair", "AC Installation", "Commercial HVAC", "HVAC Maintenance"],
+    rating: 4.8,
+    review_count: 156,
+    featured: true,
+    insurance_verified: true,
+    license_number: "CAC1829301",
+    business_hours: {
+      monday: "7:00 AM - 8:00 PM",
+      tuesday: "7:00 AM - 8:00 PM",
+      wednesday: "7:00 AM - 8:00 PM",
+      thursday: "7:00 AM - 8:00 PM",
+      friday: "7:00 AM - 8:00 PM",
+      saturday: "8:00 AM - 6:00 PM",
+      sunday: "Emergency Only"
+    }
+  },
+  {
+    name: "Alachua County HVAC",
+    description: "Trusted HVAC contractor in Gainesville area. Specializing in energy-efficient AC systems and professional installation services.",
+    phone: "(352) 555-1402",
+    email: "info@alachuacountyhvac.com",
+    address: "5678 SW Archer Rd",
+    city: "Gainesville",
+    state: "FL",
+    zip_code: "32608",
+    services: ["Energy Efficiency", "Heat Pump Service", "Indoor Air Quality", "Air Duct Cleaning"],
+    rating: 4.6,
+    review_count: 101,
+    featured: false,
+    insurance_verified: true,
+    license_number: "CAC1829302",
+    business_hours: {
+      monday: "8:00 AM - 6:00 PM",
+      tuesday: "8:00 AM - 6:00 PM",
+      wednesday: "8:00 AM - 6:00 PM",
+      thursday: "8:00 AM - 6:00 PM",
+      friday: "8:00 AM - 6:00 PM",
+      saturday: "9:00 AM - 3:00 PM",
+      sunday: "Closed"
+    }
+  },
+  
+  // Ocala HVAC businesses
+  {
+    name: "Ocala Air Conditioning Masters",
+    description: "Professional AC repair and HVAC services in Ocala and Marion County. Expert technicians with 30+ years combined experience.",
+    phone: "(352) 555-1501",
+    email: "contact@ocalaacmasters.com",
+    address: "2345 Silver Springs Blvd",
+    city: "Ocala",
+    state: "FL",
+    zip_code: "34470",
+    services: ["AC Repair", "AC Installation", "Emergency AC Service", "HVAC Maintenance"],
+    rating: 4.7,
+    review_count: 143,
+    featured: true,
+    insurance_verified: true,
+    license_number: "CAC1830401",
+    business_hours: {
+      monday: "7:00 AM - 7:00 PM",
+      tuesday: "7:00 AM - 7:00 PM",
+      wednesday: "7:00 AM - 7:00 PM",
+      thursday: "7:00 AM - 7:00 PM",
+      friday: "7:00 AM - 7:00 PM",
+      saturday: "8:00 AM - 5:00 PM",
+      sunday: "Emergency Only"
+    }
+  },
+  {
+    name: "Marion County HVAC Pros",
+    description: "Reliable HVAC services throughout Marion County. Licensed air conditioning contractors providing quality service and installations.",
+    phone: "(352) 555-1502",
+    email: "service@marioncountyhvac.com",
+    address: "6789 SW State Road 200",
+    city: "Ocala",
+    state: "FL",
+    zip_code: "34476",
+    services: ["Commercial HVAC", "Heat Pump Service", "Air Duct Cleaning", "Indoor Air Quality"],
+    rating: 4.5,
+    review_count: 89,
+    featured: false,
+    insurance_verified: true,
+    license_number: "CAC1830402",
+    business_hours: {
+      monday: "8:00 AM - 6:00 PM",
+      tuesday: "8:00 AM - 6:00 PM",
+      wednesday: "8:00 AM - 6:00 PM",
+      thursday: "8:00 AM - 6:00 PM",
+      friday: "8:00 AM - 6:00 PM",
+      saturday: "9:00 AM - 4:00 PM",
+      sunday: "Emergency Only"
+    }
+  },
+  
+  // Tallahassee HVAC businesses
+  {
+    name: "Tallahassee AC Repair Specialists",
+    description: "Expert air conditioning services in Tallahassee and Leon County. Professional HVAC technicians serving the capital city since 2005.",
+    phone: "(850) 555-1601",
+    email: "info@tallahasseeacrepair.com",
+    address: "3456 Apalachee Pkwy",
+    city: "Tallahassee",
+    state: "FL",
+    zip_code: "32301",
+    services: ["AC Repair", "AC Installation", "Commercial HVAC", "Emergency AC Service"],
+    rating: 4.8,
+    review_count: 167,
+    featured: true,
+    insurance_verified: true,
+    license_number: "CAC1831501",
+    business_hours: {
+      monday: "7:00 AM - 8:00 PM",
+      tuesday: "7:00 AM - 8:00 PM",
+      wednesday: "7:00 AM - 8:00 PM",
+      thursday: "7:00 AM - 8:00 PM",
+      friday: "7:00 AM - 8:00 PM",
+      saturday: "8:00 AM - 6:00 PM",
+      sunday: "Emergency Only"
+    }
+  },
+  {
+    name: "Capital City HVAC",
+    description: "Trusted HVAC contractor in Tallahassee area. Specializing in residential and commercial air conditioning systems with quality service.",
+    phone: "(850) 555-1602",
+    email: "service@capitalcityhvac.com",
+    address: "7890 Thomasville Rd",
+    city: "Tallahassee",
+    state: "FL",
+    zip_code: "32312",
+    services: ["HVAC Maintenance", "Heat Pump Service", "Indoor Air Quality", "Air Duct Cleaning"],
+    rating: 4.6,
+    review_count: 124,
+    featured: false,
+    insurance_verified: true,
+    license_number: "CAC1831502",
+    business_hours: {
+      monday: "8:00 AM - 6:00 PM",
+      tuesday: "8:00 AM - 6:00 PM",
+      wednesday: "8:00 AM - 6:00 PM",
+      thursday: "8:00 AM - 6:00 PM",
+      friday: "8:00 AM - 6:00 PM",
+      saturday: "9:00 AM - 3:00 PM",
+      sunday: "Closed"
+    }
+  },
+  
+  // Pensacola HVAC businesses
+  {
+    name: "Pensacola AC Experts",
+    description: "Professional air conditioning services in Pensacola and Escambia County. Expert HVAC technicians with focus on customer satisfaction.",
+    phone: "(850) 555-1701",
+    email: "contact@pensacolaacexperts.com",
+    address: "1234 Navy Blvd",
+    city: "Pensacola",
+    state: "FL",
+    zip_code: "32507",
+    services: ["AC Repair", "AC Installation", "Emergency AC Service", "HVAC Maintenance"],
+    rating: 4.9,
+    review_count: 198,
+    featured: true,
+    insurance_verified: true,
+    license_number: "CAC1832601",
+    business_hours: {
+      monday: "6:00 AM - 9:00 PM",
+      tuesday: "6:00 AM - 9:00 PM",
+      wednesday: "6:00 AM - 9:00 PM",
+      thursday: "6:00 AM - 9:00 PM",
+      friday: "6:00 AM - 9:00 PM",
+      saturday: "7:00 AM - 7:00 PM",
+      sunday: "24/7 Emergency"
+    }
+  },
+  {
+    name: "Gulf Coast Air Conditioning",
+    description: "Reliable HVAC services in Pensacola area. Licensed and insured contractors providing quality air conditioning solutions since 2000.",
+    phone: "(850) 555-1702",
+    email: "info@gulfcoastac.com",
+    address: "5678 Mobile Hwy",
+    city: "Pensacola",
+    state: "FL",
+    zip_code: "32526",
+    services: ["Commercial HVAC", "Heat Pump Service", "Air Duct Cleaning", "Indoor Air Quality"],
+    rating: 4.7,
+    review_count: 156,
+    featured: false,
+    insurance_verified: true,
+    license_number: "CAC1832602",
     business_hours: {
       monday: "7:00 AM - 7:00 PM",
       tuesday: "7:00 AM - 7:00 PM",
