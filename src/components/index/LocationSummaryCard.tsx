@@ -2,7 +2,7 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MapPin } from "lucide-react";
-import { Business } from "@/pages/Index";
+import { Business } from "@/hooks/useBusinessData";
 
 interface LocationSummaryCardProps {
   filteredBusinesses: Business[];

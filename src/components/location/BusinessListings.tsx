@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Business } from "@/pages/Index";
+import { Business } from "@/hooks/useBusinessData";
 import BusinessCard from "@/components/BusinessCard";
 
 interface BusinessListingsProps {

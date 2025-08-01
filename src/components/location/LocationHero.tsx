@@ -1,7 +1,7 @@
 
 import React from "react";
 import { CityData } from "@/data/cities";
-import { Business } from "@/pages/Index";
+import { Business } from "@/hooks/useBusinessData";
 import TrustBadges from "@/components/TrustBadges";
 import QuoteRequestCTA from "@/components/QuoteRequestCTA";
 
