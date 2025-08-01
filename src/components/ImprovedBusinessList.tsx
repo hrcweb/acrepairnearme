@@ -1,12 +1,11 @@
 
-import React, { useState, useEffect, useMemo } from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Filter, SlidersHorizontal, Info } from "lucide-react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import EnhancedBusinessCard from "./EnhancedBusinessCard";
-import { getBusinessesByCity, getCitiesWithBusinesses } from "@/data/sampleBusinesses";
+import { getBusinessesByCity } from "@/data/sampleBusinesses";
+import BusinessListHeader from "./business-list/BusinessListHeader";
+import BusinessListFilters from "./business-list/BusinessListFilters";
+import SampleDataNotice from "./business-list/SampleDataNotice";
+import EmptyBusinessList from "./business-list/EmptyBusinessList";
 
 interface Business {
   id: number;
@@ -39,7 +38,6 @@ const ImprovedBusinessList: React.FC<ImprovedBusinessListProps> = ({
   isLoading = false, 
   searchLocation = ""
 }) => {
-  const [filteredBusinesses, setFilteredBusinesses] = useState<Business[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [serviceFilter, setServiceFilter] = useState("");
   const [ratingFilter, setRatingFilter] = useState("");
@@ -47,8 +45,8 @@ const ImprovedBusinessList: React.FC<ImprovedBusinessListProps> = ({
   const [verifiedFilter, setVerifiedFilter] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
 
-  // Verified AC/HVAC related images from Unsplash
-  const acImages = [
+  // AC/HVAC related images from Unsplash
+  const acImages = useMemo(() => [
     "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400&h=250&fit=crop",
     "https://images.unsplash.com/photo-1581094794329-c8112a89af12?w=400&h=250&fit=crop",
     "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=400&h=250&fit=crop",
@@ -59,32 +57,26 @@ const ImprovedBusinessList: React.FC<ImprovedBusinessListProps> = ({
     "https://images.unsplash.com/photo-1592928302636-c83cf0fa1a2a?w=400&h=250&fit=crop",
     "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=250&fit=crop",
     "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=400&h=250&fit=crop",
-    "https://images.unsplash.com/photo-1590736969955-71cc94901144?w=400&h=250&fit=crop",
-    "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=250&fit=crop"
-  ];
+    "https://images.unsplash.com/photo-1590736969955-71cc94901144?w=400&h=250&fit=crop"
+  ], []);
 
-  const allServices = ["AC Repair", "Installation", "Emergency Service", "Maintenance", "Commercial HVAC", "Duct Cleaning", "Heat Pump"];
+  const allServices = useMemo(() => [
+    "AC Repair", "Installation", "Emergency Service", "Maintenance", "Commercial HVAC", "Duct Cleaning", "Heat Pump"
+  ], []);
 
-  const getRandomAcImage = (businessId: number) => {
+  const getRandomAcImage = useCallback((businessId: number) => {
     return acImages[businessId % acImages.length];
-  };
+  }, [acImages]);
 
-  // Determine which businesses to show using useMemo to prevent recalculation
+  // Determine which businesses to show
   const { allBusinesses, usingSampleData } = useMemo(() => {
     console.log('ImprovedBusinessList: Determining business data source');
-    console.log('Props businesses length:', businesses.length);
-    console.log('Search location:', searchLocation);
     
-    // Always prioritize real data from the database
     if (businesses.length > 0) {
-      console.log('Using real database businesses');
-      return {
-        allBusinesses: businesses,
-        usingSampleData: false
-      };
+      console.log('Using real database businesses:', businesses.length);
+      return { allBusinesses: businesses, usingSampleData: false };
     }
     
-    // Only use sample data if no real data exists and we have a search location
     if (searchLocation) {
       const sampleForLocation = getBusinessesByCity(searchLocation);
       const convertedSample = sampleForLocation.map((business, index) => ({
@@ -107,32 +99,19 @@ const ImprovedBusinessList: React.FC<ImprovedBusinessListProps> = ({
         created_at: new Date().toISOString()
       }));
       
-      console.log('Using sample businesses for location:', searchLocation, 'Count:', convertedSample.length);
-      return {
-        allBusinesses: convertedSample,
-        usingSampleData: true
-      };
+      console.log('Using sample businesses for location:', searchLocation, convertedSample.length);
+      return { allBusinesses: convertedSample, usingSampleData: true };
     }
     
-    // Return empty array if no data available
-    console.log('No businesses available');
-    return {
-      allBusinesses: [],
-      usingSampleData: false
-    };
+    return { allBusinesses: [], usingSampleData: false };
   }, [businesses, searchLocation]);
 
-  // Apply filters whenever any filter changes
-  useEffect(() => {
-    console.log('ImprovedBusinessList: Applying filters');
-    console.log('All businesses count:', allBusinesses.length);
-    console.log('Search query:', searchQuery);
-    console.log('Service filter:', serviceFilter);
-    console.log('Rating filter:', ratingFilter);
+  // Apply filters
+  const filteredBusinesses = useMemo(() => {
+    console.log('Applying filters to businesses:', allBusinesses.length);
     
     let filtered = [...allBusinesses];
 
-    // Apply search filter
     if (searchQuery) {
       filtered = filtered.filter(business =>
         business.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -143,7 +122,6 @@ const ImprovedBusinessList: React.FC<ImprovedBusinessListProps> = ({
       );
     }
 
-    // Apply service filter - only filter if not "all"
     if (serviceFilter && serviceFilter !== "all") {
       filtered = filtered.filter(business =>
         business.services?.some(service => 
@@ -152,7 +130,6 @@ const ImprovedBusinessList: React.FC<ImprovedBusinessListProps> = ({
       );
     }
 
-    // Apply rating filter - only filter if not "all"
     if (ratingFilter && ratingFilter !== "all") {
       const minRating = parseFloat(ratingFilter);
       filtered = filtered.filter(business => 
@@ -160,7 +137,6 @@ const ImprovedBusinessList: React.FC<ImprovedBusinessListProps> = ({
       );
     }
 
-    // Apply verified filter
     if (verifiedFilter) {
       filtered = filtered.filter(business => business.insurance_verified);
     }
@@ -172,9 +148,17 @@ const ImprovedBusinessList: React.FC<ImprovedBusinessListProps> = ({
       return (b.rating || 0) - (a.rating || 0);
     });
 
-    console.log('Filtered businesses count:', filtered.length);
-    setFilteredBusinesses(filtered);
-  }, [allBusinesses, searchQuery, serviceFilter, ratingFilter, verifiedFilter, emergencyFilter]);
+    console.log('Filtered businesses result:', filtered.length);
+    return filtered;
+  }, [allBusinesses, searchQuery, serviceFilter, ratingFilter, verifiedFilter]);
+
+  const handleClearFilters = useCallback(() => {
+    setSearchQuery("");
+    setServiceFilter("");
+    setRatingFilter("");
+    setVerifiedFilter(false);
+    setEmergencyFilter(false);
+  }, []);
 
   if (isLoading) {
     return (
@@ -190,130 +174,32 @@ const ImprovedBusinessList: React.FC<ImprovedBusinessListProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* Sample Data Notice - only show if using sample data */}
-      {usingSampleData && (
-        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 flex items-start space-x-3">
-          <Info className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
-          <div>
-            <p className="text-blue-800 font-medium">Sample Listings</p>
-            <p className="text-blue-700 text-sm">
-              These are example contractors to show you the types of services available in {searchLocation}. 
-              We're actively adding real contractor listings for your area.
-            </p>
-          </div>
-        </div>
+      {usingSampleData && searchLocation && (
+        <SampleDataNotice searchLocation={searchLocation} />
       )}
 
-      {/* Search and Filters */}
-      <div className="bg-white rounded-lg p-6 shadow-sm border">
-        <div className="flex flex-col lg:flex-row gap-4">
-          {/* Search */}
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-            <Input
-              placeholder="Search contractors, services, or locations..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
-            />
-          </div>
+      <BusinessListFilters
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        serviceFilter={serviceFilter}
+        setServiceFilter={setServiceFilter}
+        ratingFilter={ratingFilter}
+        setRatingFilter={setRatingFilter}
+        verifiedFilter={verifiedFilter}
+        setVerifiedFilter={setVerifiedFilter}
+        emergencyFilter={emergencyFilter}
+        setEmergencyFilter={setEmergencyFilter}
+        showFilters={showFilters}
+        setShowFilters={setShowFilters}
+        allServices={allServices}
+        onClearFilters={handleClearFilters}
+      />
 
-          {/* Filter Toggle */}
-          <Button
-            variant="outline"
-            onClick={() => setShowFilters(!showFilters)}
-            className="lg:hidden"
-          >
-            <SlidersHorizontal className="w-4 h-4 mr-2" />
-            Filters
-          </Button>
-        </div>
+      <BusinessListHeader 
+        searchLocation={searchLocation}
+        filteredCount={filteredBusinesses.length}
+      />
 
-        {/* Advanced Filters */}
-        <div className={`mt-4 space-y-4 ${showFilters ? 'block' : 'hidden lg:block'}`}>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Select value={serviceFilter} onValueChange={setServiceFilter}>
-              <SelectTrigger>
-                <SelectValue placeholder="Service Type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Services</SelectItem>
-                {allServices.map((service) => (
-                  <SelectItem key={service} value={service}>{service}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-
-            <Select value={ratingFilter} onValueChange={setRatingFilter}>
-              <SelectTrigger>
-                <SelectValue placeholder="Minimum Rating" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Any Rating</SelectItem>
-                <SelectItem value="4.5">4.5+ Stars</SelectItem>
-                <SelectItem value="4.0">4.0+ Stars</SelectItem>
-                <SelectItem value="3.5">3.5+ Stars</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                id="verified"
-                checked={verifiedFilter}
-                onChange={(e) => setVerifiedFilter(e.target.checked)}
-                className="rounded"
-              />
-              <label htmlFor="verified" className="text-sm">Verified Only</label>
-            </div>
-
-            <div className="flex items-center space-x-2">
-              <input
-                type="checkbox"
-                id="emergency"
-                checked={emergencyFilter}
-                onChange={(e) => setEmergencyFilter(e.target.checked)}
-                className="rounded"
-              />
-              <label htmlFor="emergency" className="text-sm">24/7 Emergency</label>
-            </div>
-          </div>
-
-          {/* Active Filters */}
-          <div className="flex flex-wrap gap-2">
-            {searchQuery && (
-              <Badge variant="secondary" className="cursor-pointer" onClick={() => setSearchQuery("")}>
-                Search: {searchQuery} ✕
-              </Badge>
-            )}
-            {serviceFilter && serviceFilter !== "all" && (
-              <Badge variant="secondary" className="cursor-pointer" onClick={() => setServiceFilter("")}>
-                Service: {serviceFilter} ✕
-              </Badge>
-            )}
-            {ratingFilter && ratingFilter !== "all" && (
-              <Badge variant="secondary" className="cursor-pointer" onClick={() => setRatingFilter("")}>
-                Rating: {ratingFilter}+ ✕
-              </Badge>
-            )}
-            {verifiedFilter && (
-              <Badge variant="secondary" className="cursor-pointer" onClick={() => setVerifiedFilter(false)}>
-                Verified ✕
-              </Badge>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Results Summary */}
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-gray-900">
-          {searchLocation ? `AC Contractors in ${searchLocation}` : "AC Repair Contractors"}
-          <span className="text-gray-500 font-normal ml-2">({filteredBusinesses.length} found)</span>
-        </h2>
-      </div>
-
-      {/* Business Grid */}
       {filteredBusinesses.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredBusinesses.map((business) => (
@@ -326,25 +212,7 @@ const ImprovedBusinessList: React.FC<ImprovedBusinessListProps> = ({
           ))}
         </div>
       ) : (
-        <div className="text-center py-12">
-          <div className="max-w-md mx-auto">
-            <h3 className="text-xl font-semibold text-gray-700 mb-4">
-              No contractors found
-            </h3>
-            <p className="text-gray-500 mb-6">
-              Try adjusting your search criteria or browse contractors in other locations.
-            </p>
-            <Button onClick={() => {
-              setSearchQuery("");
-              setServiceFilter("");
-              setRatingFilter("");
-              setVerifiedFilter(false);
-              setEmergencyFilter(false);
-            }}>
-              Clear All Filters
-            </Button>
-          </div>
-        </div>
+        <EmptyBusinessList onClearFilters={handleClearFilters} />
       )}
     </div>
   );
