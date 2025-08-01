@@ -361,7 +361,6 @@ export const FLORIDA_SAMPLE_BUSINESSES: SampleBusiness[] = [
       sunday: "Emergency Only"
     }
   },
-
   // Clearwater HVAC businesses
   {
     name: "Clearwater Climate Control",
@@ -414,7 +413,6 @@ export const FLORIDA_SAMPLE_BUSINESSES: SampleBusiness[] = [
       sunday: "Closed"
     }
   },
-  
   // St. Petersburg HVAC businesses
   {
     name: "St. Pete AC Specialists",
@@ -466,7 +464,6 @@ export const FLORIDA_SAMPLE_BUSINESSES: SampleBusiness[] = [
       sunday: "Emergency Only"
     }
   },
-  
   // Sarasota HVAC businesses
   {
     name: "Sarasota Premier AC",
@@ -518,7 +515,6 @@ export const FLORIDA_SAMPLE_BUSINESSES: SampleBusiness[] = [
       sunday: "Closed"
     }
   },
-  
   // Bradenton HVAC businesses
   {
     name: "Bradenton Air Conditioning Pros",
@@ -570,7 +566,6 @@ export const FLORIDA_SAMPLE_BUSINESSES: SampleBusiness[] = [
       sunday: "Emergency Only"
     }
   },
-  
   // Lakeland HVAC businesses
   {
     name: "Lakeland AC Repair Experts",
@@ -622,7 +617,6 @@ export const FLORIDA_SAMPLE_BUSINESSES: SampleBusiness[] = [
       sunday: "Emergency Only"
     }
   },
-  
   // Gainesville HVAC businesses
   {
     name: "Gainesville AC Solutions",
@@ -674,7 +668,6 @@ export const FLORIDA_SAMPLE_BUSINESSES: SampleBusiness[] = [
       sunday: "Closed"
     }
   },
-  
   // Ocala HVAC businesses
   {
     name: "Ocala Air Conditioning Masters",
@@ -710,7 +703,7 @@ export const FLORIDA_SAMPLE_BUSINESSES: SampleBusiness[] = [
     city: "Ocala",
     state: "FL",
     zip_code: "34476",
-    services: ["Commercial HVAC", "Heat Pump Service", "Air Duct Cleaning", "Indoor Air Quality"],
+    services: ["Commercial HVAC", "Heat Pump Service", "Indoor Air Quality", "Air Duct Cleaning"],
     rating: 4.5,
     review_count: 89,
     featured: false,
@@ -726,7 +719,6 @@ export const FLORIDA_SAMPLE_BUSINESSES: SampleBusiness[] = [
       sunday: "Emergency Only"
     }
   },
-  
   // Tallahassee HVAC businesses
   {
     name: "Tallahassee AC Repair Specialists",
@@ -778,7 +770,6 @@ export const FLORIDA_SAMPLE_BUSINESSES: SampleBusiness[] = [
       sunday: "Closed"
     }
   },
-  
   // Pensacola HVAC businesses
   {
     name: "Pensacola AC Experts",
@@ -830,7 +821,6 @@ export const FLORIDA_SAMPLE_BUSINESSES: SampleBusiness[] = [
       sunday: "Emergency Only"
     }
   },
-  
   // Port Charlotte HVAC businesses
   {
     name: "Port Charlotte AC Solutions",
@@ -882,7 +872,6 @@ export const FLORIDA_SAMPLE_BUSINESSES: SampleBusiness[] = [
       sunday: "Closed"
     }
   },
-  
   // Vero Beach HVAC businesses
   {
     name: "Vero Beach AC Masters",
@@ -934,7 +923,6 @@ export const FLORIDA_SAMPLE_BUSINESSES: SampleBusiness[] = [
       sunday: "Emergency Only"
     }
   },
-  
   // Kissimmee HVAC businesses
   {
     name: "Kissimmee AC Repair Specialists",
@@ -986,7 +974,6 @@ export const FLORIDA_SAMPLE_BUSINESSES: SampleBusiness[] = [
       sunday: "Closed"
     }
   },
-  
   // Daytona Beach HVAC businesses
   {
     name: "Daytona Beach AC Experts",
@@ -1038,7 +1025,6 @@ export const FLORIDA_SAMPLE_BUSINESSES: SampleBusiness[] = [
       sunday: "Emergency Only"
     }
   },
-  
   // Fort Myers HVAC businesses
   {
     name: "Fort Myers AC Solutions",
@@ -1090,7 +1076,6 @@ export const FLORIDA_SAMPLE_BUSINESSES: SampleBusiness[] = [
       sunday: "Emergency Only"
     }
   },
-  
   // Hollywood HVAC businesses
   {
     name: "Hollywood AC Masters",
@@ -1142,7 +1127,6 @@ export const FLORIDA_SAMPLE_BUSINESSES: SampleBusiness[] = [
       sunday: "Emergency Only"
     }
   },
-  
   // Additional Miami businesses
   {
     name: "Coral Gables AC Specialists",
@@ -1194,7 +1178,6 @@ export const FLORIDA_SAMPLE_BUSINESSES: SampleBusiness[] = [
       sunday: "Emergency Only"
     }
   },
-
   // Additional realistic AC contractors
   {
     name: "Arctic Air Systems",
@@ -1702,6 +1685,261 @@ export const FLORIDA_SAMPLE_BUSINESSES: SampleBusiness[] = [
       friday: "7:00 AM - 8:00 PM",
       saturday: "8:00 AM - 6:00 PM",
       sunday: "Emergency Only"
+    }
+  },
+  // Additional 10 realistic AC contractors
+  {
+    name: "Florida Keys Climate Solutions",
+    description: "Specialized HVAC services for the unique climate challenges of the Florida Keys. Expert in salt-air resistant systems and hurricane-rated installations.",
+    phone: "(305) 555-5001",
+    email: "service@flkeysclimate.com",
+    website: "https://flkeysclimate.com",
+    address: "2255 Overseas Hwy",
+    city: "Key West",
+    state: "FL",
+    zip_code: "33040",
+    services: ["Hurricane-Rated Systems", "Salt-Air Resistant AC", "Marine HVAC", "Emergency Storm Service"],
+    rating: 4.8,
+    review_count: 134,
+    featured: true,
+    insurance_verified: true,
+    license_number: "CAC1870101",
+    business_hours: {
+      monday: "7:00 AM - 7:00 PM",
+      tuesday: "7:00 AM - 7:00 PM",
+      wednesday: "7:00 AM - 7:00 PM",
+      thursday: "7:00 AM - 7:00 PM",
+      friday: "7:00 AM - 7:00 PM",
+      saturday: "8:00 AM - 5:00 PM",
+      sunday: "Emergency Only"
+    }
+  },
+  {
+    name: "Ocala Forest Air Conditioning",
+    description: "Professional HVAC contractor serving Ocala's residential communities. Specializing in energy-efficient systems and indoor air quality solutions.",
+    phone: "(352) 555-5002",
+    email: "info@ocalaforestac.com",
+    address: "4477 SW College Rd",
+    city: "Ocala",
+    state: "FL",
+    zip_code: "34474",
+    services: ["Energy Efficient AC", "Indoor Air Quality", "Duct Sealing", "Smart Thermostats"],
+    rating: 4.6,
+    review_count: 167,
+    featured: false,
+    insurance_verified: true,
+    license_number: "CAC1870102",
+    business_hours: {
+      monday: "7:00 AM - 6:00 PM",
+      tuesday: "7:00 AM - 6:00 PM",
+      wednesday: "7:00 AM - 6:00 PM",
+      thursday: "7:00 AM - 6:00 PM",
+      friday: "7:00 AM - 6:00 PM",
+      saturday: "8:00 AM - 4:00 PM",
+      sunday: "Emergency Only"
+    }
+  },
+  {
+    name: "Everglades Air Systems",
+    description: "HVAC specialists serving communities near the Everglades. Expert in humidity control systems and mold prevention for Florida's wetland areas.",
+    phone: "(239) 555-5003",
+    email: "contact@evergladesair.com",
+    address: "1899 Tamiami Trail E",
+    city: "Naples",
+    state: "FL",
+    zip_code: "34112",
+    services: ["Humidity Control", "Mold Prevention", "Dehumidification", "AC Repair"],
+    rating: 4.7,
+    review_count: 189,
+    featured: true,
+    insurance_verified: true,
+    license_number: "CAC1870103",
+    business_hours: {
+      monday: "6:00 AM - 8:00 PM",
+      tuesday: "6:00 AM - 8:00 PM",
+      wednesday: "6:00 AM - 8:00 PM",
+      thursday: "6:00 AM - 8:00 PM",
+      friday: "6:00 AM - 8:00 PM",
+      saturday: "7:00 AM - 6:00 PM",
+      sunday: "Emergency Only"
+    }
+  },
+  {
+    name: "Big Bend Air Conditioning",
+    description: "Reliable HVAC services in Florida's Big Bend region. Family-owned business providing quality air conditioning solutions since 1987.",
+    phone: "(850) 555-5004",
+    email: "service@bigbendac.com",
+    website: "https://bigbendac.com",
+    address: "3566 Mahan Dr",
+    city: "Tallahassee",
+    state: "FL",
+    zip_code: "32308",
+    services: ["Residential HVAC", "AC Replacement", "Maintenance Programs", "Emergency Repair"],
+    rating: 4.9,
+    review_count: 245,
+    featured: true,
+    insurance_verified: true,
+    license_number: "CAC1870104",
+    business_hours: {
+      monday: "6:00 AM - 9:00 PM",
+      tuesday: "6:00 AM - 9:00 PM",
+      wednesday: "6:00 AM - 9:00 PM",
+      thursday: "6:00 AM - 9:00 PM",
+      friday: "6:00 AM - 9:00 PM",
+      saturday: "7:00 AM - 8:00 PM",
+      sunday: "24/7 Emergency"
+    }
+  },
+  {
+    name: "Heritage Coast HVAC",
+    description: "Professional air conditioning services in historic Florida communities. Specializing in climate control for older homes and historic buildings.",
+    phone: "(904) 555-5005",
+    email: "info@heritagecoasthvac.com",
+    address: "789 King St",
+    city: "St. Augustine",
+    state: "FL",
+    zip_code: "32084",
+    services: ["Historic Home HVAC", "Ductless Systems", "Preservation-Friendly AC", "Custom Installations"],
+    rating: 4.8,
+    review_count: 156,
+    featured: false,
+    insurance_verified: true,
+    license_number: "CAC1870105",
+    business_hours: {
+      monday: "7:00 AM - 7:00 PM",
+      tuesday: "7:00 AM - 7:00 PM",
+      wednesday: "7:00 AM - 7:00 PM",
+      thursday: "7:00 AM - 7:00 PM",
+      friday: "7:00 AM - 7:00 PM",
+      saturday: "8:00 AM - 5:00 PM",
+      sunday: "Emergency Only"
+    }
+  },
+  {
+    name: "Seminole County Air Pros",
+    description: "Expert HVAC contractors serving Seminole County communities. Licensed professionals with advanced certifications in modern AC technology.",
+    phone: "(407) 555-5006",
+    email: "contact@seminolecountyairpros.com",
+    address: "1244 State Road 434",
+    city: "Longwood",
+    state: "FL",
+    zip_code: "32750",
+    services: ["Variable Speed AC", "Zoned Systems", "Air Quality Testing", "Commercial Service"],
+    rating: 4.5,
+    review_count: 198,
+    featured: false,
+    insurance_verified: true,
+    license_number: "CAC1870106",
+    business_hours: {
+      monday: "7:00 AM - 7:00 PM",
+      tuesday: "7:00 AM - 7:00 PM",
+      wednesday: "7:00 AM - 7:00 PM",
+      thursday: "7:00 AM - 7:00 PM",
+      friday: "7:00 AM - 7:00 PM",
+      saturday: "8:00 AM - 5:00 PM",
+      sunday: "Emergency Only"
+    }
+  },
+  {
+    name: "Citrus Belt Air Conditioning",
+    description: "HVAC services for Florida's citrus growing regions. Specializing in agricultural facility climate control and residential comfort systems.",
+    phone: "(863) 555-5007",
+    email: "service@citrusbeltac.com",
+    website: "https://citrusbeltac.com",
+    address: "5533 US Highway 27 N",
+    city: "Sebring",
+    state: "FL",
+    zip_code: "33870",
+    services: ["Agricultural HVAC", "Packinghouse Climate Control", "Residential AC", "Industrial Refrigeration"],
+    rating: 4.7,
+    review_count: 134,
+    featured: true,
+    insurance_verified: true,
+    license_number: "CAC1870107",
+    business_hours: {
+      monday: "6:00 AM - 8:00 PM",
+      tuesday: "6:00 AM - 8:00 PM",
+      wednesday: "6:00 AM - 8:00 PM",
+      thursday: "6:00 AM - 8:00 PM",
+      friday: "6:00 AM - 8:00 PM",
+      saturday: "7:00 AM - 6:00 PM",
+      sunday: "Emergency Only"
+    }
+  },
+  {
+    name: "Nature Coast Comfort Systems",
+    description: "Professional HVAC contractor serving Florida's Nature Coast. Expert in coastal climate solutions and energy-efficient installations.",
+    phone: "(352) 555-5008",
+    email: "info@naturecoastcomfort.com",
+    address: "2677 Commercial Way",
+    city: "Spring Hill",
+    state: "FL",
+    zip_code: "34606",
+    services: ["Coastal AC Systems", "Energy Efficiency", "Heat Pump Specialists", "Duct Design"],
+    rating: 4.6,
+    review_count: 143,
+    featured: false,
+    insurance_verified: true,
+    license_number: "CAC1870108",
+    business_hours: {
+      monday: "7:00 AM - 7:00 PM",
+      tuesday: "7:00 AM - 7:00 PM",
+      wednesday: "7:00 AM - 7:00 PM",
+      thursday: "7:00 AM - 7:00 PM",
+      friday: "7:00 AM - 7:00 PM",
+      saturday: "8:00 AM - 5:00 PM",
+      sunday: "Emergency Only"
+    }
+  },
+  {
+    name: "Redland District Air Solutions",
+    description: "HVAC services for South Miami-Dade's agricultural communities. Specializing in farm and greenhouse climate control systems.",
+    phone: "(305) 555-5009",
+    email: "service@redlandair.com",
+    address: "19800 SW 344th St",
+    city: "Homestead",
+    state: "FL",
+    zip_code: "33034",
+    services: ["Greenhouse Climate Control", "Farm HVAC", "Nursery Cooling", "Residential Service"],
+    rating: 4.8,
+    review_count: 167,
+    featured: true,
+    insurance_verified: true,
+    license_number: "CAC1870109",
+    business_hours: {
+      monday: "5:00 AM - 8:00 PM",
+      tuesday: "5:00 AM - 8:00 PM",
+      wednesday: "5:00 AM - 8:00 PM",
+      thursday: "5:00 AM - 8:00 PM",
+      friday: "5:00 AM - 8:00 PM",
+      saturday: "6:00 AM - 6:00 PM",
+      sunday: "Emergency Only"
+    }
+  },
+  {
+    name: "River Valley HVAC Specialists",
+    description: "Expert air conditioning services along Florida's river valleys. Professional technicians with expertise in flood-resistant HVAC installations.",
+    phone: "(386) 555-5010",
+    email: "contact@rivervalleyhvac.com",
+    website: "https://rivervalleyhvac.com",
+    address: "1455 Saxon Blvd",
+    city: "DeLand",
+    state: "FL",
+    zip_code: "32720",
+    services: ["Flood-Resistant Systems", "Elevated AC Installation", "Emergency Restoration", "Residential HVAC"],
+    rating: 4.9,
+    review_count: 234,
+    featured: true,
+    insurance_verified: true,
+    license_number: "CAC1870110",
+    business_hours: {
+      monday: "6:00 AM - 9:00 PM",
+      tuesday: "6:00 AM - 9:00 PM",
+      wednesday: "6:00 AM - 9:00 PM",
+      thursday: "6:00 AM - 9:00 PM",
+      friday: "6:00 AM - 9:00 PM",
+      saturday: "7:00 AM - 8:00 PM",
+      sunday: "24/7 Emergency"
     }
   }
 ];
