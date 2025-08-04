@@ -61,17 +61,8 @@ export class FirecrawlService {
 
       const scrapeResponse = await this.firecrawlApp.scrapeUrl(url, {
         formats: ['markdown'],
-        extractorOptions: {
-          mode: 'llm-extraction',
-          extractionPrompt: `Extract AC/HVAC contractor information from this page. For each contractor, provide:
-          - Business name
-          - Phone number
-          - Address (street, city, state, zip)
-          - Website URL (if available)
-          - Services offered
-          - Any licensing information
-          Format as JSON array with these fields: name, phone, address, city, state, zip_code, website, services, license_number`
-        }
+        onlyMainContent: true,
+        waitFor: 3000
       });
 
       if (!scrapeResponse.success) {
