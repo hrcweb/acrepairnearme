@@ -10,7 +10,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { businessValidationSchema, sanitizeHtml, rateLimiter } from '@/utils/security';
+import { businessValidationSchema, sanitizeHtml } from '@/utils/security';
+import { enhancedRateLimiter, strictSanitizeHtml } from '@/utils/securityEnhancements';
+import { BusinessSecurityService, AuthSecurityService } from '@/utils/enhancedSecurity';
 import { z } from 'zod';
 
 type BusinessFormData = z.infer<typeof businessValidationSchema>;
@@ -25,7 +27,6 @@ const SecureBusinessListingForm = () => {
     handleSubmit,
     formState: { errors },
     reset,
-    watch,
   } = useForm<BusinessFormData>({
     resolver: zodResolver(businessValidationSchema),
   });
@@ -40,9 +41,9 @@ const SecureBusinessListingForm = () => {
       return;
     }
 
-    // Rate limiting check
+    // Enhanced rate limiting check
     const rateLimitKey = `business_submit_${user.id}`;
-    if (!rateLimiter.isAllowed(rateLimitKey, 3, 300000)) { // 3 submissions per 5 minutes
+    if (!enhancedRateLimiter.isAllowed(rateLimitKey, 2, 300000, 'fixed')) { // 2 submissions per 5 minutes
       toast({
         title: "Rate limit exceeded",
         description: "Please wait before submitting another business listing",
@@ -54,13 +55,30 @@ const SecureBusinessListingForm = () => {
     setLoading(true);
 
     try {
-      // Sanitize HTML content
+      // Check for duplicate business
+      const isDuplicate = await BusinessSecurityService.checkDuplicateBusiness(
+        data.name,
+        data.address,
+        user.id
+      );
+
+      if (isDuplicate) {
+        toast({
+          title: "Duplicate business detected",
+          description: "You have already submitted a business with this name and address",
+          variant: "destructive",
+        });
+        setLoading(false);
+        return;
+      }
+
+      // Enhanced sanitization
       const sanitizedData = {
-        name: sanitizeHtml(data.name),
+        name: strictSanitizeHtml(data.name),
         description: data.description ? sanitizeHtml(data.description) : null,
-        address: sanitizeHtml(data.address),
-        city: sanitizeHtml(data.city),
-        state: data.state,
+        address: strictSanitizeHtml(data.address),
+        city: strictSanitizeHtml(data.city),
+        state: data.state.toUpperCase(),
         zip_code: data.zip_code,
         phone: data.phone || null,
         email: data.email || null,
@@ -76,6 +94,13 @@ const SecureBusinessListingForm = () => {
 
       if (error) throw error;
 
+      // Log security event
+      await AuthSecurityService.logSecurityEvent(
+        user.id,
+        'business_listing_created',
+        { business_name: sanitizedData.name }
+      );
+
       toast({
         title: "Success!",
         description: "Your business listing has been submitted for review",
@@ -84,6 +109,14 @@ const SecureBusinessListingForm = () => {
       reset();
     } catch (error) {
       console.error('Error submitting business:', error);
+      
+      // Log security event for failed submission
+      await AuthSecurityService.logSecurityEvent(
+        user.id,
+        'business_listing_failed',
+        { error: error instanceof Error ? error.message : 'Unknown error' }
+      );
+      
       toast({
         title: "Error",
         description: "Failed to submit business listing. Please try again.",
