@@ -56,17 +56,23 @@ const SecureBusinessListingForm = () => {
     try {
       // Sanitize HTML content
       const sanitizedData = {
-        ...data,
         name: sanitizeHtml(data.name),
         description: data.description ? sanitizeHtml(data.description) : null,
         address: sanitizeHtml(data.address),
         city: sanitizeHtml(data.city),
+        state: data.state,
+        zip_code: data.zip_code,
+        phone: data.phone || null,
+        email: data.email || null,
+        website: data.website || null,
+        license_number: data.license_number || null,
+        services: data.services || null,
         user_id: user.id,
       };
 
       const { error } = await supabase
         .from('businesses')
-        .insert([sanitizedData]);
+        .insert(sanitizedData);
 
       if (error) throw error;
 

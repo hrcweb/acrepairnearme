@@ -2,6 +2,23 @@
 import FirecrawlApp from '@mendable/firecrawl-js';
 import { useSecureApiKey } from '@/hooks/useSecureApiKey';
 
+interface ErrorResponse {
+  success: false;
+  error: string;
+}
+
+interface CrawlStatusResponse {
+  success: true;
+  status: string;
+  completed: number;
+  total: number;
+  creditsUsed: number;
+  expiresAt: string;
+  data: any[];
+}
+
+type CrawlResponse = CrawlStatusResponse | ErrorResponse;
+
 class SecureFirecrawlService {
   private firecrawlApp: FirecrawlApp | null = null;
   private apiKeyService = useSecureApiKey();
@@ -94,10 +111,11 @@ class SecureFirecrawlService {
         onlyMainContent: true,
         ...options.scrapeOptions
       }
-    });
+    }) as CrawlResponse;
 
     if (!crawlResponse.success) {
-      throw new Error(`Crawling failed: ${crawlResponse.error}`);
+      const errorResponse = crawlResponse as ErrorResponse;
+      throw new Error(`Crawling failed: ${errorResponse.error}`);
     }
 
     return crawlResponse;

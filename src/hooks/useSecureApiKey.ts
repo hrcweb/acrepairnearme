@@ -2,6 +2,7 @@
 import { useState, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface EncryptedApiKey {
   id: string;
@@ -13,8 +14,18 @@ interface EncryptedApiKey {
 export const useSecureApiKey = () => {
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
+  const { user } = useAuth();
 
   const storeApiKey = useCallback(async (serviceName: string, apiKey: string): Promise<boolean> => {
+    if (!user) {
+      toast({
+        title: "Authentication required",
+        description: "Please sign in to store API keys",
+        variant: "destructive",
+      });
+      return false;
+    }
+
     setLoading(true);
     try {
       // Simple client-side hashing for key verification (not security)
@@ -29,6 +40,7 @@ export const useSecureApiKey = () => {
       const { error } = await supabase
         .from('encrypted_api_keys')
         .upsert({
+          user_id: user.id,
           service_name: serviceName,
           encrypted_key: btoa(apiKey), // Basic encoding, not encryption
           key_hash: keyHash,
@@ -54,13 +66,18 @@ export const useSecureApiKey = () => {
     } finally {
       setLoading(false);
     }
-  }, [toast]);
+  }, [toast, user]);
 
   const retrieveApiKey = useCallback(async (serviceName: string): Promise<string | null> => {
+    if (!user) {
+      return null;
+    }
+
     try {
       const { data, error } = await supabase
         .from('encrypted_api_keys')
         .select('encrypted_key')
+        .eq('user_id', user.id)
         .eq('service_name', serviceName)
         .single();
 
@@ -72,13 +89,18 @@ export const useSecureApiKey = () => {
       console.error('Error retrieving API key:', error);
       return null;
     }
-  }, []);
+  }, [user]);
 
   const listApiKeys = useCallback(async (): Promise<EncryptedApiKey[]> => {
+    if (!user) {
+      return [];
+    }
+
     try {
       const { data, error } = await supabase
         .from('encrypted_api_keys')
-        .select('id, service_name, created_at, updated_at');
+        .select('id, service_name, created_at, updated_at')
+        .eq('user_id', user.id);
 
       if (error) throw error;
       return data || [];
@@ -86,13 +108,18 @@ export const useSecureApiKey = () => {
       console.error('Error listing API keys:', error);
       return [];
     }
-  }, []);
+  }, [user]);
 
   const deleteApiKey = useCallback(async (serviceName: string): Promise<boolean> => {
+    if (!user) {
+      return false;
+    }
+
     try {
       const { error } = await supabase
         .from('encrypted_api_keys')
         .delete()
+        .eq('user_id', user.id)
         .eq('service_name', serviceName);
 
       if (error) throw error;
@@ -112,7 +139,7 @@ export const useSecureApiKey = () => {
       });
       return false;
     }
-  }, [toast]);
+  }, [toast, user]);
 
   return {
     storeApiKey,
