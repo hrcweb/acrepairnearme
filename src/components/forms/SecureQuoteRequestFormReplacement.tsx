@@ -53,16 +53,17 @@ const SecureQuoteRequestFormReplacement: React.FC<SecureQuoteRequestFormProps> =
       // Sanitize HTML content
       const sanitizedData = {
         business_id: businessId,
+        user_id: (await supabase.auth.getUser()).data.user?.id,
         name: sanitizeHtml(data.name),
         email: data.email,
         phone: data.phone,
         service: sanitizeHtml(data.service),
         message: sanitizeHtml(data.message),
-        created_at: new Date().toISOString(),
       };
 
+      // Use generic insert to avoid TypeScript issues with table types
       const { error } = await supabase
-        .from('quotes')
+        .from('quotes' as any)
         .insert(sanitizedData);
 
       if (error) throw error;

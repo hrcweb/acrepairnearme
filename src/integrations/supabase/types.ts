@@ -1759,6 +1759,53 @@ export type Database = {
         }
         Relationships: []
       }
+      quotes: {
+        Row: {
+          business_id: number
+          created_at: string
+          email: string
+          id: string
+          message: string
+          name: string
+          phone: string
+          service: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          business_id: number
+          created_at?: string
+          email: string
+          id?: string
+          message: string
+          name: string
+          phone: string
+          service: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          business_id?: number
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string
+          name?: string
+          phone?: string
+          service?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quotes_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "businesses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       render_jobs: {
         Row: {
           created_at: string
