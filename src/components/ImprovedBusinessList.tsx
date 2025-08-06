@@ -163,9 +163,9 @@ const ImprovedBusinessList: React.FC<ImprovedBusinessListProps> = ({
   if (isLoading) {
     return (
       <div className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center max-w-7xl mx-auto">
           {[1, 2, 3, 4, 5, 6].map((i) => (
-            <div key={i} className="bg-gray-200 rounded-lg h-96 animate-pulse"></div>
+            <div key={i} className="bg-gray-200 rounded-lg h-96 animate-pulse w-full max-w-sm"></div>
           ))}
         </div>
       </div>
@@ -201,7 +201,7 @@ const ImprovedBusinessList: React.FC<ImprovedBusinessListProps> = ({
       />
 
       {filteredBusinesses.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 justify-items-center max-w-7xl mx-auto">
           {filteredBusinesses.map((business) => (
             <EnhancedBusinessCard
               key={business.id}
