@@ -77,6 +77,84 @@ const Footer = () => {
           </div>
         </div>
         
+        <div className="border-t border-gray-700 mt-8 pt-8">
+          <h4 className="font-semibold mb-6 text-lg text-center">Our Network</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
+            <div>
+              <a href="https://accentlounge.com" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 font-medium">
+                AccentLounge.com
+              </a>
+              <p className="text-gray-400 mt-1">Trusted Reviews & Gear Guides for Outdoor Adventures</p>
+            </div>
+            <div>
+              <a href="https://acrepairnearme.pro" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 font-medium">
+                ACRepairNearMe.pro
+              </a>
+              <p className="text-gray-400 mt-1">Find Top-Rated AC Repair Pros Near You</p>
+            </div>
+            <div>
+              <a href="https://aiteachai.pro" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 font-medium">
+                AITeachAI.pro
+              </a>
+              <p className="text-gray-400 mt-1">Professional AI education and training platform for businesses</p>
+            </div>
+            <div>
+              <a href="https://backpack-and-gear.com" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 font-medium">
+                Backpack-and-Gear.com
+              </a>
+              <p className="text-gray-400 mt-1">Your Trusted Guide to Outdoor Adventures</p>
+            </div>
+            <div>
+              <a href="https://bizfixed.com" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 font-medium">
+                BizFixed.com
+              </a>
+              <p className="text-gray-400 mt-1">Technical support and IT solutions for small businesses</p>
+            </div>
+            <div>
+              <a href="https://bizrepp.com" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 font-medium">
+                BizRepp.com
+              </a>
+              <p className="text-gray-400 mt-1">Online reputation management and review optimization services</p>
+            </div>
+            <div>
+              <a href="https://bizupp.com" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 font-medium">
+                BizUpp.com
+              </a>
+              <p className="text-gray-400 mt-1">Business growth strategies and marketing automation tools</p>
+            </div>
+            <div>
+              <a href="https://bizwebb.com" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 font-medium">
+                BizWebb.com
+              </a>
+              <p className="text-gray-400 mt-1">Professional web design and digital solutions for growing businesses</p>
+            </div>
+            <div>
+              <a href="https://compliiq.com" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 font-medium">
+                Compliiq.com
+              </a>
+              <p className="text-gray-400 mt-1">Compliance management and regulatory guidance platform</p>
+            </div>
+            <div>
+              <a href="https://friendly-home.net" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 font-medium">
+                Friendly-Home.net
+              </a>
+              <p className="text-gray-400 mt-1">Your complete guide to Hydroponic and Aquaponic Growing</p>
+            </div>
+            <div>
+              <a href="https://homeschoolmethod.com" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 font-medium">
+                HomeschoolMethod.com
+              </a>
+              <p className="text-gray-400 mt-1">Keep Your Kids Safe While Giving Them the Best Education</p>
+            </div>
+            <div>
+              <a href="https://invizon.com" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 font-medium">
+                Invizon.com
+              </a>
+              <p className="text-gray-400 mt-1">Discover the best APIs, AI tools, and developer services to launch your MVP faster</p>
+            </div>
+          </div>
+        </div>
+        
         <div className="border-t border-gray-700 mt-6 sm:mt-8 pt-6 sm:pt-8 text-center text-gray-400">
           <p className="text-sm sm:text-base">© 2025 AC Repair Near Me. All rights reserved worldwide.</p>
         </div>
